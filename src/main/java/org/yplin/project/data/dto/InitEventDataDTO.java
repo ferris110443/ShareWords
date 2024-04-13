@@ -1,4 +1,4 @@
 package org.yplin.project.data.dto;
 
-public class MarkdownDTO {
+public class InitEventDataDTO {
 }

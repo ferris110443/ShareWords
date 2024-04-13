@@ -301,6 +301,6 @@ RGA.AceEditorRGA = function AceEditorRGA(id, editor) {
 }
 
 
-if (typeof module !== 'undefined') { exports = module.exports = RGA }
+// if (typeof module !== 'undefined') { exports = module.exports = RGA }
 
-
+if (typeof module !== 'undefined') { module.exports = RGA }
