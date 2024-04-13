@@ -1,0 +1,29 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Source Code Pro', monospace;
+}
+
+.container{
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    max-width: 100%;
+    height: 100vh;
+}
+
+
+aside{
+    display: flex;
+    flex-direction: row;
+    width: 50px;
+}
+.mid-workspace{
+    flex:5;
+}
+
+.co-editor-workspace{
+    margin: 0 auto 0  0;
+    flex: 10;
+}
