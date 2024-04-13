@@ -58,28 +58,10 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.9/ace.min.js"></script>
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="anonymous"></script>
-    <script src="/rga.js"></script>
-    <script type="module" src="editor.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script>
-      // Initialize Ace Editor => interact with api need to work with its api
-      var editor = ace.edit("editor");
+    <script src="/rga.js"></script>
+    <script src="/markdown.js"></script>
+    <script type="module" src="editor.js"></script>
 
-      // Add change event listener
-      editor.getSession().on('change', function() {
-        updatePreview();
-      });
-
-      function updatePreview() {
-        var markdownText = editor.getValue(); // Get the text from Ace Editor
-        var htmlContent = marked.parse(markdownText); // Parse markdown to HTML
-        console.log(markdownText);
-        console.log(htmlContent);
-        document.getElementById("preview").innerHTML = htmlContent; // Display the HTML in the preview div
-      }
-
-      // Initial call to display default content
-      updatePreview();
-    </script>
   </body>
 </html>

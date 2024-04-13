@@ -41,7 +41,6 @@ public class SocketIOService {
                 System.out.println("Client connected to room: " + roomId);
             }
 
-
             System.out.println("Client connected: " + client.getSessionId());
             int userId = nextUserId.getAndIncrement();
             System.out.println("Connection - Assigning ID: " + userId);
