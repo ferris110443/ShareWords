@@ -19,16 +19,16 @@ public class MarkdownRestController {
     FileContentService fileContentService;
 
     @PostMapping("/saveMarkdownText")
-    public void saveMarkdownText(@RequestBody MarkdownForm markdownText) {
-        fileContentService.saveFileContent(markdownText);
-        logger.info("markdownText.getMarkdownText() : "+markdownText.getMarkdownText());
-        logger.info("markdownText.getTitle() : "+markdownText.getTitle());
-        logger.info("markdownText.getRoomId() : "+markdownText.getRoomId());
+    public void saveMarkdownText(@RequestBody MarkdownForm markdownForm) {
+        fileContentService.saveFileContent(markdownForm);
+        logger.info("markdownText.getMarkdownText() : "+markdownForm.getMarkdownText());
+        logger.info("markdownText.getTitle() : "+markdownForm.getTitle());
+        logger.info("markdownText.getRoomId() : "+markdownForm.getRoomId());
     }
 
-    @GetMapping("/getMarkdownText")
-    public void  getMarkdownText() {
-
-    }
+//    @GetMapping("/getMarkdownText")
+//    public void  getMarkdownText() {
+//
+//    }
 
 }

@@ -1,14 +1,25 @@
 
 const roomId = new URLSearchParams(window.location.search).get('roomId') || 'general';
-// const title = document.getElementById("title").innerText;
 const title = "title need modify";
-
-
-// Create a new instance of the marked library
 let editor = ace.edit("editor");
+
+let debounceTimeout = 3000;
+let debouncedSaveData = debounce(saveDataToServer, debounceTimeout);
+
+
+
+
+
+
 editor.getSession().on('change', function() {
     updatePreview();
+    let currentContent = editor.getValue();
+    // console.log("Current Content: " + currentContent);
+    debouncedSaveData(currentContent,title,roomId);
 });
+
+
+
 function updatePreview() {
     let markdownText = editor.getValue(); // Get the text from Ace Editor
     let htmlContent = marked.parse(markdownText); // Parse markdown to HTML
@@ -18,20 +29,7 @@ function updatePreview() {
 }
 updatePreview();
 
-
-
-
-
-let debouncedSaveData = debounce(saveData, 3000);
-
-editor.getSession().on('change', function() {
-    console.log("Change event triggered.");
-    let currentContent = editor.getValue();
-    console.log("Current Content: " + currentContent);
-    debouncedSaveData(currentContent,title,roomId);
-});
-
-function debounce(func, timeout = 3000) {
+function debounce(func, timeout) {
     let timer;
     return function(...args) {
         const context = this;
@@ -42,8 +40,7 @@ function debounce(func, timeout = 3000) {
     };
 }
 
-
-async function saveData(data,title,roomId) {
+async function saveDataToServer(data,title,roomId) {
     const response = await fetch('/api/1.0/markdown/saveMarkdownText', {
         method: 'POST',
         headers: {
@@ -53,3 +50,4 @@ async function saveData(data,title,roomId) {
     });
     console.log(response);
 }
+

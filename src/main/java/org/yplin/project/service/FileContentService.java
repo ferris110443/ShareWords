@@ -4,7 +4,7 @@ import org.yplin.project.data.form.MarkdownForm;
 
 public interface FileContentService {
 
-    void saveFileContent(MarkdownForm markdownText);
+    void saveFileContent(MarkdownForm markdownForm);
 
 //    MarkdownDTO getFileContent(int fileId);
 }

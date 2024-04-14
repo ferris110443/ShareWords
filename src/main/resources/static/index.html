@@ -56,6 +56,61 @@
       Preview will appear here...
     </div>
 
+    <script>
+      function insertImageMarkdown(url) {
+        const markdownText = `![Image](${url})`;
+        editor.insert(markdownText);
+      }
+
+      function uploadImage(data) {
+        return fetch('api/1.0/upload/Image', {
+          method: 'POST',
+          body: JSON.stringify({image: data}),
+          headers: {'Content-Type': 'application/json'}
+        })
+                .then(response => {
+                  if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                  }
+                  return response.json();
+                })
+                .then(data => {
+                  if (!data.imageUrl) {
+                    throw new Error('No image URL in response');
+                  }
+                  return data.imageUrl;
+                })
+                .catch(error => {
+                  console.error('Error during image upload:', error);
+                  return null; // Return null or a default image URL as a fallback
+                });
+      }
+
+
+      document.getElementById('editor').addEventListener('paste', function(event) {
+        console.log('Paste event: ', event)
+        let clipboardData = event.clipboardData || window.clipboardData;
+        console.log('clipboardData: ', clipboardData)
+        if (clipboardData && clipboardData.items) {
+          for (let i = 0; i < clipboardData.items.length; i++) {
+            let item = clipboardData.items[i];
+            if (item.type.indexOf('image') === 0) {  // Check if the item is an image
+              let blob = item.getAsFile();
+              let reader = new FileReader();
+              reader.onload = function(e) {
+                console.log('File content: ', e.target.result);
+                uploadImage(e.target.result).then(url => {
+                  insertImageMarkdown(url);
+                });
+              };
+              reader.readAsDataURL(blob);
+              event.preventDefault(); // Prevent the default behavior of pasting
+            }
+          }
+        }
+      });
+    </script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.9/ace.min.js"></script>
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
