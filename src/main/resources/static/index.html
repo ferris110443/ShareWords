@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Ace CRDT</title>
+    <title>CRDT</title>
     <style>
       html, body {
         height: 100%;
@@ -37,15 +37,15 @@
   <body>
     <div>
       <h1>Collaborative text editing using CRDT</h1>
-      <p>
-        This demo makes sense when more than one person connects and
-        writes at the same time, some quirks are to be expected, but the
-        text should remain the same across clients. The contents are
-        cleared at least once per day.
-        <strong>Please be kind to each other.</strong>
-        <br>
-        Source and details:
-      </p>
+
+
+      <label for="fileName">FileName</label>
+      <input type="text" name = "fileName" id = "fileName"><br>
+
+      <label for="attendees">Attendees</label>
+      <input type="text" name = "attendees" id = "attendees">
+
+
     </div>
 
     <div id="editor-container">
@@ -55,55 +55,6 @@
     <div id="preview" style="border: 1px solid #ccc; margin-top: 20px; padding: 10px;">
       Preview will appear here...
     </div>
-
-    <script>
-      function insertImageMarkdown(url) {
-        const markdownText = `![Image](${url})`;
-        editor.insert(markdownText);
-      }
-
-      async function uploadImage(data) {
-        try {
-          const response = await fetch('api/1.0/upload/Image', {
-            method: 'POST',
-            body: JSON.stringify({image: data}),
-            headers: {'Content-Type': 'application/json'}
-          });
-
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-
-          const responseData = await response.json();
-          console.log("responseData" + JSON.stringify(responseData));
-          return responseData["imageURL"]; // Assuming the server returns the image URL or some relevant data
-        } catch (error) {
-          console.error("Error uploading image:", error);
-          return null;
-        }
-      }
-
-      document.getElementById('editor').addEventListener('paste', function(event) {
-        let clipboardData = event.clipboardData || window.clipboardData;
-        if (clipboardData && clipboardData.items) {
-          for (let i = 0; i < clipboardData.items.length; i++) {
-            let item = clipboardData.items[i];
-            if (item.type.indexOf('image') === 0) {  // Check if the item is an image
-              let blob = item.getAsFile();
-              let reader = new FileReader();
-              reader.onload = function(e) {
-                // console.log('File content: ', e.target.result);
-                uploadImage(e.target.result).then(url => {
-                  insertImageMarkdown(url);
-                });
-              };
-              reader.readAsDataURL(blob);
-              event.preventDefault(); // Prevent the default behavior of pasting
-            }
-          }
-        }
-      });
-    </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.9/ace.min.js"></script>
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="anonymous"></script>
