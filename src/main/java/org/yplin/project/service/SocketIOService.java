@@ -48,11 +48,11 @@ public class SocketIOService {
                 logger.info("Client connected to room: " + roomId);
             }
 
-            logger.info("Client connected: " + client.getSessionId());
+//            logger.info("Client connected: " + client.getSessionId());
             int userId = nextUserId.getAndIncrement();
-            logger.info("Connection - Assigning ID: " + userId);
+//            logger.info("Connection - Assigning ID: " + userId);
             InitEventDataForm initData = new InitEventDataForm(userId);
-            logger.info("Sending init data: " + initData);
+//            logger.info("Sending init data: " + initData);
             client.sendEvent("init", new InitEventDataForm(userId));
         };
     }
@@ -66,16 +66,13 @@ public class SocketIOService {
     private DataListener<MessageDataForm> onMessageReceived() {
         return (client, data, ackSender) -> {
             logger.info("Message received: " + data);
-            // Broadcast the message to all clients after a delay
             int delayMilliseconds = 0;
             new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    logger.info("Message received in room: " + data.getRoomId() + " with content: " + data);
+//                    logger.info("Message received in room: " + data.getRoomId() + " with content: " + data);
                     server.getRoomOperations(data.getRoomId()).sendEvent("message", data);
-                    // send the message to all clients;
-                    // if need to send to specific clients https://medium.com/folksdev/spring-boot-netty-socket-io-example-3f21fcc1147d
-                }
+                 }
             }, delayMilliseconds);
         };
     }

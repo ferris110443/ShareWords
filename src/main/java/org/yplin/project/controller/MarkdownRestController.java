@@ -21,9 +21,9 @@ public class MarkdownRestController {
     @PostMapping("/saveMarkdownText")
     public void saveMarkdownText(@RequestBody MarkdownForm markdownForm) {
         fileContentService.saveFileContent(markdownForm);
-        logger.info("markdownText.getMarkdownText() : "+markdownForm.getMarkdownText());
-        logger.info("markdownText.getTitle() : "+markdownForm.getTitle());
-        logger.info("markdownText.getRoomId() : "+markdownForm.getRoomId());
+//        logger.info("markdownText.getMarkdownText() : "+markdownForm.getMarkdownText());
+//        logger.info("markdownText.getTitle() : "+markdownForm.getTitle());
+//        logger.info("markdownText.getRoomId() : "+markdownForm.getRoomId());
     }
 
 //    @GetMapping("/getMarkdownText")

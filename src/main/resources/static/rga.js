@@ -217,6 +217,7 @@ RGA.AceEditorRGA = function AceEditorRGA(id, editor) {
 
     if (action === 'insert') {
       contentInserted(from, change)
+      // console.log(" from : " + from + " change : "+change) check ok
     } else if (action === 'remove') {
       contentRemoved(from + 1, change)
     }
@@ -233,7 +234,7 @@ RGA.AceEditorRGA = function AceEditorRGA(id, editor) {
       , startNode = rgaAry.get(startIndex)
       , endIndex = doc.positionToIndex(end)
       , endNode = rgaAry.get(endIndex)
-
+    console.log("startNode:", JSON.stringify(startNode), "endNode:", JSON.stringify(endNode));
     nodeSelection = { startNode: startNode, endNode: endNode }
   }
 

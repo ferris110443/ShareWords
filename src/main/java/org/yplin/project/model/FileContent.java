@@ -21,7 +21,7 @@ public class FileContent {
     @Column(name = "file_title", nullable = false)
     private String fileTitle = "test";
 
-    @Column(name = "content")
+    @Column(name = "content",columnDefinition = "TEXT")
     private String content;
 
     @Column(name = "file_URL", nullable = false)
