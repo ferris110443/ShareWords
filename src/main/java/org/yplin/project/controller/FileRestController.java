@@ -4,6 +4,7 @@ package org.yplin.project.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,28 +12,32 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.yplin.project.data.form.ImageDataForm;
+import org.yplin.project.service.FileContentService;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
 @Slf4j
 @RestController
 @RequestMapping("api/1.0/upload")
 public class FileRestController {
+    public static final Logger logger = LoggerFactory.getLogger(FileRestController.class);
+
+
+    @Autowired
+    FileContentService fileContentService;
 
     @PostMapping(path = "/Image", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> uploadImage(@RequestBody ImageDataForm imageDataForm) {
-        System.out.println("Received image data");
-        try {
-            // Assuming imageDataForm.getImage() returns a Base64 encoded String
-            String imageData = imageDataForm.getImage();
-            System.out.println("Image data: " + imageData);
-            if (imageData != null) {
-                // Decode and save image logic here
-                return ResponseEntity.ok("Image uploaded successfully");
-            } else {
-                return ResponseEntity.badRequest().body("Invalid image data");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Error uploading image: " + e.getMessage());
-        }
+    public ResponseEntity<Map<String,String>> uploadImage(@RequestBody ImageDataForm imageDataForm) {
+        String imageURL = fileContentService.saveImageContent(imageDataForm);
+        Map<String,String> response = new HashMap<>();
+        response.put("imageURL", imageURL);
+        return ResponseEntity.ok(response);
     }
 
 

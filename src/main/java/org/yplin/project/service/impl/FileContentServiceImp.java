@@ -4,16 +4,32 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.yplin.project.configuration.WebSocketConfiguration;
+import org.yplin.project.data.form.ImageDataForm;
 import org.yplin.project.data.form.MarkdownForm;
 import org.yplin.project.model.FileContent;
 import org.yplin.project.repository.FileContentRepository;
 import org.yplin.project.service.FileContentService;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Base64;
+import java.util.UUID;
+
 @Slf4j
 @Service
 public class FileContentServiceImp implements FileContentService {
+
+    @Value("${project.domain}")
+    private String domain;
+
+    @Value("${project.port}")
+    private int port;
+
+    @Value("${project.scheme}")
+    private String scheme;
 
 
     public static final Logger logger = LoggerFactory.getLogger(FileContentServiceImp.class);
@@ -22,11 +38,43 @@ public class FileContentServiceImp implements FileContentService {
     @Override
     public void saveFileContent(MarkdownForm markdownText) {
         FileContent fileContent = new FileContent();
+        fileContent.setWorkspaceId(1);
+        fileContent.setFileTitle("test");
         fileContent.setContent(markdownText.getMarkdownText());
-        fileContent.setFileId(123);
-        fileContent.setFileTitle(markdownText.getTitle());
         fileContent.setFileURL("http://localhost:8080/api/1.0/markdown/getMarkdownText");
         fileContentRepository.save(fileContent);
+    }
+
+    @Override
+    public String saveImageContent(ImageDataForm imageDataForm) {
+        try {
+            String imageDataBase64 = imageDataForm.getImage().split(",")[1];
+            System.out.println(imageDataBase64);
+            if (imageDataBase64 != null) {
+                byte[] decodedBytes = Base64.getDecoder().decode(imageDataBase64);
+                String filename = UUID.randomUUID().toString()+".png";
+                Path destinationPath = Paths.get("C:\\Users\\USER\\OneDrive\\Programming\\JavaProject\\AppWorks\\Personal project\\yplin\\project\\src\\main\\resources\\static\\images");
+                if (!Files.exists(destinationPath)) {
+                    Files.createDirectories(destinationPath);
+                }
+                Path destinationFile = destinationPath.resolve(filename);
+                // resolve() method returns a path that is this path with given path appended to it.
+                Files.write(destinationFile, decodedBytes);
+                logger.info("Image uploaded successfully");
+
+                String imageURL = scheme + "://" + domain + ":" + port + "/images/" + filename;
+                System.out.println(imageURL);
+                return imageURL;
+
+            } else {
+                logger.error("Error in uploading image");
+                return null;
+
+            }
+        } catch (Exception e) {
+            logger.error("Error in uploading image", e);
+            return null;
+        }
     }
 
 

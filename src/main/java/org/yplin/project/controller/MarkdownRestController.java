@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.yplin.project.data.form.MarkdownForm;
 import org.yplin.project.service.FileContentService;
+import org.yplin.project.service.impl.FileContentServiceImp;
 
 @Slf4j
 @RestController

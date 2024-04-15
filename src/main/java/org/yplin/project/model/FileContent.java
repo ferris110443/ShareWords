@@ -15,8 +15,8 @@ public class FileContent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "file_id", nullable = false)
-    private int fileId = 123;
+    @Column(name = "workspace_id", nullable = false)
+    private int workspaceId ;
 
     @Column(name = "file_title", nullable = false)
     private String fileTitle = "test";
@@ -32,7 +32,7 @@ public class FileContent {
     public String toString() {
         return "FileContent{" +
                 "id=" + id +
-                ", fileId='" + fileId + '\'' +
+                ", workspaceId=" + workspaceId +
                 ", fileTitle='" + fileTitle + '\'' +
                 ", content='" + content + '\'' +
                 ", fileURL='" + fileURL + '\'' +

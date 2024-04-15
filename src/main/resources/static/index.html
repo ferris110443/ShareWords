@@ -62,35 +62,29 @@
         editor.insert(markdownText);
       }
 
-      function uploadImage(data) {
-        return fetch('api/1.0/upload/Image', {
-          method: 'POST',
-          body: JSON.stringify({image: data}),
-          headers: {'Content-Type': 'application/json'}
-        })
-                .then(response => {
-                  if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                  }
-                  return response.json();
-                })
-                .then(data => {
-                  if (!data.imageUrl) {
-                    throw new Error('No image URL in response');
-                  }
-                  return data.imageUrl;
-                })
-                .catch(error => {
-                  console.error('Error during image upload:', error);
-                  return null; // Return null or a default image URL as a fallback
-                });
+      async function uploadImage(data) {
+        try {
+          const response = await fetch('api/1.0/upload/Image', {
+            method: 'POST',
+            body: JSON.stringify({image: data}),
+            headers: {'Content-Type': 'application/json'}
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const responseData = await response.json();
+          console.log("responseData" + JSON.stringify(responseData));
+          return responseData["imageURL"]; // Assuming the server returns the image URL or some relevant data
+        } catch (error) {
+          console.error("Error uploading image:", error);
+          return null;
+        }
       }
 
-
       document.getElementById('editor').addEventListener('paste', function(event) {
-        console.log('Paste event: ', event)
         let clipboardData = event.clipboardData || window.clipboardData;
-        console.log('clipboardData: ', clipboardData)
         if (clipboardData && clipboardData.items) {
           for (let i = 0; i < clipboardData.items.length; i++) {
             let item = clipboardData.items[i];
@@ -98,7 +92,7 @@
               let blob = item.getAsFile();
               let reader = new FileReader();
               reader.onload = function(e) {
-                console.log('File content: ', e.target.result);
+                // console.log('File content: ', e.target.result);
                 uploadImage(e.target.result).then(url => {
                   insertImageMarkdown(url);
                 });
