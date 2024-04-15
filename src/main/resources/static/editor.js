@@ -6,6 +6,27 @@ const socket = io('http://localhost:9092',{
   query: { roomId }
 });
 
+document.addEventListener("DOMContentLoaded", function() {
+  let editor = ace.edit("editor", {
+    mode: "ace/mode/javascript",
+    selectionStyle: "text"
+  });
+
+  editor.setOptions({
+    autoScrollEditorIntoView: true,
+    copyWithEmptySelection: true,
+  });
+
+
+
+  // Optional: Resize editor based on its container's size
+  window.onresize = function() {
+    editor.resize();
+  };
+});
+
+let rga
+
 
 socket.on('connect', () => {
   console.log('Connected to Netty-SocketIO server in room:', roomId);
@@ -30,8 +51,7 @@ socket.on('disconnect', (error) => {
   console.log('Disconnected from Netty-SocketIO server' + error);
 });
 
-const editor = ace.edit('editor')
-let rga
+
 
 
 

@@ -48,11 +48,8 @@ public class SocketIOService {
                 logger.info("Client connected to room: " + roomId);
             }
 
-//            logger.info("Client connected: " + client.getSessionId());
             int userId = nextUserId.getAndIncrement();
-//            logger.info("Connection - Assigning ID: " + userId);
             InitEventDataForm initData = new InitEventDataForm(userId);
-//            logger.info("Sending init data: " + initData);
             client.sendEvent("init", new InitEventDataForm(userId));
         };
     }
