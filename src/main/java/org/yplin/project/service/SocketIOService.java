@@ -67,7 +67,7 @@ public class SocketIOService {
             new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
-//                    logger.info("Message received in room: " + data.getRoomId() + " with content: " + data);
+                    logger.info("Message received in room: " + data.getRoomId() + " with content: " + data);
                     server.getRoomOperations(data.getRoomId()).sendEvent("message", data);
                  }
             }, delayMilliseconds);

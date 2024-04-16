@@ -13,11 +13,14 @@ function RGA(id) {
   //   The left sentinel node acts as a fixed starting point in the linked list.
   //   It's always present and never removed, helping to manage the list structure efficiently.
   this.index = new Map([[this.left.timestamp, this.left]])
+    //   The index is a Map object that stores the nodes of the RGA.
+    //   It maps the timestamp of a node to the node itself.
   this.timestamp = null
   this.subscribers = [] // array to store the callback functions associated with the subscribers!!!!
 }
 
 // turn the RGA into an JS array
+// linked list starting from the left sentinel node of RGA instance
 RGA.toArray = function (rga) {
   let ary = [];
   let curr = rga.left;
@@ -26,7 +29,6 @@ RGA.toArray = function (rga) {
     ary.push(curr)
     curr = curr.next
   }
-
   return ary
 }
 
@@ -51,9 +53,7 @@ RGA.prototype = { // define the RGA prototype object
   , downstream: function (op) {
     const node = this.receive(op)
     op.sender = this.id
-
     if (node) { this.subscribers.forEach(callback => { callback(op) }) }
-
     return node
   }
 
@@ -86,10 +86,11 @@ RGA.prototype = { // define the RGA prototype object
   }
 
   , add: function (op) {
-    if (this.index.get(op.t)) { return }
+    if (this.index.get(op.t)) { return } // op timestamp return if already exists
 
     let prev = this.index.get(op.prev)
-      , newNode
+    console.log("op.prev" + op.prev)
+    let newNode
 
     if (!prev) { return this.requestHistory(op) }
 
@@ -101,6 +102,10 @@ RGA.prototype = { // define the RGA prototype object
       chr: op.chr,
       removed: false
     }
+
+    // console.log(JSON.stringify(newNode) + " added")
+    // same
+
 
     prev.next = newNode
     this.index.set(op.t, newNode)
@@ -121,8 +126,8 @@ RGA.prototype = { // define the RGA prototype object
 
   , history: function () {
     let hist = []
-      , prev = this.left
-      , curr = prev.next
+    let prev = this.left
+    let curr = prev.next
 
     while (curr) {
       hist.push({
@@ -149,8 +154,11 @@ RGA.prototype = { // define the RGA prototype object
 // constructor function for the RGAtoText
 function RGAtoText(rga) {
   this.ary = RGA.toArray(rga)
+  // console.log("this.ary : "+JSON.stringify(this.ary));
   this.compactedAry =
     this.ary.filter(({removed}) => { return !removed })
+  // console.log("this.compactedAry : "+JSON.stringify(this.compactedAry));
+
 }
 
 RGAtoText.prototype = {
@@ -173,7 +181,6 @@ RGAtoText.prototype = {
     return this.compactedAry[idx]
   }
 }
-
 
 RGA.AceEditorRGA = function AceEditorRGA(id, editor) {
   let rga = new RGA(id)
@@ -234,7 +241,7 @@ RGA.AceEditorRGA = function AceEditorRGA(id, editor) {
       , startNode = rgaAry.get(startIndex)
       , endIndex = doc.positionToIndex(end)
       , endNode = rgaAry.get(endIndex)
-    console.log("startNode:", JSON.stringify(startNode), "endNode:", JSON.stringify(endNode));
+    // console.log("startNode:", JSON.stringify(startNode), "endNode:", JSON.stringify(endNode));
     nodeSelection = { startNode: startNode, endNode: endNode }
   }
 
