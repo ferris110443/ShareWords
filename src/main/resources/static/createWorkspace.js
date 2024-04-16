@@ -1,8 +1,4 @@
 
-
-
-
-
 function togglePasswordInput() {
     let passwordField = document.getElementById("passwordField");
     let needPassword = document.getElementById("needPassword");

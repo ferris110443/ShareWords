@@ -10,11 +10,11 @@ const TIMESTAMP_BITS = 24 // Max num of chars is 2 ** 24
 function RGA(id) {
   this.id = id
   this.left = { timestamp: 0, removed: false, chr: "" }
-  // the left sentinel node , used as a starting point for the linked list structure
-  // the left sentinel node is always present and never removed
+  //   The left sentinel node acts as a fixed starting point in the linked list.
+  //   It's always present and never removed, helping to manage the list structure efficiently.
   this.index = new Map([[this.left.timestamp, this.left]])
   this.timestamp = null
-  this.subscribers = []
+  this.subscribers = [] // array to store the callback functions associated with the subscribers!!!!
 }
 
 // turn the RGA into an JS array
@@ -38,7 +38,7 @@ RGA.prototype = { // define the RGA prototype object
   // Public interface
   , subscribe: function (callback) {
     this.subscribers.push(callback)
-  } //add a callback to the subscribers array
+  } //add a callback function to the subscribers
 
 
   //Receives an operation and applies it to the RGA.
