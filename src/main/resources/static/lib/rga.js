@@ -4,6 +4,7 @@
 const TIMESTAMP_BITS = 24 // Max num of chars is 2 ** 24
                           // Max num of replicas is 2 ** 8
 
+const MAX_REPLICA_ID_BITS = 16;
 
 // An RGA is a replicated string.
 // constructor function for the RGA
@@ -17,7 +18,10 @@ function RGA(id) {
     //   It maps the timestamp of a node to the node itself.
   this.timestamp = null
   this.subscribers = [] // array to store the callback functions associated with the subscribers!!!!
+  this._nextTimestamp = id;
 }
+
+
 
 // turn the RGA into an JS array
 // linked list starting from the left sentinel node of RGA instance
@@ -79,11 +83,20 @@ RGA.prototype = { // define the RGA prototype object
     ops.forEach(op => { this.receive(op) })
   }
 
-  , genTimestamp: function () {
-    this.timestamp = (this.timestamp || this.id << TIMESTAMP_BITS) + 1
+  // , genTimestamp: function () {
+  //
+  //
+  //   this.timestamp = (this.timestamp || this.id << TIMESTAMP_BITS) + 1
+  //   return this.timestamp
+  // }
 
-    return this.timestamp
+  , genTimestamp: function () {
+    var t = this._nextTimestamp;
+    this._nextTimestamp += (1 << MAX_REPLICA_ID_BITS);
+    return t;
   }
+
+
 
   , add: function (op) {
     if (this.index.get(op.t)) { return } // op timestamp return if already exists
