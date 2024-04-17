@@ -7,10 +7,10 @@ import java.util.List;
 @Data
 public class MessageDataForm {
     private String type;
-    private int prev;
-    private int t;
+    private long prev;
+    private long t;
     private String chr;
-    private int sender;
+    private long sender;
     private List<MessageDataForm> ops;
     private String roomId;
 }

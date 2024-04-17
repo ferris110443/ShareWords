@@ -1,7 +1,7 @@
 "use strict";
 
 
-const TIMESTAMP_BITS = 24 // Max num of chars is 2 ** 24
+// const TIMESTAMP_BITS = 24 // Max num of chars is 2 ** 24
                           // Max num of replicas is 2 ** 8
 
 const MAX_REPLICA_ID_BITS = 16;
@@ -90,11 +90,21 @@ RGA.prototype = { // define the RGA prototype object
   //   return this.timestamp
   // }
 
+  // , genTimestamp: function () {
+  //   var t = this._nextTimestamp;
+  //   this._nextTimestamp += (1 << MAX_REPLICA_ID_BITS);
+  //   console.log(t)
+  //   return t;
+  // }
+
   , genTimestamp: function () {
-    var t = this._nextTimestamp;
-    this._nextTimestamp += (1 << MAX_REPLICA_ID_BITS);
-    return t;
+    this._nextTimestamp = Math.max(this._nextTimestamp, new Date().getTime())-1713371800000;
+    // this._nextTimestamp += (1 << MAX_REPLICA_ID_BITS);
+    console.log(Math.max(this._nextTimestamp, new Date().getTime()))
+    console.log(Math.max("this._nextTimestamp"+this._nextTimestamp));
+    return this._nextTimestamp;
   }
+
 
 
 
