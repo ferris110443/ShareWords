@@ -5,10 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.yplin.project.data.form.MarkdownForm;
 import org.yplin.project.service.FileContentService;
-import org.yplin.project.service.impl.FileContentServiceImp;
 
 @Slf4j
 @RestController
@@ -19,7 +21,7 @@ public class MarkdownRestController {
     @Autowired
     FileContentService fileContentService;
 
-    @PostMapping("/saveMarkdownText")
+    @PostMapping("/markdownText")
     public void saveMarkdownText(@RequestBody MarkdownForm markdownForm) {
         fileContentService.saveFileContent(markdownForm);
 //        logger.info("markdownText.getMarkdownText() : "+markdownForm.getMarkdownText());

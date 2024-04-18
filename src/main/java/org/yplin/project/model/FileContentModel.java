@@ -9,19 +9,19 @@ import lombok.NoArgsConstructor;
 @Table(name = "file_content")
 @Data
 @NoArgsConstructor
-public class FileContent {
+public class FileContentModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "workspace_id", nullable = false)
-    private int workspaceId ;
+    private int workspaceId;
 
     @Column(name = "file_title", nullable = false)
     private String fileTitle = "test";
 
-    @Column(name = "content",columnDefinition = "TEXT")
+    @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
     @Column(name = "file_URL", nullable = false)

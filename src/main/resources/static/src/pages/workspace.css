@@ -5,7 +5,7 @@ body, html {
 }
 
 
-.container{
+.container {
     margin: 0;
     padding: 0;
     display: flex;
@@ -14,26 +14,36 @@ body, html {
     height: 100vh;
 }
 
-aside{
+aside {
     display: flex;
     flex-direction: row;
     width: 50px;
 }
-.mid-workspace{
-    flex:5;
+
+.mid-workspace {
+    flex: 4;
 }
 
-.create-workspace-zone{
-    flex:5;
+.user-workspace-container {
+    flex: 6;
 }
 
-.co-editor-workspace{
-    margin: 0 auto 0  0;
+.create-workspace-zone {
+    flex: 6;
+}
+
+.user-friends-zone {
+    flex: 4;
+}
+
+.user-search-zone {
+    flex: 6;
+}
+
+.co-editor-workspace {
+    margin: 0 auto 0 0;
     flex: 10;
 }
-
-
-
 
 
 #editor {
@@ -62,7 +72,7 @@ aside{
 
 }
 
-#markdown-button{
+#markdown-button {
     position: relative;
     top: 80vh;
 }

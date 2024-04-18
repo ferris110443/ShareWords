@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+<head>
+    <title>CRDT</title>
+    <style>
+
+    </style>
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" rel="stylesheet">
+    <link href="/src/pages/workspace.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <div id="sidebar-placeholder"></div>
+
+    <div class="mid-workspace ">
+        <div class="zone content-section" id="room-zone">
+            <div>In Room</div>
+            <div id="friend-zone">
+                <div id="online-zone">Online</div>
+                <div id="offline-zone">Offline</div>
+            </div>
+        </div>
+        <div class="zone content-section" id="file-zone">
+            <div>Files</div>
+            <div id="FileList">
+                <div id="file1">File1</div>
+                <div id="file2">File2</div>
+                <div id="file3">File3</div>
+            </div>
+            <div id="upload-download">
+                <button class="upload" type="submit" value="Upload"> Upload</button>
+                <button class="download" type="submit" value="Download"> Download</button>
+            </div>
+        </div>
+        <div class="zone content-section" id="setting-zone">
+            <div>Setting</div>
+            <div id="setting">
+                <div>Font size</div>
+                <div>Theme</div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div style="background-color: rgba(225, 225, 255, 0.7); width: 5px; display: block;"></div>
+
+    <div class=" right-workspace co-editor-workspace">
+        <div>
+            <label for="fileName">FileName</label>
+            <input id="fileName" name="fileName" type="text"><br>
+
+            <label for="attendees">Attendees</label>
+            <input id="attendees" name="attendees" type="text">
+        </div>
+        <div id="editor-container">
+            <div id="editor"></div>
+        </div>
+        <div id="markdown-button">
+            <div id="preview" style="border: 1px solid #ccc; margin-top: 20px; padding: 10px;">
+                Preview will appear here...
+            </div>
+            <button class="preview" type="submit" value="Preview"> Preview</button>
+            <button class="send" type="submit" value="Send to attendees"> Send to attendees</button>
+            <button class="save" type="submit" value="Save"> Save</button>
+        </div>
+
+
+    </div>
+</div>
+
+<script crossorigin="anonymous"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.9/ace.min.js"></script>
+<script crossorigin="anonymous"
+        integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO"
+        src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="/lib/rga.js"></script>
+<script src="/src/pages/markdown.js"></script>
+<script src="/src/pages/socketIO.js" type="module"></script>
+<script src="/src/components/AsideWorkspace.js"></script>
+<script src="/src/pages/workspace.js"></script>
+
+</body>
+</html>

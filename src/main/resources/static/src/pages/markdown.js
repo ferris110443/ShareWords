@@ -1,4 +1,3 @@
-
 const roomId = new URLSearchParams(window.location.search).get('roomId') || 'general';
 const title = "title need modify";
 let editor = ace.edit("editor");
@@ -7,15 +6,13 @@ let debounceTimeout = 3000;
 let debouncedSaveData = debounce(saveDataToServer, debounceTimeout);
 
 
-
 // =================== Load Markdown Text ===================
-editor.getSession().on('change', function() {
+editor.getSession().on('change', function () {
     updatePreview();
     let currentContent = editor.getValue();
     // console.log("Current Content: " + currentContent);
-    debouncedSaveData(currentContent,title,roomId);
+    debouncedSaveData(currentContent, title, roomId);
 });
-
 
 
 function updatePreview() {
@@ -25,11 +22,12 @@ function updatePreview() {
     // console.log(htmlContent);
     document.getElementById("preview").innerHTML = htmlContent; // Display the HTML in the preview div
 }
+
 updatePreview();
 
 function debounce(func, timeout) {
     let timer;
-    return function(...args) {
+    return function (...args) {
         const context = this;
         clearTimeout(timer);
         timer = setTimeout(() => {
@@ -38,20 +36,20 @@ function debounce(func, timeout) {
     };
 }
 
-async function saveDataToServer(data,title,roomId) {
-    const response = await fetch('/api/1.0/markdown/saveMarkdownText', {
+async function saveDataToServer(data, title, roomId) {
+    const response = await fetch('/api/1.0/markdown/markdownText', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({markdownText: data,title: title,roomId: roomId})
+        body: JSON.stringify({markdownText: data, title: title, roomId: roomId})
     });
     console.log(response);
 }
 
 
 // =================== Image Upload in markdown ===================
-document.getElementById('editor').addEventListener('paste', function(event) {
+document.getElementById('editor').addEventListener('paste', function (event) {
     let clipboardData = event.clipboardData || window.clipboardData;
     if (clipboardData && clipboardData.items) { //clipboardData.items is a list of all the items that were copied (text,image, etc.
         for (let i = 0; i < clipboardData.items.length; i++) {
@@ -61,7 +59,7 @@ document.getElementById('editor').addEventListener('paste', function(event) {
             if (item.type.indexOf('image') === 0) {  // Check if the item is an image
                 let blob = item.getAsFile();
                 let reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     // console.log('File content: ', e.target.result);
                     uploadImage(e.target.result).then(url => {
                         insertImageMarkdown(url);
