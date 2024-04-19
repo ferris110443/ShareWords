@@ -38,26 +38,24 @@ public class FileContentServiceImp implements FileContentService {
     @Value("${project.scheme}")
     private String scheme;
 
+
     @Override
     public void saveFileContent(MarkdownForm markdownForm) {
-//        System.out.println("markdownForm.getTitle() : " + markdownForm.getTitle());
-//        System.out.println(queryWorkspaceIdFromWorkspaceName(markdownForm.getTitle()));
-
         FileContentModel fileContentModel = new FileContentModel();
-        fileContentModel.setWorkspaceId(1);
+        fileContentModel.setWorkspaceId(queryWorkspaceIdFromWorkspaceName(markdownForm));
         fileContentModel.setFileTitle(markdownForm.getTitle());
         fileContentModel.setContent(markdownForm.getMarkdownText());
         fileContentModel.setFileURL("http://localhost:8080/api/1.0/markdown/getMarkdownText");
         fileContentRepository.save(fileContentModel);
     }
 
-    public long queryWorkspaceIdFromWorkspaceName(String workspaceName) {
+    public long queryWorkspaceIdFromWorkspaceName(MarkdownForm markdownForm) {
 
-        Long id = workspaceRepository.findIdByWorkspaceName(workspaceName);
+        Long id = workspaceRepository.findIdByWorkspaceName(markdownForm.getRoomId());
         if (id != null) {
             return id;
         } else {
-            throw new EntityNotFoundException("Workspace not found with name: " + workspaceName);
+            throw new EntityNotFoundException("Workspace not found with name: " + markdownForm.getTitle());
         }
     }
 

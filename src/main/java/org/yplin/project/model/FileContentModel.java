@@ -27,6 +27,9 @@ public class FileContentModel {
     @Column(name = "file_URL", nullable = false)
     private String fileURL;
 
+    @Column(name = "file_id", nullable = false)
+    private String fileId;
+
 
     @Override
     public String toString() {

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.yplin.project.configuration.JwtTokenUtil;
 import org.yplin.project.data.form.CreateWorkspaceForm;
+import org.yplin.project.service.FileContentService;
 import org.yplin.project.service.WorkspaceService;
 
 import java.util.HashMap;
@@ -21,13 +22,19 @@ public class WorkspaceRestController {
     @Autowired
     WorkspaceService workspaceService;
     @Autowired
+    FileContentService fileContentService;
+
+    @Autowired
     JwtTokenUtil jwtTokenUtil;
 
     @PostMapping(path = "/createWorkspace")
     public ResponseEntity<?> createWorkspace(@RequestBody CreateWorkspaceForm createWorkspaceForm, @RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
         String creatorEmail = jwtTokenUtil.extractUserEmail(token);
+
+
         workspaceService.createWorkspace(createWorkspaceForm, creatorEmail);
+
         Map<String, Object> response = new HashMap<>();
         response.put("workspaceName", createWorkspaceForm.getWorkspaceName());
         return ResponseEntity.status(HttpStatus.OK).body(response);
