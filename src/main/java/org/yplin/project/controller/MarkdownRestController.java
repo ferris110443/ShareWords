@@ -22,8 +22,9 @@ public class MarkdownRestController {
     FileContentService fileContentService;
 
     @PostMapping("/markdownText")
-    public void saveMarkdownText(@RequestBody MarkdownForm markdownForm) {
-        fileContentService.saveFileContent(markdownForm);
+    public void updateMarkdownContent(@RequestBody MarkdownForm markdownForm) {
+        System.out.println("markdownForm = " + markdownForm);
+        fileContentService.updateFileContent(markdownForm);
 
     }
 

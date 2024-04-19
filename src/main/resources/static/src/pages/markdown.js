@@ -1,4 +1,7 @@
-const roomId = new URLSearchParams(window.location.search).get('roomId') || 'general';
+const params = new URLSearchParams(window.location.search);
+const fileId = params.get('fileId');
+const roomId = params.get('roomId') || 'general';
+
 
 let editor = ace.edit("editor");
 
@@ -11,9 +14,7 @@ editor.getSession().on('change', function () {
     updatePreview();
     const title = document.getElementById("fileName").value;
     let currentContent = editor.getValue();
-    console.log("Current Content: " + currentContent);
-    console.log("Title: " + title);
-    debouncedSaveData(currentContent, title, roomId);
+    debouncedSaveData(currentContent, fileId, roomId, title);
 });
 updatePreview();
 
@@ -34,13 +35,13 @@ function updatePreview() {
     document.getElementById("preview").innerHTML = htmlContent; // Display the HTML in the preview div
 }
 
-async function saveDataToServer(data, title, roomId) {
+async function saveDataToServer(data, fileId, roomId, title) {
     const response = await fetch('/api/1.0/markdown/markdownText', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({markdownText: data, title: title, roomId: roomId})
+        body: JSON.stringify({markdownText: data, fileId: fileId, roomId: roomId, title: title})
     });
     console.log(response);
 }

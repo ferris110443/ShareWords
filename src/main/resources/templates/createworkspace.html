@@ -35,6 +35,12 @@
                     <div class="form-text" id="workspaceDescriptionHelp">Please enter the description of the workspace
                     </div>
                 </div>
+                <div class="mb-3">
+                    <label class="form-label" for="fileName">File Name</label>
+                    <input aria-describedby="fileNameHelp" class="form-control" id="fileName" name="fileName"
+                           type="text">
+                    <div class="form-text" id="fileNameHelp">Please enter the file name</div>
+                </div>
                 <button class="btn btn-primary create-workspace-btn" type="submit">Create workspace</button>
             </form>
         </div>
@@ -76,7 +82,7 @@
             let result = await response.json();
             if (response.ok) {
                 alert('Workspace created successfully');
-                window.location.href = '/admin/workspace?roomId=' + result.workspaceName;
+                window.location.href = '/admin/workspace?roomId=' + result.workspaceName + "&fileId=" + result.fileId;
             } else {
                 alert('Workspace creation failed');
             }

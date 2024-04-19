@@ -7,4 +7,5 @@ public class MarkdownForm {
     private String markdownText;
     private String title;
     private String roomId;
+    private String fileId;
 }

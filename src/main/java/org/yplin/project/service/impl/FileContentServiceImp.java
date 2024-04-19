@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.yplin.project.data.form.CreateFileForm;
 import org.yplin.project.data.form.ImageDataForm;
 import org.yplin.project.data.form.MarkdownForm;
 import org.yplin.project.model.FileContentModel;
@@ -40,22 +41,39 @@ public class FileContentServiceImp implements FileContentService {
 
 
     @Override
-    public void saveFileContent(MarkdownForm markdownForm) {
+    public void updateFileContent(MarkdownForm markdownForm) {
+        long workspaceId = queryWorkspaceIdFromWorkspaceName(markdownForm.getRoomId());
+
+        String fileId = markdownForm.getFileId();
+        String content = markdownForm.getMarkdownText();
+        String fileTitle = markdownForm.getTitle();
+        String fileURL = "http://localhost:8080/markdownfiles/" + markdownForm.getFileId();
+
+        fileContentRepository.updateFileContent(fileId, content, fileTitle, fileURL);
+    }
+
+
+    @Override
+    public void createFileContent(CreateFileForm createFileForm) {
         FileContentModel fileContentModel = new FileContentModel();
-        fileContentModel.setWorkspaceId(queryWorkspaceIdFromWorkspaceName(markdownForm));
-        fileContentModel.setFileTitle(markdownForm.getTitle());
-        fileContentModel.setContent(markdownForm.getMarkdownText());
-        fileContentModel.setFileURL("http://localhost:8080/api/1.0/markdown/getMarkdownText");
+
+        fileContentModel.setWorkspaceId(createFileForm.getWorkspaceId());
+        fileContentModel.setFileTitle(createFileForm.getFileName());
+        fileContentModel.setContent("");
+        fileContentModel.setFileURL("http://localhost:8080/markdownfiles/" + createFileForm.getFileId());
+        fileContentModel.setFileId(createFileForm.getFileId());
+
         fileContentRepository.save(fileContentModel);
     }
 
-    public long queryWorkspaceIdFromWorkspaceName(MarkdownForm markdownForm) {
 
-        Long id = workspaceRepository.findIdByWorkspaceName(markdownForm.getRoomId());
+    public long queryWorkspaceIdFromWorkspaceName(String workspaceName) {
+
+        Long id = workspaceRepository.findIdByWorkspaceName(workspaceName);
         if (id != null) {
             return id;
         } else {
-            throw new EntityNotFoundException("Workspace not found with name: " + markdownForm.getTitle());
+            throw new EntityNotFoundException("Workspace not found with name: " + workspaceName);
         }
     }
 
