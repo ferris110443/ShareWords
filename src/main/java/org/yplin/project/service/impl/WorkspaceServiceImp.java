@@ -17,11 +17,11 @@ public class WorkspaceServiceImp implements WorkspaceService {
     WorkspaceRepository workspaceRepository;
 
     @Override
-    public void createWorkspace(CreateWorkspaceForm createWorkspaceForm) {
+    public void createWorkspace(CreateWorkspaceForm createWorkspaceForm, String creatorEmail) {
         WorkspaceModel workspaceModel = new WorkspaceModel();
         workspaceModel.setWorkspaceName(createWorkspaceForm.getWorkspaceName());
         workspaceModel.setWorkspaceDescription(createWorkspaceForm.getWorkspaceDescription());
-        workspaceModel.setWorkspaceOwner("Test@gmail.com");
+        workspaceModel.setWorkspaceOwner(creatorEmail);
         workspaceModel.setWorkspaceCreatedAt(new Timestamp(System.currentTimeMillis()));
         workspaceRepository.save(workspaceModel);
     }

@@ -1,5 +1,6 @@
 const roomId = new URLSearchParams(window.location.search).get('roomId') || 'general';
-const title = "title need modify";
+// const title = document.getElementById("fileName").innerText;
+const title = document.getElementById("fileName").innerText;
 let editor = ace.edit("editor");
 
 let debounceTimeout = 3000;
@@ -11,6 +12,7 @@ editor.getSession().on('change', function () {
     updatePreview();
     let currentContent = editor.getValue();
     // console.log("Current Content: " + currentContent);
+    // console.log("Title: " + title);
     debouncedSaveData(currentContent, title, roomId);
 });
 
@@ -18,8 +20,6 @@ editor.getSession().on('change', function () {
 function updatePreview() {
     let markdownText = editor.getValue(); // Get the text from Ace Editor
     let htmlContent = marked.parse(markdownText); // Parse markdown to HTML
-    // console.log(markdownText);
-    // console.log(htmlContent);
     document.getElementById("preview").innerHTML = htmlContent; // Display the HTML in the preview div
 }
 

@@ -19,7 +19,7 @@ public class FileContentModel {
     private int workspaceId;
 
     @Column(name = "file_title", nullable = false)
-    private String fileTitle = "test";
+    private String fileTitle;
 
     @Column(name = "content", columnDefinition = "TEXT")
     private String content;

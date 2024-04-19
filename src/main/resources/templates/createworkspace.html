@@ -20,7 +20,7 @@
     <div class=" create-workspace-zone">
         <h1 class="create-workspace-title">Create Workspace</h1>
         <div class="create-workspace-form">
-            <form action="/api/1.0/workspace/createWorkspace" method="POST">
+            <form>
                 <div class="mb-3">
                     <label class="form-label" for="workspaceName">Workspace Name</label>
                     <input aria-describedby="workspaceNameHelp" class="form-control" id="workspaceName"
@@ -49,25 +49,41 @@
         integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO"
         src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script src="/src/pages/createWorkspace.js"></script>
 <script src="/src/components/AsideWorkspace.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <script>
+    const accessToken = localStorage.getItem('accessToken');
     $(document).on('submit', 'form', async function (event) {
         event.preventDefault();
+        const formData = new FormData(event.target);
+        const jsonData = {};
+        formData.forEach((value, key) => {
+            jsonData[key] = value;
+        });
         try {
-            let response = await fetch($(this).attr('action'), {
-                body: new FormData(this),
-                method: $(this).attr('method'),
+            let response = await fetch("/api/1.0/workspace/createWorkspace", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
+                },
+
+                body: JSON.stringify(jsonData)
             });
+            console.log(localStorage.getItem('accessToken'))
+            console.log(JSON.stringify(jsonData))
             let result = await response.json();
-            console.log(result);
+            if (response.ok) {
+                alert('Workspace created successfully');
+                window.location.href = '/admin/workspace?roomId=' + result.workspaceName;
+            } else {
+                alert('Workspace creation failed');
+            }
         } catch (e) {
             console.error(e);
         }
     });
-
 
 </script>
 </body>

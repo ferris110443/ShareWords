@@ -36,7 +36,7 @@ public class FileContentServiceImp implements FileContentService {
     public void saveFileContent(MarkdownForm markdownText) {
         FileContentModel fileContentModel = new FileContentModel();
         fileContentModel.setWorkspaceId(1);
-        fileContentModel.setFileTitle("test");
+        fileContentModel.setFileTitle(markdownText.getTitle());
         fileContentModel.setContent(markdownText.getMarkdownText());
         fileContentModel.setFileURL("http://localhost:8080/api/1.0/markdown/getMarkdownText");
         fileContentRepository.save(fileContentModel);
