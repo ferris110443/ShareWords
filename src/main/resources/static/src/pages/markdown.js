@@ -1,6 +1,5 @@
 const roomId = new URLSearchParams(window.location.search).get('roomId') || 'general';
-// const title = document.getElementById("fileName").innerText;
-const title = document.getElementById("fileName").innerText;
+
 let editor = ace.edit("editor");
 
 let debounceTimeout = 3000;
@@ -10,30 +9,29 @@ let debouncedSaveData = debounce(saveDataToServer, debounceTimeout);
 // =================== Load Markdown Text ===================
 editor.getSession().on('change', function () {
     updatePreview();
+    const title = document.getElementById("fileName").value;
     let currentContent = editor.getValue();
-    // console.log("Current Content: " + currentContent);
-    // console.log("Title: " + title);
+    console.log("Current Content: " + currentContent);
+    console.log("Title: " + title);
     debouncedSaveData(currentContent, title, roomId);
 });
-
-
-function updatePreview() {
-    let markdownText = editor.getValue(); // Get the text from Ace Editor
-    let htmlContent = marked.parse(markdownText); // Parse markdown to HTML
-    document.getElementById("preview").innerHTML = htmlContent; // Display the HTML in the preview div
-}
-
 updatePreview();
 
 function debounce(func, timeout) {
     let timer;
     return function (...args) {
-        const context = this;
-        clearTimeout(timer);
+        const context = this; //global window object
+        clearTimeout(timer); // Clear the previous timer
         timer = setTimeout(() => {
             func.apply(context, args);
         }, timeout);
     };
+}
+
+function updatePreview() {
+    let markdownText = editor.getValue(); // Get the text from Ace Editor
+    let htmlContent = marked.parse(markdownText); // Parse markdown to HTML
+    document.getElementById("preview").innerHTML = htmlContent; // Display the HTML in the preview div
 }
 
 async function saveDataToServer(data, title, roomId) {

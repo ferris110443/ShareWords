@@ -27,7 +27,6 @@ public class WorkspaceRestController {
     public ResponseEntity<?> createWorkspace(@RequestBody CreateWorkspaceForm createWorkspaceForm, @RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
         String creatorEmail = jwtTokenUtil.extractUserEmail(token);
-
         workspaceService.createWorkspace(createWorkspaceForm, creatorEmail);
         Map<String, Object> response = new HashMap<>();
         response.put("workspaceName", createWorkspaceForm.getWorkspaceName());

@@ -13,10 +13,10 @@ public class FileContentModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(name = "workspace_id", nullable = false)
-    private int workspaceId;
+    private long workspaceId;
 
     @Column(name = "file_title", nullable = false)
     private String fileTitle;
