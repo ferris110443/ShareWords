@@ -11,23 +11,17 @@ const MAX_REPLICA_ID_BITS = 16;
 function RGA(id) {
     this.id = id
     this.left = {timestamp: 0, removed: false, chr: ""}
-    //   The left sentinel node acts as a fixed starting point in the linked list.
-    //   It's always present and never removed, helping to manage the list structure efficiently.
     this.index = new Map([[this.left.timestamp, this.left]])
-    //   The index is a Map object that stores the nodes of the RGA.
-    //   It maps the timestamp of a node to the node itself.
     this.timestamp = null
     this.subscribers = [] // array to store the callback functions associated with the subscribers!!!!
     this._nextTimestamp = id;
 }
-
 
 // turn the RGA into an JS array
 // linked list starting from the left sentinel node of RGA instance
 RGA.toArray = function (rga) {
     let ary = [];
     let curr = rga.left;
-
     while (curr) {
         ary.push(curr)
         curr = curr.next
@@ -44,12 +38,10 @@ RGA.prototype = { // define the RGA prototype object
         this.subscribers.push(callback)
     } //add a callback function to the subscribers
 
-
     //Receives an operation and applies it to the RGA.
     , receive: function (op) {
         return this[op.type].call(this, op)
     }
-
 
     // Sends an operation to all subscribers and applies it locally.
     , downstream: function (op) {
@@ -62,7 +54,6 @@ RGA.prototype = { // define the RGA prototype object
         }
         return node
     }
-
     // Private
     , requestHistory: function () {
         this.subscribers.forEach(callback => {
@@ -103,12 +94,8 @@ RGA.prototype = { // define the RGA prototype object
 
     , genTimestamp: function () {
         this._nextTimestamp = Math.max(this._nextTimestamp, new Date().getTime()) - 1713371800000;
-        // this._nextTimestamp += (1 << MAX_REPLICA_ID_BITS);
-        // console.log(Math.max(this._nextTimestamp, new Date().getTime()))
-        // console.log(Math.max("this._nextTimestamp"+this._nextTimestamp));
         return this._nextTimestamp;
     }
-
 
     , add: function (op) {
         if (this.index.get(op.t)) {

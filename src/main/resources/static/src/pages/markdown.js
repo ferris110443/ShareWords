@@ -1,22 +1,64 @@
 const params = new URLSearchParams(window.location.search);
 const fileId = params.get('fileId');
 const roomId = params.get('roomId') || 'general';
-
-
 let editor = ace.edit("editor");
-
 let debounceTimeout = 3000;
-let debouncedSaveData = debounce(saveDataToServer, debounceTimeout);
+let fileList = '';
 
 
 // =================== Load Markdown Text ===================
-editor.getSession().on('change', function () {
-    updatePreview();
-    const title = document.getElementById("fileName").value;
-    let currentContent = editor.getValue();
-    debouncedSaveData(currentContent, fileId, roomId, title);
+document.addEventListener('DOMContentLoaded', function () {
+    fetchCurrentWorkspaceFiles(roomId, fileId)
+    // fetchFileContentAndRenderMarkdown(roomId, fileId)
 });
-updatePreview();
+
+async function fetchCurrentWorkspaceFiles(roomId, fileId) {
+    const response = await fetch(`/api/1.0/markdown/workspaceFiles?roomId=${roomId}&fileId=${fileId}`, {
+        method: 'GET',
+    });
+    const data = await response.json();
+    data.data.forEach(file => {
+        fileList += `
+        <div id="${file.fileId}">
+            ${file.fileTitle}
+            <button class="edit" data-fileid="${file.fileId}">Edit</button>
+            <button class="delete" data-fileid="${file.fileId}">Delete</button>
+        </div>
+        `
+    });
+
+    $("#FileList").html(fileList);
+
+}
+
+// async function fetchFileContentAndRenderMarkdown(roomId, fileId) {
+//     const response = await fetch(`/api/1.0/markdown/markdown?roomId=${roomId}&fileId=${fileId}`, {
+//         method: 'GET',
+//     });
+//     const data = await response.json();
+//     console.log(data.data);
+//     if (data.data) {
+//         currentContent = data.data.content;
+//         editor.setValue(data.data.content, 1); // 1 is the starting position cursor
+//         updatePreview();
+//     }
+//
+// }
+
+
+// =================== Load Markdown Text ===================
+
+let debouncedSaveData = debounce(saveDataToServer, debounceTimeout);
+
+editor.getSession().on('change', function () {
+    let currentContent = editor.getValue();
+    let title = document.getElementById("fileName").value;
+    console.log('currentContent', currentContent);
+    console.log('title', title);
+    debouncedSaveData(currentContent, fileId, roomId, title);
+    updatePreview();
+});
+
 
 function debounce(func, timeout) {
     let timer;
@@ -35,13 +77,13 @@ function updatePreview() {
     document.getElementById("preview").innerHTML = htmlContent; // Display the HTML in the preview div
 }
 
-async function saveDataToServer(data, fileId, roomId, title) {
-    const response = await fetch('/api/1.0/markdown/markdownText', {
+async function saveDataToServer(currentContent, fileId, roomId, title) {
+    const response = await fetch('/api/1.0/markdown/markdown', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({markdownText: data, fileId: fileId, roomId: roomId, title: title})
+        body: JSON.stringify({markdownText: currentContent, fileId: fileId, roomId: roomId, title: title})
     });
     console.log(response);
 }

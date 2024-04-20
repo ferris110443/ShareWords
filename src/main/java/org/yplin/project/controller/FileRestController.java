@@ -14,13 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.yplin.project.data.form.ImageDataForm;
 import org.yplin.project.service.FileContentService;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -33,28 +28,26 @@ public class FileRestController {
     FileContentService fileContentService;
 
     @PostMapping(path = "/Image", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String,String>> uploadImage(@RequestBody ImageDataForm imageDataForm) {
+    public ResponseEntity<Map<String, String>> uploadImage(@RequestBody ImageDataForm imageDataForm) {
         String imageURL = fileContentService.saveImageContent(imageDataForm);
-        Map<String,String> response = new HashMap<>();
+        Map<String, String> response = new HashMap<>();
         response.put("imageURL", imageURL);
         return ResponseEntity.ok(response);
     }
 
 
-    @PostMapping("/File")
-    public void uploadFile() {
+//    @PostMapping("/File")
+//    public void uploadFile() {
+//
+//    }
 
-    }
-
-    public void downloadFile() {
-
-    }
-
-    public void deleteFile() {
-
-    }
-
-
+//    public void downloadFile() {
+//
+//    }
+//
+//    public void deleteFile() {
+//
+//    }
 
 
 }

@@ -14,11 +14,13 @@ import org.yplin.project.model.FileContentModel;
 import org.yplin.project.repository.FileContentRepository;
 import org.yplin.project.repository.WorkspaceRepository;
 import org.yplin.project.service.FileContentService;
+import org.yplin.project.service.WorkspaceFileContentProjection;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Base64;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -110,5 +112,14 @@ public class FileContentServiceImp implements FileContentService {
         }
     }
 
+
+    public List<WorkspaceFileContentProjection> getWorkspaceFilesContent(String roomId) {
+        return fileContentRepository.getWorkspaceFilesContent(roomId);
+    }
+
+    @Override
+    public FileContentModel getFileContent(String fileId) {
+        return fileContentRepository.findByFileId(fileId);
+    }
 
 }

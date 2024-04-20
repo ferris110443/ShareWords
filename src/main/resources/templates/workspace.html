@@ -25,9 +25,11 @@
         <div class="zone content-section" id="file-zone">
             <div>Files</div>
             <div id="FileList">
-                <div id="file1">File1</div>
-                <div id="file2">File2</div>
-                <div id="file3">File3</div>
+                <div id="file1">
+                    File1
+                    <button class="edit" data-fileid="file1">Edit</button>
+                    <button class="delete" data-fileid="file1">Delete</button>
+                </div>
             </div>
             <div id="upload-download">
                 <button class="upload" type="submit" value="Upload"> Upload</button>
@@ -85,7 +87,6 @@
 <script src="/src/pages/markdown.js"></script>
 <script src="/src/pages/socketIO.js" type="module"></script>
 <script src="/src/components/AsideWorkspace.js"></script>
-<script src="/src/pages/workspace.js"></script>
 
 </body>
 </html>
