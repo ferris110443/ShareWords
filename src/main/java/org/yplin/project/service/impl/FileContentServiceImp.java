@@ -11,6 +11,7 @@ import org.yplin.project.data.form.CreateFileForm;
 import org.yplin.project.data.form.ImageDataForm;
 import org.yplin.project.data.form.MarkdownForm;
 import org.yplin.project.model.FileContentModel;
+import org.yplin.project.repository.FileContentBatchInsertRepository;
 import org.yplin.project.repository.FileContentRepository;
 import org.yplin.project.repository.WorkspaceRepository;
 import org.yplin.project.service.FileContentService;
@@ -32,6 +33,9 @@ public class FileContentServiceImp implements FileContentService {
     FileContentRepository fileContentRepository;
 
     @Autowired
+    FileContentBatchInsertRepository fileContentBatchInsertRepository;
+
+    @Autowired
     WorkspaceRepository workspaceRepository;
 
     @Value("${project.domain}")
@@ -44,14 +48,8 @@ public class FileContentServiceImp implements FileContentService {
 
     @Override
     public void updateFileContent(MarkdownForm markdownForm) {
-        long workspaceId = queryWorkspaceIdFromWorkspaceName(markdownForm.getRoomId());
-
-        String fileId = markdownForm.getFileId();
-        String content = markdownForm.getMarkdownText();
-        String fileTitle = markdownForm.getTitle();
-        String fileURL = "http://localhost:8080/markdownfiles/" + markdownForm.getFileId();
-
-        fileContentRepository.updateFileContent(fileId, content, fileTitle, fileURL);
+        List<MarkdownForm> markdownForms = List.of(markdownForm);
+        fileContentBatchInsertRepository.updateFileContentInBatch(markdownForms);
     }
 
 

@@ -11,6 +11,7 @@ import org.yplin.project.data.form.MarkdownForm;
 import org.yplin.project.model.FileContentModel;
 import org.yplin.project.service.FileContentService;
 import org.yplin.project.service.WorkspaceFileContentProjection;
+import org.yplin.project.service.impl.MarkdownStorageService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,10 +26,12 @@ public class MarkdownRestController {
     @Autowired
     FileContentService fileContentService;
 
+    @Autowired
+    MarkdownStorageService markdownStorageService;
+
     @PostMapping("/markdown")
     public void updateMarkdownContent(@RequestBody MarkdownForm markdownForm) {
-        System.out.println("markdownForm = " + markdownForm);
-        fileContentService.updateFileContent(markdownForm);
+        markdownStorageService.addMarkdownForm(markdownForm);
     }
 
     @GetMapping("/markdown")
