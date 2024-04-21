@@ -12,7 +12,6 @@ import java.util.List;
 
 @Repository
 public class FileContentBatchInsertRepository {
-    final int batchSize = 10; //
     String sql = "UPDATE file_content SET content = ?, file_title = ? WHERE file_id = ?";
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -29,7 +28,7 @@ public class FileContentBatchInsertRepository {
 
             @Override
             public int getBatchSize() {
-                return markdownForms.size();  // Or a predefined batchSize
+                return markdownForms.size();
             }
         });
     }

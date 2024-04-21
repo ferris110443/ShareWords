@@ -2,14 +2,14 @@ const params = new URLSearchParams(window.location.search);
 const fileId = params.get('fileId');
 const roomId = params.get('roomId') || 'general';
 let editor = ace.edit("editor");
-let debounceTimeout = 3000;
+let debounceTimeout = 10000;
 let fileList = '';
 
 
 // =================== Load Markdown Text ===================
 document.addEventListener('DOMContentLoaded', function () {
     fetchCurrentWorkspaceFiles(roomId, fileId)
-    // fetchFileContentAndRenderMarkdown(roomId, fileId)
+    fetchFileContentAndRenderMarkdown(roomId, fileId)
 });
 
 async function fetchCurrentWorkspaceFiles(roomId, fileId) {
@@ -31,19 +31,19 @@ async function fetchCurrentWorkspaceFiles(roomId, fileId) {
 
 }
 
-// async function fetchFileContentAndRenderMarkdown(roomId, fileId) {
-//     const response = await fetch(`/api/1.0/markdown/markdown?roomId=${roomId}&fileId=${fileId}`, {
-//         method: 'GET',
-//     });
-//     const data = await response.json();
-//     console.log(data.data);
-//     if (data.data) {
-//         currentContent = data.data.content;
-//         editor.setValue(data.data.content, 1); // 1 is the starting position cursor
-//         updatePreview();
-//     }
-//
-// }
+async function fetchFileContentAndRenderMarkdown(roomId, fileId) {
+    const response = await fetch(`/api/1.0/markdown/markdown?roomId=${roomId}&fileId=${fileId}`, {
+        method: 'GET',
+    });
+    const data = await response.json();
+    console.log(data.data);
+    if (data.data) {
+        currentContent = data.data.content;
+        editor.setValue(data.data.content, 1); // 1 is the starting position cursor
+        updatePreview();
+    }
+
+}
 
 
 // =================== Load Markdown Text ===================
