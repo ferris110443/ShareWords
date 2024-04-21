@@ -13,4 +13,5 @@ public class MessageDataForm {
     private long sender;
     private List<MessageDataForm> ops;
     private String roomId;
+    private String fileId;
 }

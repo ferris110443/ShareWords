@@ -12,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.yplin.project.data.form.InitEventDataForm;
 import org.yplin.project.data.form.MessageDataForm;
-import org.yplin.project.service.impl.FileContentServiceImp;
-
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -43,9 +41,10 @@ public class SocketIOService {
     private ConnectListener onConnected() {
         return client -> {
             String roomId = client.getHandshakeData().getSingleUrlParam("roomId");
-            if (roomId != null) {
-                client.joinRoom(roomId);
-                logger.info("Client connected to room: " + roomId);
+            String fileId = client.getHandshakeData().getSingleUrlParam("fileId");
+            if (roomId != null && fileId != null) {
+                client.joinRoom(roomId + fileId);
+                logger.info("Client connected to room: " + roomId + "with fileId: " + fileId);
             }
 
             int userId = nextUserId.getAndIncrement();
@@ -68,8 +67,8 @@ public class SocketIOService {
                 @Override
                 public void run() {
                     logger.info("Message received in room: " + data.getRoomId() + " with content: " + data);
-                    server.getRoomOperations(data.getRoomId()).sendEvent("message", data);
-                 }
+                    server.getRoomOperations(data.getRoomId() + data.getFileId()).sendEvent("message", data);
+                }
             }, delayMilliseconds);
         };
     }
