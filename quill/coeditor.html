@@ -39,9 +39,12 @@
 <div id="preview-text"></div>
 
 <script>
-    // function redirectToPage() {
-    //     window.location.href = `http://localhost:8080/admin/workspace?roomName=${localStorage.getItem('roomName')}`;
-    // }
+    const queryParams = new URLSearchParams(window.location.search);
+    const roomId = queryParams.get('roomId');
+
+    function redirectToPage() {
+        window.location.href = `http://localhost:8080/admin/workspace?roomId=${roomId}`;
+    }
 </script>
 
 </body>

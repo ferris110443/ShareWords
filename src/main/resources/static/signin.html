@@ -44,6 +44,7 @@
                 const accessToken = data.data.access_token;
                 localStorage.setItem('accessToken', accessToken);
                 alert('SignIn successful');
+                window.location.href = 'http://localhost:8080/admin/home';
             } else {
                 const errorData = await response.json();
                 console.log(errorData)

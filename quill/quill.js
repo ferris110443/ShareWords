@@ -39,6 +39,35 @@ window.addEventListener('load', () => {
         theme: 'snow' // or 'bubble'
     })
 
+    // retrieve the markdown content from the server and render it in the editor for the first time
+    fetchFileContentAndRenderMarkdown(roomId, fileId);
+
+    async function fetchFileContentAndRenderMarkdown(roomId, fileId) {
+        try {
+            const response = await fetch(`http://localhost:8080/api/1.0/markdown/markdown?roomId=${encodeURIComponent(roomId)}&fileId=${encodeURIComponent(fileId)}`, {
+                method: 'GET',
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            if (data.data && data.data.content) {
+                ydoc.transact(() => {
+                    // Insert content if the document is empty
+                    if (ytext.toString() === '') {
+                        ytext.insert(0, data.data.content);
+                    }
+                });
+                updatePreview(data.data);
+            } else {
+                console.log('No content available to update');
+            }
+        } catch (error) {
+            console.error('Failed to fetch markdown content:', error);
+            // Optionally, update the UI to show an error message
+        }
+    }
+
 
     editor.root.addEventListener('paste', function (e) {
 
@@ -80,7 +109,7 @@ window.addEventListener('load', () => {
             }
         }
     });
-    let debounceTimeout = 1000;
+    let debounceTimeout = 500;
     let debouncedSaveData = debounce(saveText, debounceTimeout);
 
     editor.on('text-change', () => {
@@ -91,26 +120,6 @@ window.addEventListener('load', () => {
 
 
     });
-
-
-    // retrieve the markdown content from the server and render it in the editor for the first time
-    fetchFileContentAndRenderMarkdown(roomId, fileId);
-
-    async function fetchFileContentAndRenderMarkdown(roomId, fileId) {
-        const response = await fetch(`http://localhost:8080/api/1.0/markdown/markdown?roomId=${roomId}&fileId=${fileId}`, {
-            method: 'GET',
-        });
-        const data = await response.json();
-        console.log(data.data);
-        if (data.data) {
-            ydoc.transact(() => {
-                if (ytext.toString() === '') { // Check if the document is empty
-                    ytext.insert(0, data.data.content);
-                }
-            });
-            updatePreview(data.data);
-        }
-    }
 
 
     const binding = new QuillBinding(ytext, editor, provider.awareness)
