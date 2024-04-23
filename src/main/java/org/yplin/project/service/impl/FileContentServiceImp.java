@@ -54,10 +54,12 @@ public class FileContentServiceImp implements FileContentService {
 
 
     @Override
-    public void createFileContent(CreateFileForm createFileForm) {
+    public void createFile(CreateFileForm createFileForm) {
         FileContentModel fileContentModel = new FileContentModel();
 
-        fileContentModel.setWorkspaceId(createFileForm.getWorkspaceId());
+        long workspaceId = queryWorkspaceIdFromWorkspaceName(createFileForm.getRoomId());
+        System.out.println(workspaceId);
+        fileContentModel.setWorkspaceId(workspaceId);
         fileContentModel.setFileTitle(createFileForm.getFileName());
         fileContentModel.setContent("");
         fileContentModel.setFileURL("http://localhost:8080/markdownfiles/" + createFileForm.getFileId());

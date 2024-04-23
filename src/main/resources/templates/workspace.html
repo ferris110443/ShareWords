@@ -15,62 +15,46 @@
     <div id="sidebar-placeholder"></div>
 
     <div class="mid-workspace ">
-        <div class="zone content-section" id="room-zone">
-            <div>In Room</div>
-            <div id="friend-zone">
-                <div id="online-zone">Online</div>
-                <div id="offline-zone">Offline</div>
-            </div>
-        </div>
-        <div class="zone content-section" id="file-zone">
-            <div>Files</div>
+        <div class="content-section" id="file-zone">
+            <h2>Existed Files</h2>
             <div id="FileList">
-                <div id="file1">
-                    File1
-                    <button class="edit" data-fileid="file1">Edit</button>
-                    <button class="delete" data-fileid="file1">Delete</button>
+                <div class="file-entry" id="file1">
+                    <p>FileName : Test1</p>
+                    <p>description : </p>
+                    <button aria-label="Edit File 1" class="edit-btn" data-fileid="file1">Edit</button>
+                    <button aria-label="Delete File 1" class="delete-btn" data-fileid="file1">Delete</button>
+                </div>
+                <div class="file-entry" id="file2">
+                    <p>FileName : Test2</p>
+                    <p>description : </p>
+                    <button aria-label="Edit File 2" class="edit-btn" data-fileid="file2">Edit</button>
+                    <button aria-label="Delete File 2" class="delete-btn" data-fileid="file2">Delete</button>
                 </div>
             </div>
-            <div id="upload-download">
-                <button class="upload" type="submit" value="Upload"> Upload</button>
-                <button class="download" type="submit" value="Download"> Download</button>
-            </div>
         </div>
-        <div class="zone content-section" id="setting-zone">
-            <div>Setting</div>
-            <div id="setting">
-                <div>Font size</div>
-                <div>Theme</div>
-            </div>
-        </div>
-
 
     </div>
 
-    <div style="background-color: rgba(225, 225, 255, 0.7); width: 5px; display: block;"></div>
-
-    <div class=" right-workspace co-editor-workspace">
-        <div>
-            <label for="fileName">FileName</label>
-            <input id="fileName" name="fileName" type="text"><br>
-
-            <label for="attendees">Attendees</label>
-            <input id="attendees" name="attendees" type="text">
+    <div class="right-workspace">
+        <h2>Creat New File</h2>
+        <div id="create-new-file">
+            <form id="file-creation-form">
+                <div>
+                    <label for="file-name-input">File Name</label>
+                    <input aria-label="file-name-input" id="file-name-input" name="file" placeholder="Enter file name"
+                           type="text">
+                </div>
+                <div>
+                    <label for="file-description">File description</label>
+                    <textarea aria-label="file-description" id="file-description" name="file-description"
+                              placeholder="Enter file description"></textarea>
+                </div>
+                <button class="create-btn" type="submit">Create File</button>
+            </form>
         </div>
-        <div id="editor-container">
-            <div id="editor"></div>
-        </div>
-        <div id="markdown-button">
-            <div id="preview" style="border: 1px solid #ccc; margin-top: 20px; padding: 10px;">
-                Preview will appear here...
-            </div>
-            <button class="preview" type="submit" value="Preview"> Preview</button>
-            <button class="send" type="submit" value="Send to attendees"> Send to attendees</button>
-            <button class="save" type="submit" value="Save"> Save</button>
-        </div>
-
-
     </div>
+
+
 </div>
 
 <script crossorigin="anonymous"
@@ -83,10 +67,10 @@
         integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO"
         src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script src="/lib/rga.js"></script>
-<script src="/src/pages/markdown.js"></script>
-<script src="/src/pages/socketIO.js" type="module"></script>
+<!--<script src="/lib/rga.js"></script>-->
+<!--<script src="/src/pages/markdown.js"></script>-->
+<!--<script src="/src/pages/socketIO.js" type="module"></script>-->
 <script src="/src/components/AsideWorkspace.js"></script>
-
+<script src="/src/pages/workspace.js"></script>
 </body>
 </html>

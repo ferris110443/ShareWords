@@ -6,5 +6,6 @@ import lombok.Data;
 public class CreateFileForm {
     private String fileName;
     private String fileId;
-    private long workspaceId;
+    private String fileDescription;
+    private String roomId;
 }

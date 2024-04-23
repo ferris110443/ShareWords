@@ -14,7 +14,6 @@ import org.yplin.project.service.WorkspaceService;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -29,26 +28,49 @@ public class WorkspaceRestController {
     @Autowired
     JwtTokenUtil jwtTokenUtil;
 
-    @PostMapping(path = "/createWorkspace")
+    @PostMapping(path = "/workspace")
     public ResponseEntity<?> createWorkspace(@RequestBody CreateWorkspaceForm createWorkspaceForm, @RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
         String creatorEmail = jwtTokenUtil.extractUserEmail(token);
-        UUID fileId = UUID.randomUUID();
 
         workspaceService.createWorkspace(createWorkspaceForm, creatorEmail);
 
-        long workspaceId = fileContentService.queryWorkspaceIdFromWorkspaceName(createWorkspaceForm.getWorkspaceName());
-        CreateFileForm createFileForm = new CreateFileForm();
-        createFileForm.setFileName(createWorkspaceForm.getFileName());
-        createFileForm.setFileId(fileId.toString());
-        createFileForm.setWorkspaceId(workspaceId);
-        fileContentService.createFileContent(createFileForm);
-
-
         Map<String, Object> response = new HashMap<>();
         response.put("workspaceName", createWorkspaceForm.getWorkspaceName());
-        response.put("fileId", fileId.toString());
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+
+    @PostMapping(path = "/file")
+    public ResponseEntity<?> createNewFile(@RequestBody CreateFileForm createFileForm, @RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            String token = authorizationHeader.replace("Bearer ", "");
+            String creatorEmail = jwtTokenUtil.extractUserEmail(token);
+
+            // Example validation
+            if (createFileForm.getFileName() == null || createFileForm.getFileName().trim().isEmpty()) {
+                return ResponseEntity
+                        .badRequest()
+                        .body("File name must not be empty");
+            }
+
+            fileContentService.createFile(createFileForm);
+            System.out.println("createFileForm.getFileName() = " + createFileForm.getFileName());
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("fileName", createFileForm.getFileName());
+            response.put("fileDescription", createFileForm.getFileDescription());
+
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)  // Use CREATED status for successful resource creation
+                    .body(response);
+
+        } catch (Exception e) {
+            log.error("An error occurred: " + e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred: " + e.getMessage());
+        }
     }
 
 

@@ -44,12 +44,10 @@ public class MarkdownRestController {
 
 
     @GetMapping("/workspaceFiles")
-    public ResponseEntity<?> getWorkspaceFiles(@RequestParam("roomId") String roomId, @RequestParam("fileId") String fileId) {
-
+    public ResponseEntity<?> getWorkspaceFiles(@RequestParam("roomId") String roomId) {
 
         fileContentService.getWorkspaceFilesContent(roomId);
         System.out.println(fileContentService.getWorkspaceFilesContent(roomId));
-
         Map<String, List<WorkspaceFileContentProjection>> response = new HashMap<>();
         response.put("data", fileContentService.getWorkspaceFilesContent(roomId));
         return ResponseEntity.ok().body(response);

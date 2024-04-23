@@ -6,5 +6,4 @@ import lombok.Data;
 public class CreateWorkspaceForm {
     private String workspaceName;
     private String workspaceDescription;
-    private String fileName;
 }

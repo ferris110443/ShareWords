@@ -11,7 +11,7 @@ public interface FileContentService {
 
     void updateFileContent(MarkdownForm markdownForm);
 
-    void createFileContent(CreateFileForm createFileForm);
+    void createFile(CreateFileForm createFileForm);
 
     String saveImageContent(ImageDataForm imageDataForm);
 
