@@ -39,16 +39,6 @@ window.addEventListener('load', () => {
         theme: 'snow' // or 'bubble'
     })
 
-    // Get the editor's content-editable element
-    const editorContent = editor.root;
-
-// Disable pasting into the editor
-//     editorContent.addEventListener('paste', function (e) {
-//         e.preventDefault();
-//         // Optionally, you can display a message to the user here.
-//         alert('Pasting text is not allowed.');
-//     });
-
 
     editor.root.addEventListener('paste', function (e) {
         // Prevent the default pasting action
@@ -65,11 +55,14 @@ window.addEventListener('load', () => {
                     const reader = new FileReader();
                     reader.onload = function (event) {
                         const base64image = event.target.result;
-                        const markdownImageText = `![Pasted Image](${base64image})`;
-                        const range = editor.getSelection();
-                        if (range) {
-                            editor.insertText(range.index, markdownImageText);
-                        }
+                        uploadImage(base64image).then(url => {
+                            // const markdownImageText = `![Image](${base64image})`;
+                            const markdownImageText = `![Image](${url})`;
+                            const range = editor.getSelection();
+                            if (range) {
+                                editor.insertText(range.index, markdownImageText);
+                            }
+                        });
                     };
                     reader.readAsDataURL(blob);
                     break; // Once an image is found, no need to look further
@@ -164,6 +157,22 @@ function updatePreview(markdownText) {
     document.getElementById("preview-text").innerHTML = htmlContent; // Display the HTML in the preview div
 }
 
+async function uploadImage(data) {
+    try {
+        const response = await fetch('http://localhost:8080/api/1.0/upload/Image', {
+            method: 'POST',
+            body: JSON.stringify({image: data}),
+            headers: {'Content-Type': 'application/json'}
+        });
+        const responseData = await response.json();
+        // console.log("responseData" + JSON.stringify(responseData));
+        return responseData["imageURL"];
+    } catch (error) {
+        console.error("Error uploading image:", error);
+        return null;
+    }
+}
+
 
 //================upload Image ============================
 // document.getElementById('editor').addEventListener('paste', function (event) {
@@ -195,18 +204,4 @@ function updatePreview(markdownText) {
 //     editor.insert(markdownText);
 // }
 //
-// async function uploadImage(data) {
-//     try {
-//         const response = await fetch('api/1.0/upload/Image', {
-//             method: 'POST',
-//             body: JSON.stringify({image: data}),
-//             headers: {'Content-Type': 'application/json'}
-//         });
-//         const responseData = await response.json();
-//         // console.log("responseData" + JSON.stringify(responseData));
-//         return responseData["imageURL"];
-//     } catch (error) {
-//         console.error("Error uploading image:", error);
-//         return null;
-//     }
-// }
+
