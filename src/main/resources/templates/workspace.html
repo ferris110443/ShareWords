@@ -38,7 +38,7 @@
                     <textarea aria-label="file-description" id="file-description" name="file-description"
                               placeholder="Enter file description"></textarea>
                 </div>
-                <button class="create-btn" type="submit">Create File</button>
+                <button class="create-btn btn btn-primary" type="submit">Create File</button>
             </form>
         </div>
     </div>
@@ -84,16 +84,29 @@
             data.data.forEach((file, index) => {
                 html += `
                     <div class="file-entry" id="file${index}">
-                        <p>FileName: ${file.fileTitle}</p>
-                        <p>Description: ${file.fileDescription}</p>
-                        <button aria-label="Edit File ${index}" class="edit-btn" data-fileid="file${index}">Edit</button>
-                        <button aria-label="Delete File ${index}" class="delete-btn" data-fileid="file${index}">Delete</button>
+                        <p>File Name: ${file.fileTitle}</p>
+                        <p>File Description: ${file.fileDescription}</p>
+                        <button aria-label="Edit File ${index}" class="edit-btn btn btn-primary " data-fileid="${file.fileId}">Edit</button>
+                        <button aria-label="Delete File ${index}" class="delete-btn btn btn-danger" data-fileid="${file.fileId}">Delete</button>
                     </div>
                 `;
             });
             document.getElementById("fileList").innerHTML += html;
+            attachEditButtonListeners()
         } else {
-            console.error('Expected an array of files, received:', data.data);
+            console.error('No files in workspace', data.data);
+        }
+
+
+        function attachEditButtonListeners() {
+            const editButtons = document.querySelectorAll('.edit-btn');
+            editButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const fileId = this.getAttribute('data-fileid');
+                    const editUrl = `http://localhost:3000/coeditor.html?roomId=${workspaceName}&fileId=${fileId}`;
+                    window.location.href = editUrl;
+                });
+            });
         }
 
 

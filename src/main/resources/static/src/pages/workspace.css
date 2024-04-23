@@ -76,3 +76,9 @@ aside {
     position: relative;
     top: 80vh;
 }
+
+.file-entry {
+
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
