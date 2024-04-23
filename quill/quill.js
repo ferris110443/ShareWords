@@ -91,6 +91,8 @@ window.addEventListener('load', () => {
 
     editor.on('text-change', () => {
         let markdownText = editor.getText();
+        console.log(markdownText)
+        updatePreview(markdownText);
         saveText(markdownText);
 
         async function saveText(markdownText) {
@@ -111,11 +113,23 @@ window.addEventListener('load', () => {
 
     });
 
-    ydoc.transact(() => {
-        if (ytext.toString() === '') { // Check if the document is empty
-            ytext.insert(0, 'Welcome to the collaborative editor!');
+    fetchFileContentAndRenderMarkdown(roomId, fileId);
+
+    async function fetchFileContentAndRenderMarkdown(roomId, fileId) {
+        const response = await fetch(`http://localhost:8080/api/1.0/markdown/markdown?roomId=${roomId}&fileId=${fileId}`, {
+            method: 'GET',
+        });
+        const data = await response.json();
+        console.log(data.data);
+        if (data.data) {
+            ydoc.transact(() => {
+                if (ytext.toString() === '') { // Check if the document is empty
+                    ytext.insert(0, data.data.content);
+                }
+            });
+            updatePreview(data.data);
         }
-    });
+    }
 
 
     const binding = new QuillBinding(ytext, editor, provider.awareness)
@@ -143,3 +157,12 @@ window.addEventListener('load', () => {
     // @ts-ignore
     window.example = {provider, ydoc, ytext, binding, Y}
 })
+
+
+function updatePreview(markdownText) {
+    console.log("Markdown Text: " + markdownText);
+    let htmlContent = marked.parse(markdownText); // Parse markdown to HTML
+    console.log("HTML Content: " + htmlContent);
+    document.getElementById("preview-text").innerHTML = htmlContent; // Display the HTML in the preview div
+}
+

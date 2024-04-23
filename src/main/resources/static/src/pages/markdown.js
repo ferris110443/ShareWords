@@ -42,7 +42,6 @@
 //         editor.setValue(data.data.content, 1); // 1 is the starting position cursor
 //         updatePreview();
 //     }
-//
 // }
 //
 //

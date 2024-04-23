@@ -19,6 +19,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("api/1.0/markdown")
 public class MarkdownRestController {
     public static final Logger logger = LoggerFactory.getLogger(MarkdownRestController.class);
@@ -30,7 +31,7 @@ public class MarkdownRestController {
     MarkdownStorageService markdownStorageService;
 
     @PostMapping("/markdown")
-    @CrossOrigin(origins = "http://localhost:3000")
+
     public ResponseEntity<?> updateMarkdownContent(@RequestBody MarkdownForm markdownForm) {
         System.out.println("markdownForm : " + markdownForm);
         markdownStorageService.addMarkdownForm(markdownForm);
