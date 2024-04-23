@@ -30,8 +30,13 @@ public class MarkdownRestController {
     MarkdownStorageService markdownStorageService;
 
     @PostMapping("/markdown")
-    public void updateMarkdownContent(@RequestBody MarkdownForm markdownForm) {
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<?> updateMarkdownContent(@RequestBody MarkdownForm markdownForm) {
+        System.out.println("markdownForm : " + markdownForm);
         markdownStorageService.addMarkdownForm(markdownForm);
+        Map<String, MarkdownForm> response = new HashMap<>();
+        response.put("data", markdownForm);
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/markdown")

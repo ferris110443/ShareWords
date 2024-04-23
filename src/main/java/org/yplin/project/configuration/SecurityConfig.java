@@ -14,6 +14,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(cors -> cors.disable()) // Postman are not including a CSRF token in request
                 .csrf(csrf -> csrf.disable()) // Postman are not including a CSRF token in request
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests

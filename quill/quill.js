@@ -8,7 +8,6 @@ import QuillCursors from 'quill-cursors'
 
 Quill.register('modules/cursors', QuillCursors)
 const ydoc = new Y.Doc()
-// const roomName = "testing";
 const params = new URLSearchParams(window.location.search)
 const roomId = params.get('roomId') || 'general'
 const fileId = params.get('fileId') || 'general'
@@ -23,11 +22,7 @@ window.addEventListener('load', () => {
         ydoc
     )
     const ytext = ydoc.getText('quill')
-    const editorContainer = document.createElement('div')
-    editorContainer.setAttribute('id', 'editor')
-    document.body.insertBefore(editorContainer, null)
-
-    const editor = new Quill(editorContainer, {
+    const editor = new Quill('#editor', {
         modules: {
             cursors: true,
             toolbar: false,
@@ -95,8 +90,25 @@ window.addEventListener('load', () => {
 
 
     editor.on('text-change', () => {
-        console.log('Text change!');
-        console.log(editor.getText());
+        let markdownText = editor.getText();
+        saveText(markdownText);
+
+        async function saveText(markdownText) {
+            const response = await fetch(`http://localhost:8080/api/1.0/markdown/markdown`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "markdownText": markdownText,
+                    "roomId": roomId,
+                    "fileId": fileId,
+                })
+            });
+            const data = await response.json();
+            console.log(data);
+        }
+
     });
 
     ydoc.transact(() => {

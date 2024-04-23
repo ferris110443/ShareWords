@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 public class FileContentBatchInsertRepository {
-    String sql = "UPDATE file_content SET content = ?, file_title = ? WHERE file_id = ?";
+    String sql = "UPDATE file_content SET content = ? WHERE file_id = ?";
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -22,8 +22,8 @@ public class FileContentBatchInsertRepository {
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 MarkdownForm markdownForm = markdownForms.get(i);
                 ps.setString(1, markdownForm.getMarkdownText());
-                ps.setString(2, markdownForm.getTitle());
-                ps.setString(3, markdownForm.getFileId());
+//                ps.setString(2, markdownForm.getTitle());
+                ps.setString(2, markdownForm.getFileId());
             }
 
             @Override
