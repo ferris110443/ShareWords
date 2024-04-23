@@ -11,13 +11,16 @@ import org.yplin.project.data.dto.UserWorkspaceDto;
 import org.yplin.project.data.form.SignInForm;
 import org.yplin.project.data.form.SignupForm;
 import org.yplin.project.model.UserModel;
+import org.yplin.project.model.UserOwnWorkspaceDetailsModel;
 import org.yplin.project.model.UserWorkspaceModel;
 import org.yplin.project.repository.WorkspaceRepository;
+import org.yplin.project.repository.user.UserOwnWorkspaceDetailsRepository;
 import org.yplin.project.repository.user.UserRepository;
 import org.yplin.project.repository.user.UserWorkspaceRepository;
 import org.yplin.project.service.UserService;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -32,6 +35,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserWorkspaceRepository userWorkspaceRepository;
+    @Autowired
+    UserOwnWorkspaceDetailsRepository userOwnWorkspaceDetailsRepository;
 
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private @Value("${jwt.signKey}") String jwtSignKey;
@@ -101,5 +106,10 @@ public class UserServiceImpl implements UserService {
 
 
         return null;
+    }
+
+    @Override
+    public List<UserOwnWorkspaceDetailsModel> fetchUserOwnWorkspaceDetails(String userEmail) {
+        return userOwnWorkspaceDetailsRepository.fetchWorkspaceDetailsWithNativeQuery(userEmail);
     }
 }

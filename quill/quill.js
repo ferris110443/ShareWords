@@ -41,7 +41,7 @@ window.addEventListener('load', () => {
 
 
     editor.root.addEventListener('paste', function (e) {
-        // Prevent the default pasting action
+
         e.preventDefault();
 
         // Check for images and get the data URL
@@ -80,32 +80,20 @@ window.addEventListener('load', () => {
             }
         }
     });
-
+    let debounceTimeout = 1000;
+    let debouncedSaveData = debounce(saveText, debounceTimeout);
 
     editor.on('text-change', () => {
         let markdownText = editor.getText();
         console.log(markdownText)
         updatePreview(markdownText);
-        saveText(markdownText);
+        debouncedSaveData(markdownText);
 
-        async function saveText(markdownText) {
-            const response = await fetch(`http://localhost:8080/api/1.0/markdown/markdown`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "markdownText": markdownText,
-                    "roomId": roomId,
-                    "fileId": fileId,
-                })
-            });
-            const data = await response.json();
-            console.log(data);
-        }
 
     });
 
+
+    // retrieve the markdown content from the server and render it in the editor for the first time
     fetchFileContentAndRenderMarkdown(roomId, fileId);
 
     async function fetchFileContentAndRenderMarkdown(roomId, fileId) {
@@ -151,6 +139,33 @@ window.addEventListener('load', () => {
     window.example = {provider, ydoc, ytext, binding, Y}
 })
 
+
+async function saveText(markdownText) {
+    const response = await fetch(`http://localhost:8080/api/1.0/markdown/markdown`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            "markdownText": markdownText,
+            "roomId": roomId,
+            "fileId": fileId,
+        })
+    });
+    const data = await response.json();
+    console.log(data);
+}
+
+function debounce(func, timeout) {
+    let timer;
+    return function (...args) {
+        const context = this; //global window object
+        clearTimeout(timer); // Clear the previous timer
+        timer = setTimeout(() => {
+            func.apply(context, args);
+        }, timeout);
+    };
+}
 
 function updatePreview(markdownText) {
     let htmlContent = marked.parse(markdownText); // Parse markdown to HTML

@@ -47,28 +47,29 @@
 //
 // // =================== Load Markdown Text ===================
 //
-// let debouncedSaveData = debounce(saveDataToServer, debounceTimeout);
-//
-// editor.getSession().on('change', function () {
-//     let currentContent = editor.getValue();
-//     let title = document.getElementById("fileName").value;
-//     console.log('currentContent', currentContent);
-//     console.log('title', title);
-//     debouncedSaveData(currentContent, fileId, roomId, title);
-//     updatePreview();
-// });
-//
-//
-// function debounce(func, timeout) {
-//     let timer;
-//     return function (...args) {
-//         const context = this; //global window object
-//         clearTimeout(timer); // Clear the previous timer
-//         timer = setTimeout(() => {
-//             func.apply(context, args);
-//         }, timeout);
-//     };
-// }
+let debouncedSaveData = debounce(saveDataToServer, debounceTimeout);
+
+editor.getSession().on('change', function () {
+    let currentContent = editor.getValue();
+    let title = document.getElementById("fileName").value;
+    console.log('currentContent', currentContent);
+    console.log('title', title);
+    debouncedSaveData(currentContent, fileId, roomId, title);
+    updatePreview();
+});
+
+
+function debounce(func, timeout) {
+    let timer;
+    return function (...args) {
+        const context = this; //global window object
+        clearTimeout(timer); // Clear the previous timer
+        timer = setTimeout(() => {
+            func.apply(context, args);
+        }, timeout);
+    };
+}
+
 //
 // function updatePreview() {
 //     let markdownText = editor.getValue(); // Get the text from Ace Editor

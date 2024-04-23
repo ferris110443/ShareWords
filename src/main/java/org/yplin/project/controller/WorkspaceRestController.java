@@ -10,7 +10,10 @@ import org.yplin.project.configuration.JwtTokenUtil;
 import org.yplin.project.data.form.CreateFileForm;
 import org.yplin.project.data.form.CreateWorkspaceForm;
 import org.yplin.project.model.FileContentModel;
+import org.yplin.project.model.UserOwnWorkspaceDetailsModel;
+import org.yplin.project.repository.user.UserOwnWorkspaceDetailsRepository;
 import org.yplin.project.service.FileContentService;
+import org.yplin.project.service.UserService;
 import org.yplin.project.service.WorkspaceService;
 
 import java.util.HashMap;
@@ -26,6 +29,11 @@ public class WorkspaceRestController {
     WorkspaceService workspaceService;
     @Autowired
     FileContentService fileContentService;
+    @Autowired
+    UserOwnWorkspaceDetailsRepository userOwnWorkspaceDetailsRepository;
+    @Autowired
+    UserService userservice;
+
 
     @Autowired
     JwtTokenUtil jwtTokenUtil;
@@ -52,6 +60,18 @@ public class WorkspaceRestController {
 
         Map<String, List<FileContentModel>> response = new HashMap<>();
         response.put("data", fileList);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+
+    @GetMapping(path = "/userWorkspaceDetails")
+    public ResponseEntity<?> getUserWorkspaceInformation(@RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        String userEmail = jwtTokenUtil.extractUserEmail(token);
+        List<UserOwnWorkspaceDetailsModel> userOwnWorkspaceDetailsModelList = userservice.fetchUserOwnWorkspaceDetails(userEmail);
+
+        Map<String, List<UserOwnWorkspaceDetailsModel>> response = new HashMap<>();
+        response.put("data", userOwnWorkspaceDetailsModelList);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
