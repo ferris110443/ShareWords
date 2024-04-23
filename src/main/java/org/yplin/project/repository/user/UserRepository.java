@@ -11,4 +11,7 @@ public interface UserRepository extends JpaRepository<UserModel, Long> {
 
     @Query
     UserModel findUserByEmail(@Param("email") String email);
+
+    @Query
+    UserModel findIdByEmail(@Param("email") String email);
 }

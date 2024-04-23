@@ -5,7 +5,6 @@ document.getElementById('file-creation-form').addEventListener('submit', functio
     const fileName = document.getElementById('file-name-input').value;
     const fileDescription = document.getElementById('file-description').value;
     const fileId = uuidv4();
-
     const accessToken = localStorage.getItem('accessToken');
     const data = {
         fileName: fileName,

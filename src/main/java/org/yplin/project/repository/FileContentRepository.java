@@ -13,11 +13,6 @@ import java.util.List;
 @Repository
 public interface FileContentRepository extends JpaRepository<FileContentModel, Long> {
 
-//    @Modifying
-//    @Transactional
-//    @Query("UPDATE FileContentModel f SET f.content = :content, f.fileTitle = :fileTitle, f.fileURL = :fileURL WHERE f.fileId = :fileId")
-//    void updateFileContent(@Param("fileId") String fileId, @Param("content") String content, @Param("fileTitle") String fileTitle, @Param("fileURL") String fileURL);
-//
 
     @Query(value = "SELECT " +
             "fc.file_title AS fileTitle, " +
@@ -34,6 +29,8 @@ public interface FileContentRepository extends JpaRepository<FileContentModel, L
     List<WorkspaceFileContentProjection> getWorkspaceFilesContent(@Param("workspaceName") String workspaceName);
 
     FileContentModel findByFileId(String fileId);
+
+    List<FileContentModel> findByWorkspaceId(long workspaceId);
 }
 
 

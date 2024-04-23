@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 public class UserModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(name = "name", length = 127, nullable = false)
     private String name;
@@ -40,6 +40,6 @@ public class UserModel {
     private String accessToken;
 
     @Column(name = "access_expired", nullable = false)
-    private Long accessExpired;
+    private long accessExpired;
 
 }

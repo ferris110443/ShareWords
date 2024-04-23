@@ -17,19 +17,8 @@
     <div class="mid-workspace ">
         <div class="content-section" id="file-zone">
             <h2>Existed Files</h2>
-            <div id="FileList">
-                <div class="file-entry" id="file1">
-                    <p>FileName : Test1</p>
-                    <p>description : </p>
-                    <button aria-label="Edit File 1" class="edit-btn" data-fileid="file1">Edit</button>
-                    <button aria-label="Delete File 1" class="delete-btn" data-fileid="file1">Delete</button>
-                </div>
-                <div class="file-entry" id="file2">
-                    <p>FileName : Test2</p>
-                    <p>description : </p>
-                    <button aria-label="Edit File 2" class="edit-btn" data-fileid="file2">Edit</button>
-                    <button aria-label="Delete File 2" class="delete-btn" data-fileid="file2">Delete</button>
-                </div>
+            <div id="fileList">
+
             </div>
         </div>
 
@@ -72,6 +61,46 @@
 <!--<script src="/src/pages/socketIO.js" type="module"></script>-->
 <script src="/src/components/AsideWorkspace.js"></script>
 <script src="/src/pages/workspace.js"></script>
+
+<script>
+    const accessToken = localStorage.getItem('accessToken');
+    const params = new URLSearchParams(window.location.search);
+    const workspaceName = params.get('roomId');
+
+    renderWorkspaceFileList()
+
+    async function renderWorkspaceFileList() {
+        const response = await fetch(`/api/1.0/workspace/workspace?workspaceName=${workspaceName}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })
+        const data = await response.json();
+
+        if (Array.isArray(data.data)) {
+            let html = '';
+            data.data.forEach((file, index) => {
+                html += `
+                    <div class="file-entry" id="file${index}">
+                        <p>FileName: ${file.fileTitle}</p>
+                        <p>Description: ${file.fileDescription}</p>
+                        <button aria-label="Edit File ${index}" class="edit-btn" data-fileid="file${index}">Edit</button>
+                        <button aria-label="Delete File ${index}" class="delete-btn" data-fileid="file${index}">Delete</button>
+                    </div>
+                `;
+            });
+            document.getElementById("fileList").innerHTML += html;
+        } else {
+            console.error('Expected an array of files, received:', data.data);
+        }
+
+
+    }
+
+
+</script>
 
 
 </body>

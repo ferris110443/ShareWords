@@ -15,7 +15,7 @@ public class WorkspaceModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(name = "workspace_name", columnDefinition = "varchar(255)", nullable = false)
     private String workspaceName;

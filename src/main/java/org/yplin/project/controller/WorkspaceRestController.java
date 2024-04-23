@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import org.yplin.project.configuration.JwtTokenUtil;
 import org.yplin.project.data.form.CreateFileForm;
 import org.yplin.project.data.form.CreateWorkspaceForm;
+import org.yplin.project.model.FileContentModel;
 import org.yplin.project.service.FileContentService;
 import org.yplin.project.service.WorkspaceService;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -32,8 +34,8 @@ public class WorkspaceRestController {
     public ResponseEntity<?> createWorkspace(@RequestBody CreateWorkspaceForm createWorkspaceForm, @RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
         String creatorEmail = jwtTokenUtil.extractUserEmail(token);
-
         workspaceService.createWorkspace(createWorkspaceForm, creatorEmail);
+
 
         Map<String, Object> response = new HashMap<>();
         response.put("workspaceName", createWorkspaceForm.getWorkspaceName());
@@ -41,13 +43,26 @@ public class WorkspaceRestController {
     }
 
 
+    @GetMapping(path = "/workspace")
+    public ResponseEntity<?> getWorkspaceInformation(@RequestParam(value = "workspaceName") String workspaceName, @RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        String creatorEmail = jwtTokenUtil.extractUserEmail(token);
+
+        List<FileContentModel> fileList = fileContentService.getFileContentsByWorkspaceName(workspaceName);
+
+        Map<String, List<FileContentModel>> response = new HashMap<>();
+        response.put("data", fileList);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+
     @PostMapping(path = "/file")
     public ResponseEntity<?> createNewFile(@RequestBody CreateFileForm createFileForm, @RequestHeader("Authorization") String authorizationHeader) {
+
         try {
             String token = authorizationHeader.replace("Bearer ", "");
             String creatorEmail = jwtTokenUtil.extractUserEmail(token);
 
-            // Example validation
             if (createFileForm.getFileName() == null || createFileForm.getFileName().trim().isEmpty()) {
                 return ResponseEntity
                         .badRequest()
@@ -55,14 +70,13 @@ public class WorkspaceRestController {
             }
 
             fileContentService.createFile(createFileForm);
-            System.out.println("createFileForm.getFileName() = " + createFileForm.getFileName());
 
             Map<String, Object> response = new HashMap<>();
             response.put("fileName", createFileForm.getFileName());
             response.put("fileDescription", createFileForm.getFileDescription());
 
             return ResponseEntity
-                    .status(HttpStatus.CREATED)  // Use CREATED status for successful resource creation
+                    .status(HttpStatus.CREATED)
                     .body(response);
 
         } catch (Exception e) {

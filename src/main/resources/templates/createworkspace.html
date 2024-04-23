@@ -54,6 +54,7 @@
 
 <script>
     const accessToken = localStorage.getItem('accessToken');
+
     $(document).on('submit', 'form', async function (event) {
         event.preventDefault();
         const formData = new FormData(event.target);
@@ -71,12 +72,13 @@
 
                 body: JSON.stringify(jsonData)
             });
-            console.log(localStorage.getItem('accessToken'))
-            console.log(JSON.stringify(jsonData))
             let result = await response.json();
             if (response.ok) {
                 alert('Workspace created successfully');
+                await updateUserWorkspaceList(result.workspaceName);
                 window.location.href = '/admin/workspace?roomId=' + result.workspaceName;
+
+
             } else {
                 alert('Workspace creation failed');
             }
@@ -84,6 +86,32 @@
             console.error(e);
         }
     });
+
+
+    async function updateUserWorkspaceList(workspaceName) {
+        console.log(workspaceName)
+        const response = await fetch("/api/1.0/user/userWorkspace", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            },
+
+            body: JSON.stringify(
+                {
+                    "workspaceName": workspaceName,
+                    "accessToken": accessToken
+                }
+            )
+        });
+        const data = await response.json();
+        if (response.ok) {
+            console.log("user workspace list updated successfully");
+        } else {
+            console.error(data);
+        }
+
+    }
 
 </script>
 </body>

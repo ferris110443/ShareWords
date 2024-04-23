@@ -30,6 +30,9 @@ public class FileContentModel {
     @Column(name = "file_id", nullable = false)
     private String fileId;
 
+    @Column(name = "file_description", nullable = false)
+    private String fileDescription;
+
 
     @Override
     public String toString() {

@@ -64,6 +64,7 @@ public class FileContentServiceImp implements FileContentService {
         fileContentModel.setContent("");
         fileContentModel.setFileURL("http://localhost:8080/markdownfiles/" + createFileForm.getFileId());
         fileContentModel.setFileId(createFileForm.getFileId());
+        fileContentModel.setFileDescription(createFileForm.getFileDescription());
 
         fileContentRepository.save(fileContentModel);
     }
@@ -120,6 +121,12 @@ public class FileContentServiceImp implements FileContentService {
     @Override
     public FileContentModel getFileContent(String fileId) {
         return fileContentRepository.findByFileId(fileId);
+    }
+
+    @Override
+    public List<FileContentModel> getFileContentsByWorkspaceName(String workspaceName) {
+
+        return fileContentRepository.findByWorkspaceId(workspaceRepository.findIdByWorkspaceName(workspaceName));
     }
 
 }

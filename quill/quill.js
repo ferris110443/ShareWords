@@ -160,9 +160,7 @@ window.addEventListener('load', () => {
 
 
 function updatePreview(markdownText) {
-    console.log("Markdown Text: " + markdownText);
     let htmlContent = marked.parse(markdownText); // Parse markdown to HTML
-    console.log("HTML Content: " + htmlContent);
     document.getElementById("preview-text").innerHTML = htmlContent; // Display the HTML in the preview div
 }
 

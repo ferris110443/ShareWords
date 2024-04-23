@@ -11,4 +11,6 @@ public interface WorkspaceRepository extends JpaRepository<WorkspaceModel, Long>
 
     @Query("SELECT w.id FROM WorkspaceModel w WHERE w.workspaceName = :workspaceName")
     Long findIdByWorkspaceName(String workspaceName);
+
+
 }

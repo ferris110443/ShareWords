@@ -21,4 +21,6 @@ public interface FileContentService {
 
 
     FileContentModel getFileContent(String fileId);
+
+    List<FileContentModel> getFileContentsByWorkspaceName(String workspaceName);
 }
