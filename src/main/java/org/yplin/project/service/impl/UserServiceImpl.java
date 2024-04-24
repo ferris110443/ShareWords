@@ -10,9 +10,9 @@ import org.yplin.project.data.dto.SignInDto;
 import org.yplin.project.data.dto.UserWorkspaceDto;
 import org.yplin.project.data.form.SignInForm;
 import org.yplin.project.data.form.SignupForm;
-import org.yplin.project.model.UserModel;
-import org.yplin.project.model.UserOwnWorkspaceDetailsModel;
-import org.yplin.project.model.UserWorkspaceModel;
+import org.yplin.project.data.form.UserAddFriendForm;
+import org.yplin.project.model.*;
+import org.yplin.project.repository.FriendsRepository;
 import org.yplin.project.repository.WorkspaceRepository;
 import org.yplin.project.repository.user.UserOwnWorkspaceDetailsRepository;
 import org.yplin.project.repository.user.UserRepository;
@@ -37,6 +37,9 @@ public class UserServiceImpl implements UserService {
     UserWorkspaceRepository userWorkspaceRepository;
     @Autowired
     UserOwnWorkspaceDetailsRepository userOwnWorkspaceDetailsRepository;
+    @Autowired
+    FriendsRepository friendsRepository;
+
 
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private @Value("${jwt.signKey}") String jwtSignKey;
@@ -95,8 +98,6 @@ public class UserServiceImpl implements UserService {
         long userId = userRepository.findIdByEmail(userEmailFromToken).getId();
         long workspaceId = workspaceRepository.findIdByWorkspaceName(workspaceName);
 
-        System.out.println("userId: " + userId);
-        System.out.println("workspaceId: " + workspaceId);
 
         UserWorkspaceModel userWorkspaceModel = new UserWorkspaceModel();
         userWorkspaceModel.setWorkspaceId(workspaceId);
@@ -111,5 +112,37 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserOwnWorkspaceDetailsModel> fetchUserOwnWorkspaceDetails(String userEmail) {
         return userOwnWorkspaceDetailsRepository.fetchWorkspaceDetailsWithNativeQuery(userEmail);
+    }
+
+    @Override
+    public List<UserModel> getSpecificUserInformation(String query) {
+        return userRepository.findByNameContaining(query);
+    }
+
+    @Override
+    public void addFriend(UserAddFriendForm userAddFriendForm) {
+        Long userId = userAddFriendForm.getUserId();
+        Long friendId = userAddFriendForm.getFriendId();
+
+        // Check for existing friendship in both directions
+        boolean exists = friendsRepository.existsFriendship(userId, friendId)
+                || friendsRepository.existsFriendship(friendId, userId);
+
+        if (!exists) {
+            FriendsModel friendsModel = new FriendsModel();
+            friendsModel.setUserId(userId);
+            friendsModel.setFriendId(friendId);
+            friendsModel.setStatus(Status.valueOf(userAddFriendForm.getStatus()));
+            friendsModel.setCreatedAt(userAddFriendForm.getCreatedAt());
+            friendsRepository.save(friendsModel);
+        } else {
+            // Handle the case where the friendship already exists
+            throw new RuntimeException("Friend Request already exists.");
+        }
+    }
+
+    @Override
+    public Long getUserIdByEmail(String userEmail) {
+        return userRepository.findIdByEmail(userEmail).getId();
     }
 }
