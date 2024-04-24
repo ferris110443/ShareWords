@@ -28,4 +28,13 @@ public class FriendsModel {
 
     @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp createdAt;
+
+    @Transient
+    private String friendEmail;
+    @Transient
+    private String friendName;
+    @Transient
+    private String userEmail;
+    @Transient
+    private String userName;
 }

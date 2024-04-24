@@ -145,4 +145,24 @@ public class UserServiceImpl implements UserService {
     public Long getUserIdByEmail(String userEmail) {
         return userRepository.findIdByEmail(userEmail).getId();
     }
+
+
+    @Override
+    public List<FriendsModel> getFriendsRelationStatus(long userId) {
+        List<FriendsModel> friendsModelList = friendsRepository.fetchByUserId(userId);
+        friendsModelList.forEach(friendsModel -> {
+            UserEmailNameProjection friendEmailName = userRepository.findEmailById(friendsModel.getFriendId());
+            UserEmailNameProjection userEmailName = userRepository.findEmailById(friendsModel.getUserId());
+            friendsModel.setFriendEmail(friendEmailName.getEmail());
+            friendsModel.setFriendName(friendEmailName.getName());
+            friendsModel.setUserEmail(userEmailName.getEmail());
+            friendsModel.setUserName(userEmailName.getName());
+        });
+        System.out.println(friendsModelList);
+
+
+        return friendsModelList;
+    }
+
+
 }

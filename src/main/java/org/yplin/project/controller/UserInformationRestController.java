@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.yplin.project.configuration.JwtTokenUtil;
 import org.yplin.project.data.dto.UserWorkspaceDto;
 import org.yplin.project.data.form.UserAddFriendForm;
+import org.yplin.project.model.FriendsModel;
 import org.yplin.project.model.UserModel;
 import org.yplin.project.service.UserService;
 
@@ -65,7 +66,7 @@ public class UserInformationRestController {
         String userEmail = jwtTokenUtil.extractUserEmail(token);
         userAddFriendForm.setUserId(userService.getUserIdByEmail(userEmail));
         userAddFriendForm.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        userAddFriendForm.setStatus("PENDING");
+        userAddFriendForm.setStatus("pending");
 
         try {
             userService.addFriend(userAddFriendForm);
@@ -77,4 +78,18 @@ public class UserInformationRestController {
         }
     }
 
+    @GetMapping("/friendsRelationShip")
+    public ResponseEntity<?> getFriendsRelationStatus(@RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        String userEmail = jwtTokenUtil.extractUserEmail(token);
+        long userId = userService.getUserIdByEmail(userEmail);
+        System.out.println("userId" + userId);
+        List<FriendsModel> friendsRelationStatusList = userService.getFriendsRelationStatus(userId);
+
+        Map<String, Object> response = new HashMap<>();
+
+        response.put("data", friendsRelationStatusList);
+        response.put("userId", userId);
+        return ResponseEntity.ok(response);
+    }
 }

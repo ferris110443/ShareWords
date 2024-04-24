@@ -5,6 +5,7 @@ import org.yplin.project.data.dto.UserWorkspaceDto;
 import org.yplin.project.data.form.SignInForm;
 import org.yplin.project.data.form.SignupForm;
 import org.yplin.project.data.form.UserAddFriendForm;
+import org.yplin.project.model.FriendsModel;
 import org.yplin.project.model.UserModel;
 import org.yplin.project.model.UserOwnWorkspaceDetailsModel;
 
@@ -27,6 +28,9 @@ public interface UserService {
     void addFriend(UserAddFriendForm userAddFriendForm);
 
     Long getUserIdByEmail(String userEmail);
+
+    List<FriendsModel> getFriendsRelationStatus(long userEmail);
+
 
     sealed class UserException extends
             Exception permits UserExistException, UserNotExistException, UserPasswordMismatchException {
