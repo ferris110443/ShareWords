@@ -136,7 +136,7 @@ async function checkFriendshipStatus(event) {
             const friendRequestElement = document.createElement('div');
             friendRequestElement.className = 'friend-request-item';
             friendRequestElement.innerHTML = `
-            <div><strong>Name:</strong> ${item.userId}</div>
+            <div><strong>Name:</strong> ${item.userName}</div>
             <div><strong>Email:</strong> ${item.userEmail}</div>
             <button id="btn-userId-${item.userId}" class="btn btn-primary accept-friend-btn" data-user-id="${item.friendId}">Accept Friend</button>
             <button id="btn-userId-${item.userId}" class="btn btn-primary reject-friend-btn" data-user-id="${item.friendId}">Reject Friend</button>
