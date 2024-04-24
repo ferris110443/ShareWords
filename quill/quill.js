@@ -53,12 +53,14 @@ window.addEventListener('load', () => {
             const data = await response.json();
             if (data.data && data.data.content) {
                 ydoc.transact(() => {
+                    console.log(ytext)
                     // Insert content if the document is empty
-                    if (ytext.toString() === '') {
+                    if (ytext._start.content.toString() === '') {
                         ytext.insert(0, data.data.content);
+                        console.log("ytext is empty")
                     }
                 });
-                updatePreview(data.data);
+                updatePreview(data.data.content);
             } else {
                 console.log('No content available to update');
             }
