@@ -9,25 +9,25 @@ function loadAsideWorkspace() {
   </a>
   <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
     <li class="nav-item">
-      <a class="nav-link py-0 border-bottom rounded-0" aria-current="page" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Home" data-bs-original-title="user" data-target="room-zone">
+      <a class="workspace-partial nav-link py-0 border-bottom rounded-0" aria-current="page" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Home" data-bs-original-title="user" data-target="room-zone">
         <svg class="bi pe-none" width="36" height="36" role="img" aria-label="Home"><use xlink:href="#home"></use></svg>
         <img src=${logoFolderURL}/user.png width="36" height="36">
       </a>
     </li>
     <li>
-      <a class="nav-link py-0 border-bottom rounded-0" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Dashboard" data-bs-original-title="file" data-target="file-zone">
+      <a class="workspace-partial nav-link py-0 border-bottom rounded-0" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Dashboard" data-bs-original-title="file" data-target="file-zone">
         <svg class="bi pe-none" width="36" height="36" role="img" aria-label="Dashboard"><use xlink:href="#speedometer2"></use></svg>
         <img src= ${logoFolderURL}/file.png width="36" height="36">
       </a>
     </li>
     <li>
-      <a class="nav-link py-0 border-bottom rounded-0" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Orders" data-bs-original-title="setting" data-target="setting-zone">
+      <a class="workspace-partial nav-link py-0 border-bottom rounded-0" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Orders" data-bs-original-title="setting" data-target="setting-zone">
         <svg class="bi pe-none" width="36" height="36" role="img" aria-label="Orders"><use xlink:href="#table"></use></svg>
         <img src=${logoFolderURL}/setting.png width="36" height="36">
       </a>
     </li>
     <li>
-      <a class="nav-link py-0 border-bottom rounded-0" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Orders" data-bs-original-title="Orders">
+      <a href="/admin/home" class="nav-link py-0 border-bottom rounded-0" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Orders" data-bs-original-title="Orders">
         <svg class="bi pe-none" width="36" height="36" role="img" aria-label="Orders"><use xlink:href="#table"></use></svg>
         <img src=${logoFolderURL}/logout.png width="36" height="36">
       </a>
@@ -45,7 +45,7 @@ function loadAsideWorkspace() {
 
 
 function attachNavLinkListeners(container) {
-    const navLinks = container.querySelectorAll('.nav-link');
+    const navLinks = container.querySelectorAll('.workspace-partial');
     navLinks.forEach(link => {
         link.addEventListener('click', function (event) {
             event.preventDefault(); // Prevent the default anchor behavior
@@ -74,7 +74,7 @@ function loadAsideUserHomePage() {
     </a>
     <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
       <li class="nav-item">
-        <a href="/admin/home" class="nav-link active py-0 border-bottom rounded-0" aria-current="page" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Home" data-bs-original-title="Home">
+        <a href="/admin/home" class="nav-link py-0 border-bottom rounded-0" aria-current="page" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Home" data-bs-original-title="Home">
           <svg class="bi pe-none" width="36" height="36" role="img" aria-label="Home"><use xlink:href="#home"></use></svg>
           <img src=${logoFolderURL}/workspace.png width="36" height="36">
         </a>
@@ -86,7 +86,7 @@ function loadAsideUserHomePage() {
         </a>
       </li>
       <li>
-        <a href="/admin/logout" class="nav-link py-0 border-bottom rounded-0" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Orders" data-bs-original-title="Orders">
+        <a href="/signin.html" class="nav-link py-0 border-bottom rounded-0" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Orders" data-bs-original-title="Orders">
           <svg class="bi pe-none" width="36" height="36" role="img" aria-label="Orders"><use xlink:href="#table"></use></svg>
           <img src=${logoFolderURL}/logout.png width="36" height="36">
         </a>

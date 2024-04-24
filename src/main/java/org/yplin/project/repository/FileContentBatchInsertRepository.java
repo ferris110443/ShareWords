@@ -22,7 +22,6 @@ public class FileContentBatchInsertRepository {
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 MarkdownForm markdownForm = markdownForms.get(i);
                 ps.setString(1, markdownForm.getMarkdownText());
-//                ps.setString(2, markdownForm.getTitle());
                 ps.setString(2, markdownForm.getFileId());
             }
 
