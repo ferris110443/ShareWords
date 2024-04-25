@@ -45,6 +45,16 @@
     function redirectToPage() {
         window.location.href = `http://localhost:8080/admin/workspace?roomId=${roomId}`;
     }
+
+    window.addEventListener('message', function(event) {
+        if (event.origin !== "http://localhost:8080") {
+            return; // Ensure that the message is coming from the expected origin
+        }
+        if (event.data.jwt) {
+            console.log("Received JWT:", event.data.jwt);
+            localStorage.setItem('jwt', event.data.jwt);
+        }
+    });
 </script>
 
 </body>

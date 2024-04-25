@@ -56,7 +56,7 @@
 
 
 </div>
-
+<iframe id="myIframe" src="http://localhost:3000" style="width:100%; height:100%;"></iframe>
 <script crossorigin="anonymous"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -79,6 +79,13 @@
     const workspaceName = params.get('roomId');
     const queryParams = new URLSearchParams(window.location.search);
     const roomId = decodeURIComponent(queryParams.get('roomId'));
+
+
+    document.getElementById('myIframe').onload = function () {
+        this.contentWindow.postMessage({
+            jwt: accessToken
+        }, 'http://localhost:3000');
+    };
 
     renderWorkspaceFileList()
     getWorkspaceMember()
