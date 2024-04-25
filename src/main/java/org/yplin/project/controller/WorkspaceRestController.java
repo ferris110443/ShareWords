@@ -9,8 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.yplin.project.configuration.JwtTokenUtil;
+import org.yplin.project.data.dto.WorkspaceMemberDto;
 import org.yplin.project.data.form.CreateFileForm;
 import org.yplin.project.data.form.CreateWorkspaceForm;
+import org.yplin.project.data.form.UserAddMemberInWorkspaceForm;
+import org.yplin.project.error.UserAlreadyMemberException;
 import org.yplin.project.model.FileContentModel;
 import org.yplin.project.model.UserOwnWorkspaceDetailsModel;
 import org.yplin.project.repository.user.UserOwnWorkspaceDetailsRepository;
@@ -39,6 +42,8 @@ public class WorkspaceRestController {
     @Autowired
     JwtTokenUtil jwtTokenUtil;
 
+
+    // createWorkspace create a new workspace
     @PostMapping(path = "/workspace")
     public ResponseEntity<?> createWorkspace(@RequestBody CreateWorkspaceForm createWorkspaceForm, @RequestHeader("Authorization") String authorizationHeader) {
 
@@ -57,6 +62,7 @@ public class WorkspaceRestController {
     }
 
 
+    // getWorkspaceInformation including containing files in the workspace
     @GetMapping(path = "/workspace")
     public ResponseEntity<?> getWorkspaceInformation(@RequestParam(value = "workspaceName") String workspaceName, @RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
@@ -70,6 +76,7 @@ public class WorkspaceRestController {
     }
 
 
+    // getUserWorkspaceInformation return one user joins how many workspaces information
     @GetMapping(path = "/userWorkspaceDetails")
     public ResponseEntity<?> getUserWorkspaceInformation(@RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
@@ -82,6 +89,7 @@ public class WorkspaceRestController {
     }
 
 
+    // createNewFile create a new file in the workspace
     @PostMapping(path = "/file")
     public ResponseEntity<?> createNewFile(@RequestBody CreateFileForm createFileForm, @RequestHeader("Authorization") String authorizationHeader) {
 
@@ -110,6 +118,42 @@ public class WorkspaceRestController {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("An error occurred: " + e.getMessage());
+        }
+    }
+
+    // getWorkspaceMembers return all members in the workspace
+    @GetMapping(path = "/workspaceMembers")
+    public ResponseEntity<?> getWorkspaceMembers(@RequestParam(value = "workspaceName") String workspaceName, @RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        String userEmail = jwtTokenUtil.extractUserEmail(token);
+
+        List<WorkspaceMemberDto> workspaceMembersList = userservice.fetchUserOwnWorkspaceMembers(workspaceName);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", workspaceMembersList);
+        response.put("workspaceName", workspaceName);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+
+    // update user workspace in user_workspace table when user add member into workspace
+    @PostMapping(path = "/workspaceMembers")
+    public ResponseEntity<?> addFriendToWorkspaceMembers(@RequestBody UserAddMemberInWorkspaceForm userAddMemberInWorkspaceForm, @RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        String creatorEmail = jwtTokenUtil.extractUserEmail(token);
+
+        try {
+            Map<String, List<UserOwnWorkspaceDetailsModel>> response = new HashMap<>();
+            userservice.addMemberToWorkspace(userAddMemberInWorkspaceForm);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (UserAlreadyMemberException e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "User already in the workspace");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Internal error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 

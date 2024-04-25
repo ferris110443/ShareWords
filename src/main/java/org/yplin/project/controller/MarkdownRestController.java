@@ -33,7 +33,6 @@ public class MarkdownRestController {
     @PostMapping("/markdown")
 
     public ResponseEntity<?> updateMarkdownContent(@RequestBody MarkdownForm markdownForm) {
-        System.out.println("markdownForm : " + markdownForm);
         markdownStorageService.addMarkdownForm(markdownForm);
         Map<String, MarkdownForm> response = new HashMap<>();
         response.put("data", markdownForm);
@@ -53,7 +52,6 @@ public class MarkdownRestController {
     public ResponseEntity<?> getWorkspaceFiles(@RequestParam("roomId") String roomId) {
 
         fileContentService.getWorkspaceFilesContent(roomId);
-        System.out.println(fileContentService.getWorkspaceFilesContent(roomId));
         Map<String, List<WorkspaceFileContentProjection>> response = new HashMap<>();
         response.put("data", fileContentService.getWorkspaceFilesContent(roomId));
         return ResponseEntity.ok().body(response);

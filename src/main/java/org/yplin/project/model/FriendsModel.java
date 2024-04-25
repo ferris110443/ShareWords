@@ -24,7 +24,7 @@ public class FriendsModel {
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "ENUM('pending', 'accepted', 'declined', 'blocked')")
-    private Status status;
+    private StatusEnum status;
 
     @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp createdAt;

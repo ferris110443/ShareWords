@@ -47,14 +47,14 @@ public class UserInformationRestController {
         return ResponseEntity.ok().body(responseList);
     }
 
-
+    // update user workspace in user_workspace table when user create workspace
     @PostMapping("/userWorkspace")
     public ResponseEntity<?> updateUserWorkspace(@RequestBody UserWorkspaceDto userWorkspaceDto) {
 
         userService.updateUserWorkspace(userWorkspaceDto);
 
         Map<String, String> response = new HashMap<>();
-        response.put("message", "Update User Workspace Success");
+        response.put("message", "Update User Workspace Success while creating workspace");
         return ResponseEntity.ok().body(response);
     }
 
@@ -78,12 +78,13 @@ public class UserInformationRestController {
         }
     }
 
+
+    // get friends relation status
     @GetMapping("/friendsRelationShip")
     public ResponseEntity<?> getFriendsRelationStatus(@RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
         String userEmail = jwtTokenUtil.extractUserEmail(token);
         long userId = userService.getUserIdByEmail(userEmail);
-        System.out.println("userId" + userId);
         List<FriendsModel> friendsRelationStatusList = userService.getFriendsRelationStatus(userId);
 
         Map<String, Object> response = new HashMap<>();

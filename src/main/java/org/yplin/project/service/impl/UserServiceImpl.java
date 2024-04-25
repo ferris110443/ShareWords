@@ -8,9 +8,12 @@ import org.springframework.stereotype.Service;
 import org.yplin.project.configuration.JwtTokenUtil;
 import org.yplin.project.data.dto.SignInDto;
 import org.yplin.project.data.dto.UserWorkspaceDto;
+import org.yplin.project.data.dto.WorkspaceMemberDto;
 import org.yplin.project.data.form.SignInForm;
 import org.yplin.project.data.form.SignupForm;
 import org.yplin.project.data.form.UserAddFriendForm;
+import org.yplin.project.data.form.UserAddMemberInWorkspaceForm;
+import org.yplin.project.error.UserAlreadyMemberException;
 import org.yplin.project.model.*;
 import org.yplin.project.repository.FriendsRepository;
 import org.yplin.project.repository.WorkspaceRepository;
@@ -21,6 +24,7 @@ import org.yplin.project.service.UserService;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -39,6 +43,8 @@ public class UserServiceImpl implements UserService {
     UserOwnWorkspaceDetailsRepository userOwnWorkspaceDetailsRepository;
     @Autowired
     FriendsRepository friendsRepository;
+    @Autowired
+    org.yplin.project.repository.WorkspaceMemberRepository workspaceMemberRepository;
 
 
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -89,6 +95,9 @@ public class UserServiceImpl implements UserService {
         return SignInDto.from(userDB);
     }
 
+
+    // update user workspace in user_workspace table when user create workspace
+    // transfer the workspace name to workspace id
     @Override
     public String updateUserWorkspace(UserWorkspaceDto userWorkspaceDto) {
         String userToken = userWorkspaceDto.getAccessToken();
@@ -111,6 +120,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserOwnWorkspaceDetailsModel> fetchUserOwnWorkspaceDetails(String userEmail) {
+        System.out.println(userOwnWorkspaceDetailsRepository.fetchWorkspaceDetailsWithNativeQuery(userEmail));
         return userOwnWorkspaceDetailsRepository.fetchWorkspaceDetailsWithNativeQuery(userEmail);
     }
 
@@ -118,6 +128,7 @@ public class UserServiceImpl implements UserService {
     public List<UserModel> getSpecificUserInformation(String query) {
         return userRepository.findByNameContaining(query);
     }
+
 
     @Override
     public void addFriend(UserAddFriendForm userAddFriendForm) {
@@ -132,7 +143,7 @@ public class UserServiceImpl implements UserService {
             FriendsModel friendsModel = new FriendsModel();
             friendsModel.setUserId(userId);
             friendsModel.setFriendId(friendId);
-            friendsModel.setStatus(Status.valueOf(userAddFriendForm.getStatus()));
+            friendsModel.setStatus(StatusEnum.valueOf(userAddFriendForm.getStatus()));
             friendsModel.setCreatedAt(userAddFriendForm.getCreatedAt());
             friendsRepository.save(friendsModel);
         } else {
@@ -162,6 +173,28 @@ public class UserServiceImpl implements UserService {
 
 
         return friendsModelList;
+    }
+
+    @Override
+    public List<WorkspaceMemberDto> fetchUserOwnWorkspaceMembers(String workspaceName) {
+        return workspaceMemberRepository.findWorkspaceMembersByWorkspaceName(workspaceName);
+    }
+
+    @Override
+    public void addMemberToWorkspace(UserAddMemberInWorkspaceForm userAddMemberInWorkspaceForm) {
+        long userId = userAddMemberInWorkspaceForm.getUserId();
+        String workspaceName = userAddMemberInWorkspaceForm.getWorkspaceName();
+        long workspaceId = workspaceRepository.findIdByWorkspaceName(workspaceName);
+
+        Optional<UserWorkspaceModel> existingEntry = userWorkspaceRepository.findByUserIdAndWorkspaceId(userId, workspaceId);
+        if (existingEntry.isPresent()) {
+            throw new UserAlreadyMemberException("User is already a member of the workspace.");
+        } else {
+            UserWorkspaceModel userWorkspaceModel = new UserWorkspaceModel();
+            userWorkspaceModel.setUserId(userId);
+            userWorkspaceModel.setWorkspaceId(workspaceId);
+            userWorkspaceRepository.save(userWorkspaceModel);
+        }
     }
 
 

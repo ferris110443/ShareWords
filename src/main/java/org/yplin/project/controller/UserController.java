@@ -33,7 +33,6 @@ public class UserController {
         Map<String, Object> response = new HashMap<>();
 
         try {
-            System.out.println("signupForm: " + signupForm.toString());
             SignInDto dto = userService.signup(signupForm);
             response.put("data", dto);
             return ResponseEntity.status(HttpStatus.OK).body(response);

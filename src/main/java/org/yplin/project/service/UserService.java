@@ -2,9 +2,11 @@ package org.yplin.project.service;
 
 import org.yplin.project.data.dto.SignInDto;
 import org.yplin.project.data.dto.UserWorkspaceDto;
+import org.yplin.project.data.dto.WorkspaceMemberDto;
 import org.yplin.project.data.form.SignInForm;
 import org.yplin.project.data.form.SignupForm;
 import org.yplin.project.data.form.UserAddFriendForm;
+import org.yplin.project.data.form.UserAddMemberInWorkspaceForm;
 import org.yplin.project.model.FriendsModel;
 import org.yplin.project.model.UserModel;
 import org.yplin.project.model.UserOwnWorkspaceDetailsModel;
@@ -30,6 +32,10 @@ public interface UserService {
     Long getUserIdByEmail(String userEmail);
 
     List<FriendsModel> getFriendsRelationStatus(long userEmail);
+
+    List<WorkspaceMemberDto> fetchUserOwnWorkspaceMembers(String workspaceName);
+
+    void addMemberToWorkspace(UserAddMemberInWorkspaceForm userAddMemberInWorkspaceForm);
 
 
     sealed class UserException extends

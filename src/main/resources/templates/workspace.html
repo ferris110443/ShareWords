@@ -15,13 +15,24 @@
     <div id="sidebar-placeholder"></div>
 
     <div class="mid-workspace ">
-        <div class="content-section" id="file-zone">
-            <h2>Existed Files</h2>
-            <div id="fileList">
+        <div class="content-section" id="room-zone">
+            <h2>Workspace members</h2>
+            <div id="userList">
+                <div> Alice</div>
+                <div> Bob</div>
+                <div> Tony</div>
+            </div>
+            <h2> Add members</h2>
+            <div id="add-friend-member">
 
             </div>
         </div>
 
+        <div class="content-section" id="file-zone" style="display: none;">
+            <h2>Existed Files</h2>
+            <div id="fileList">
+            </div>
+        </div>
     </div>
 
     <div class="right-workspace">
@@ -66,8 +77,12 @@
     const accessToken = localStorage.getItem('accessToken');
     const params = new URLSearchParams(window.location.search);
     const workspaceName = params.get('roomId');
+    const queryParams = new URLSearchParams(window.location.search);
+    const roomId = decodeURIComponent(queryParams.get('roomId'));
 
     renderWorkspaceFileList()
+    getWorkspaceMember()
+    getUserFriendsForAddingMembers()
 
     async function renderWorkspaceFileList() {
         const response = await fetch(`/api/1.0/workspace/workspace?workspaceName=${workspaceName}`, {
@@ -110,6 +125,125 @@
         }
 
 
+    }
+
+    async function getWorkspaceMember() {
+        try {
+            const response = await fetch(`/api/1.0/workspace/workspaceMembers?workspaceName=${roomId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            console.log(data.data)
+            showWorkspaceMemberList(data.data);
+
+        } catch (error) {
+            console.error('Failed to update user:', error);
+        }
+    }
+
+    async function getUserFriendsForAddingMembers() {
+        try {
+            const response = await fetch(`/api/1.0/user/friendsRelationShip`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
+                },
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            const userFriendsInformation = data.data;
+            const userId = data.userId;
+
+            console.log(userFriendsInformation)
+            console.log(userId)
+
+            userFriendsInformation.forEach(item => {
+
+                if (userId === item.userId && item.status === 'accepted') {
+                    const friendDiv = document.createElement('div');
+                    friendDiv.classList.add('friend');
+                    friendDiv.innerHTML = `
+                    <div class ="friend-name">${item.friendName}</div>
+                    <div class ="friend-email">${item.friendEmail}</div>
+                    <button class="add-member-btn btn btn-primary">Add to Workspace</button>`;
+                    const addButton = friendDiv.querySelector('.add-member-btn');
+                    addButton.addEventListener('click', () => addFriendsToWorkspace(item.friendId));
+                    document.getElementById('add-friend-member').appendChild(friendDiv);
+                } else if (userId === item.friendId && item.status === 'accepted') {
+                    const friendDiv = document.createElement('div');
+                    friendDiv.classList.add('friend');
+                    friendDiv.innerHTML = `
+                    <div class ="friend-name">${item.userName}</div>
+                    <div class ="friend-email">${item.userEmail}</div>
+                    <button class="add-member-btn btn btn-primary ">Add to Workspace</button>`;
+                    const addButton = friendDiv.querySelector('.add-member-btn');
+                    addButton.addEventListener('click', () => addFriendsToWorkspace(item.userId));
+                    document.getElementById('add-friend-member').appendChild(friendDiv);
+                }
+
+            });
+
+
+        } catch (error) {
+            console.error('Failed to update user:', error);
+        }
+    }
+
+
+    function showWorkspaceMemberList(members) {
+        const userListDiv = document.getElementById('userList');
+        userListDiv.innerHTML = '';
+
+        // Add new members to the list
+        members.forEach(member => {
+            const memberDiv = document.createElement('div');
+            memberDiv.classList.add('member');
+            memberDiv.innerHTML = `
+                <div class ="workspace-member-name">${member.name}</div>
+                <div class ="workspace-member-email">${member.email}</div>
+            `;
+            userListDiv.appendChild(memberDiv);
+        });
+    }
+
+    async function addFriendsToWorkspace(userId) {
+        try {
+            const response = await fetch('/api/1.0/workspace/workspaceMembers', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
+                },
+                body: JSON.stringify({
+                    userId: userId,
+                    workspaceName: roomId
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                alert('Failed to add user to workspace: ' + data.error);
+            } else {
+                alert('User added to workspace successfully.');
+                window.location.reload();
+            }
+
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to add user to workspace.');
+        }
     }
 
 

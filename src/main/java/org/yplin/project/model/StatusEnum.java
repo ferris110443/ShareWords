@@ -1,5 +1,5 @@
 package org.yplin.project.model;
 
-public enum Status {
+public enum StatusEnum {
     pending, accepted, declined, blocked
 }
