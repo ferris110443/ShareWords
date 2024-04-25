@@ -126,14 +126,14 @@ window.addEventListener('load', () => {
 
     const binding = new QuillBinding(ytext, editor, provider.awareness)
 
-    /*
+
     // Define user name and user name
     // Check the quill-cursors package on how to change the way cursors are rendered
-    provider.awareness.setLocalStateField('user', {
-      name: 'Typing Jimmy',
-      color: 'blue'
-    })
-    */
+    // provider.awareness.setLocalStateField('user', {
+    //     name: 'Typing Jimmy',
+    //     color: 'blue'
+    // })
+
 
     const connectBtn = document.getElementById('y-connect-btn')
     connectBtn.addEventListener('click', () => {
@@ -200,34 +200,4 @@ async function uploadImage(data) {
 }
 
 
-//================upload Image ============================
-// document.getElementById('editor').addEventListener('paste', function (event) {
-//     let clipboardData = event.clipboardData || window.clipboardData;
-//     if (clipboardData && clipboardData.items) { //clipboardData.items is a list of all the items that were copied (text,image, etc.
-//         for (let i = 0; i < clipboardData.items.length; i++) {
-//             let item = clipboardData.items[i];
-//             console.log('Item type: ', item.type);
-//             console.log('Item type indexOf ', item.type.indexOf('image'));
-//             if (item.type.indexOf('image') === 0) {  // Check if the item is an image
-//                 let blob = item.getAsFile();
-//                 let reader = new FileReader();
-//                 reader.onload = function (e) {
-//                     // console.log('File content: ', e.target.result);
-//                     uploadImage(e.target.result).then(url => {
-//                         insertImageMarkdown(url);
-//                     });
-//                 };
-//                 reader.readAsDataURL(blob);
-//                 event.preventDefault(); // Prevent the default behavior of pasting
-//             }
-//         }
-//     }
-// });
-//
-//
-// function insertImageMarkdown(url) {
-//     const markdownText = `![Image](${url})`;
-//     editor.insert(markdownText);
-// }
-//
 

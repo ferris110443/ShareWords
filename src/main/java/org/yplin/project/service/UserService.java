@@ -38,6 +38,8 @@ public interface UserService {
 
     void rejectFriendRequest(FriendRequestForm friendRequestForm, String userEmail);
 
+    void removeFriendRequest(FriendRequestForm friendRequestForm, String userEmail);
+
 
     sealed class UserException extends
             Exception permits UserExistException, UserNotExistException, UserPasswordMismatchException {

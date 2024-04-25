@@ -250,5 +250,33 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public void removeFriendRequest(FriendRequestForm friendRequestForm, String userEmail) {
+        Long userId = userRepository.findIdByEmail(userEmail).getId();
+        Long friendId = friendRequestForm.getFriendId();
+
+        System.out.println("userId : " + userId);
+        System.out.println("friendId : " + friendId);
+
+        // friend request in both possible directions
+        FriendsModel existingFriendship = friendsRepository.findByUserIdAndFriendId(userId, friendId);
+        FriendsModel existingFriendship2 = friendsRepository.findByUserIdAndFriendId(friendId, userId);
+        System.out.println("existingFriendship : " + existingFriendship);
+        System.out.println("existingFriendship2 : " + existingFriendship2);
+        if (existingFriendship != null) {
+            existingFriendship.setStatus(StatusEnum.pending);
+            existingFriendship.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+
+            friendsRepository.delete(existingFriendship);
+        } else if (existingFriendship2 != null) {
+            existingFriendship2.setStatus(StatusEnum.pending);
+            existingFriendship2.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+
+            friendsRepository.delete(existingFriendship2);
+        } else {
+            throw new IllegalStateException("No existing friend request found to remove");
+        }
+    }
+
 
 }

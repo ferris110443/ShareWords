@@ -119,4 +119,16 @@ public class UserInformationRestController {
     }
 
 
+    @PostMapping("/removeFriendRequest")
+    public ResponseEntity<?> removeFriendRequest(@RequestBody FriendRequestForm friendRequestForm, @RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        String userEmail = jwtTokenUtil.extractUserEmail(token);
+
+        userService.removeFriendRequest(friendRequestForm, userEmail);
+
+        Map<String, Object> response = new HashMap<>();
+        return ResponseEntity.ok(response);
+    }
+
+
 }
