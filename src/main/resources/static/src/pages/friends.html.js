@@ -50,9 +50,11 @@ async function getUserInformation(searchQuery) {
             const relation = dataRelationShip.data.find(item => (item.userId === user.id || item.friendId === user.id));
             if (relation) {
                 if (relation.status === 'pending') {
-                    relationHTML += `<button id="btn-userId-${user.id}" class="btn btn-primary add-friend-btn" data-user-id="${user.id}">Wait accepted</button>`;
+                    relationHTML += `<button id="btn-userId-${user.id}" class="btn btn-primary add-friend-btn" data-user-id="${user.id}" disabled>Wait accepted</button>`;
                 } else if (relation.status === 'accepted') {
-                    relationHTML += `<button id="btn-userId-${user.id}" class="btn btn-primary add-friend-btn" data-user-id="${user.id}">Already Friends</button>`;
+                    relationHTML += `<button id="btn-userId-${user.id}" class="btn btn-primary add-friend-btn" data-user-id="${user.id}" disabled>Already Friends</button>`;
+                } else if (relation.status === 'declined') {
+                    relationHTML += `<button id="btn-userId-${user.id}" class="btn btn-primary add-friend-btn" data-user-id="${user.id}" disabled >Request declined</button>`;
                 }
             } else {
                 relationHTML += `<button id="btn-userId-${user.id}" class="btn btn-primary add-friend-btn" data-user-id="${user.id}">Add as Friend</button>`;
@@ -87,6 +89,7 @@ async function sendAddFriendRequest(event) {
     console.log(data)
     if (response.ok) {
         alert('Friend request sent successfully');
+        window.location.reload();
     } else {
         alert(data.message);
     }
@@ -138,15 +141,71 @@ async function checkFriendshipStatus(event) {
             friendRequestElement.innerHTML = `
             <div><strong>Name:</strong> ${item.userName}</div>
             <div><strong>Email:</strong> ${item.userEmail}</div>
-            <button id="btn-userId-${item.userId}" class="btn btn-primary accept-friend-btn" data-user-id="${item.friendId}">Accept Friend</button>
-            <button id="btn-userId-${item.userId}" class="btn btn-primary reject-friend-btn" data-user-id="${item.friendId}">Reject Friend</button>
+            <button id="btn-userId-${item.userId}" class="btn btn-primary accept-friend-btn" data-user-id="${item.friendId}" data-friend-id="${item.userId}">Accept Friend</button>
+            <button id="btn-userId-${item.userId}" class="btn btn-primary reject-friend-btn" data-user-id="${item.friendId}" data-friend-id="${item.userId}">Reject Friend</button>
         `;
             friendsRequestList.appendChild(friendRequestElement);
-
-
         }
 
 
     });
 
+    const acceptButtons = document.querySelectorAll('.accept-friend-btn');
+    const rejectButtons = document.querySelectorAll('.reject-friend-btn');
+    acceptButtons.forEach(button => {
+        button.addEventListener('click', function () {
+
+            const userId = this.getAttribute('data-user-id');
+            const friendId = this.getAttribute('data-friend-id');
+            acceptFriend(userId, friendId);
+        });
+    });
+
+    rejectButtons.forEach(button => {
+        button.addEventListener('click', function () {
+
+            const userId = this.getAttribute('data-user-id');
+            const friendId = this.getAttribute('data-friend-id');
+            rejectFriend(userId, friendId);
+        });
+    });
+
+}
+
+
+async function acceptFriend(userId, friendId) {
+    try {
+        const response = await fetch(`/api/1.0/user/acceptFriendRequest`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            },
+            body: JSON.stringify({userId: userId, friendId: friendId, status: 'pending'})
+        });
+        const data = await response.json();
+        console.log('Friend request accepted:', data);
+        window.location.reload()
+    } catch (error) {
+        console.error('Error accepting friend request:', error);
+    }
+}
+
+async function rejectFriend(userId, friendId) {
+    try {
+        const response = await fetch(`/api/1.0/user/rejectFriendRequest`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            },
+            body: JSON.stringify({userId: userId, friendId: friendId, status: 'pending'})
+        });
+
+        const data = await response.json();
+        console.log('Friend request rejected:', data);
+        window.location.reload()
+    } catch (error) {
+        console.error('Error rejecting friend request:', error);
+    }
 }

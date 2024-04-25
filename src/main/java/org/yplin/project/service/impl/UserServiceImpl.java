@@ -9,10 +9,7 @@ import org.yplin.project.configuration.JwtTokenUtil;
 import org.yplin.project.data.dto.SignInDto;
 import org.yplin.project.data.dto.UserWorkspaceDto;
 import org.yplin.project.data.dto.WorkspaceMemberDto;
-import org.yplin.project.data.form.SignInForm;
-import org.yplin.project.data.form.SignupForm;
-import org.yplin.project.data.form.UserAddFriendForm;
-import org.yplin.project.data.form.UserAddMemberInWorkspaceForm;
+import org.yplin.project.data.form.*;
 import org.yplin.project.error.UserAlreadyMemberException;
 import org.yplin.project.model.*;
 import org.yplin.project.repository.FriendsRepository;
@@ -194,6 +191,62 @@ public class UserServiceImpl implements UserService {
             userWorkspaceModel.setUserId(userId);
             userWorkspaceModel.setWorkspaceId(workspaceId);
             userWorkspaceRepository.save(userWorkspaceModel);
+        }
+    }
+
+    @Override
+    public void acceptFriendRequest(FriendRequestForm friendRequestForm, String userEmail) {
+        Long userId = userRepository.findIdByEmail(userEmail).getId();
+        Long friendId = friendRequestForm.getFriendId();
+
+        // Retrieve the existing friendship model from the database
+        FriendsModel existingFriendship = friendsRepository.findByUserIdAndFriendId(userId, friendId);
+        FriendsModel existingFriendship2 = friendsRepository.findByUserIdAndFriendId(friendId, userId);
+
+        // Check if any friendship exists and is in a 'pending' state
+        if (existingFriendship != null && existingFriendship.getStatus() == StatusEnum.pending) {
+            existingFriendship.setStatus(StatusEnum.accepted);
+            existingFriendship.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+
+            // Save the updated model to the database
+            friendsRepository.save(existingFriendship);
+        } else if (existingFriendship2 != null && existingFriendship2.getStatus() == StatusEnum.pending) {
+            existingFriendship2.setStatus(StatusEnum.accepted);
+            existingFriendship2.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+
+            // Save the updated model to the database
+            friendsRepository.save(existingFriendship2);
+        } else {
+            // Handle the case where no pending friendship request exists
+            throw new IllegalStateException("No pending friend request found or request already accepted");
+        }
+    }
+
+    @Override
+    public void rejectFriendRequest(FriendRequestForm friendRequestForm, String userEmail) {
+        Long userId = userRepository.findIdByEmail(userEmail).getId();
+        Long friendId = friendRequestForm.getFriendId();
+
+        System.out.println("userId : " + userId);
+        System.out.println("friendId : " + friendId);
+
+        // friend request in both possible directions
+        FriendsModel existingFriendship = friendsRepository.findByUserIdAndFriendId(userId, friendId);
+        FriendsModel existingFriendship2 = friendsRepository.findByUserIdAndFriendId(friendId, userId);
+        System.out.println("existingFriendship : " + existingFriendship);
+        System.out.println("existingFriendship2 : " + existingFriendship2);
+        if (existingFriendship != null) {
+            existingFriendship.setStatus(StatusEnum.declined);
+            existingFriendship.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+
+            friendsRepository.save(existingFriendship);
+        } else if (existingFriendship2 != null) {
+            existingFriendship2.setStatus(StatusEnum.declined);
+            existingFriendship2.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+
+            friendsRepository.save(existingFriendship2);
+        } else {
+            throw new IllegalStateException("No existing friend request found to reject");
         }
     }
 

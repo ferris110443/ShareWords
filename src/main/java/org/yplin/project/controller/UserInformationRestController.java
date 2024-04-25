@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.yplin.project.configuration.JwtTokenUtil;
 import org.yplin.project.data.dto.UserWorkspaceDto;
+import org.yplin.project.data.form.FriendRequestForm;
 import org.yplin.project.data.form.UserAddFriendForm;
 import org.yplin.project.model.FriendsModel;
 import org.yplin.project.model.UserModel;
@@ -93,4 +94,29 @@ public class UserInformationRestController {
         response.put("userId", userId);
         return ResponseEntity.ok(response);
     }
+
+    // accept friend request button
+    @PostMapping("/acceptFriendRequest")
+    public ResponseEntity<?> acceptFriendRequest(@RequestBody FriendRequestForm friendRequestForm, @RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        String userEmail = jwtTokenUtil.extractUserEmail(token);
+
+        userService.acceptFriendRequest(friendRequestForm, userEmail);
+
+        Map<String, Object> response = new HashMap<>();
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/rejectFriendRequest")
+    public ResponseEntity<?> rejectFriendRequest(@RequestBody FriendRequestForm friendRequestForm, @RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        String userEmail = jwtTokenUtil.extractUserEmail(token);
+
+        userService.rejectFriendRequest(friendRequestForm, userEmail);
+
+        Map<String, Object> response = new HashMap<>();
+        return ResponseEntity.ok(response);
+    }
+
+
 }

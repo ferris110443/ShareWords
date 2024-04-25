@@ -22,4 +22,6 @@ public interface FriendsRepository extends JpaRepository<FriendsModel, Long> {
             ") OR " +
             "(f.friendId = :userId )")
     List<FriendsModel> fetchByUserId(long userId);
+
+    FriendsModel findByUserIdAndFriendId(Long userId, Long friendId);
 }

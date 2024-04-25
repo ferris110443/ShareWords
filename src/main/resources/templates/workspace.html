@@ -149,57 +149,63 @@
         }
     }
 
+
     async function getUserFriendsForAddingMembers() {
         try {
-            const response = await fetch(`/api/1.0/user/friendsRelationShip`, {
+            // Fetch the current members of the workspace
+            const membersResponse = await fetch(`/api/1.0/workspace/workspaceMembers?workspaceName=${roomId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${accessToken}`
                 },
             });
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
-            const userFriendsInformation = data.data;
-            const userId = data.userId;
+            const membersData = await membersResponse.json();
+            const currentMemberIds = new Set(membersData.data.map(member => member.userId));
 
-            console.log(userFriendsInformation)
-            console.log(userId)
-
-            userFriendsInformation.forEach(item => {
-
-                if (userId === item.userId && item.status === 'accepted') {
-                    const friendDiv = document.createElement('div');
-                    friendDiv.classList.add('friend');
-                    friendDiv.innerHTML = `
-                    <div class ="friend-name">${item.friendName}</div>
-                    <div class ="friend-email">${item.friendEmail}</div>
-                    <button class="add-member-btn btn btn-primary">Add to Workspace</button>`;
-                    const addButton = friendDiv.querySelector('.add-member-btn');
-                    addButton.addEventListener('click', () => addFriendsToWorkspace(item.friendId));
-                    document.getElementById('add-friend-member').appendChild(friendDiv);
-                } else if (userId === item.friendId && item.status === 'accepted') {
-                    const friendDiv = document.createElement('div');
-                    friendDiv.classList.add('friend');
-                    friendDiv.innerHTML = `
-                    <div class ="friend-name">${item.userName}</div>
-                    <div class ="friend-email">${item.userEmail}</div>
-                    <button class="add-member-btn btn btn-primary ">Add to Workspace</button>`;
-                    const addButton = friendDiv.querySelector('.add-member-btn');
-                    addButton.addEventListener('click', () => addFriendsToWorkspace(item.userId));
-                    document.getElementById('add-friend-member').appendChild(friendDiv);
-                }
-
+            // Fetch user friends
+            const friendsResponse = await fetch(`/api/1.0/user/friendsRelationShip`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
+                },
             });
 
+            if (!friendsResponse.ok) {
+                throw new Error(`HTTP error! status: ${friendsResponse.status}`);
+            }
+
+            const friendsData = await friendsResponse.json();
+            const userFriendsInformation = friendsData.data;
+            const userId = friendsData.userId;
+
+            console.log(userFriendsInformation);
+            console.log(userId);
+
+            // Display friends who are not already in the workspace
+            userFriendsInformation.forEach(item => {
+                if ((userId === item.userId && item.status === 'accepted' && !currentMemberIds.has(item.friendId)) ||
+                    (userId === item.friendId && item.status === 'accepted' && !currentMemberIds.has(item.userId))) {
+                    const friendDiv = document.createElement('div');
+                    friendDiv.classList.add('friend');
+                    const friendName = userId === item.userId ? item.friendName : item.userName;
+                    const friendEmail = userId === item.userId ? item.friendEmail : item.userEmail;
+                    const friendId = userId === item.userId ? item.friendId : item.userId;
+                    friendDiv.innerHTML = `
+                    <div class ="friend-name">${friendName}</div>
+                    <div class ="friend-email">${friendEmail}</div>
+                    <button class="add-member-btn btn btn-primary">Add to Workspace</button>`;
+                    const addButton = friendDiv.querySelector('.add-member-btn');
+                    addButton.addEventListener('click', () => addFriendsToWorkspace(friendId));
+                    document.getElementById('add-friend-member').appendChild(friendDiv);
+                }
+            });
 
         } catch (error) {
-            console.error('Failed to update user:', error);
+            console.error('Failed to fetch data:', error);
         }
     }
-
 
     function showWorkspaceMemberList(members) {
         const userListDiv = document.getElementById('userList');
