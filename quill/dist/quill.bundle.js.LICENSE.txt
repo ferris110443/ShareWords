@@ -1,0 +1,14 @@
+/*!
+ * Quill Editor v1.3.7
+ * https://quilljs.com/
+ * Copyright (c) 2014, Jason Chen
+ * Copyright (c) 2013, salesforce.com
+ */
+
+/*!
+ * RangeFix v0.2.8
+ * https://github.com/edg2s/rangefix
+ *
+ * Copyright 2014-17 Ed Sanders.
+ * Released under the MIT license
+ */
