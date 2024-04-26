@@ -254,10 +254,10 @@ async function removeFriend(userId, friendId) {
 
 
 function updateOnlineStatus() {
+    console.log("Updating online status...")
     document.querySelectorAll('.friend-item').forEach(item => {
         const email = item.querySelector('button').getAttribute('data-email');
-        const isOnline = onlineUsers[email];  // Check the online status directly from the object
-
+        const isOnline = onlineUsers[email];
         const statusDiv = item.querySelector('.status-online, .status-offline');
         if (statusDiv) {
             statusDiv.textContent = isOnline ? "Online" : "Offline";

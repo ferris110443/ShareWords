@@ -42,6 +42,7 @@ public class SocketIOService {
                 log.info("Client disconnected: {} with token {}", client.getSessionId(), userSession.getAccessToken());
                 clients.remove(userSession.getEmail()); // Assuming you have a method to get email from userSession
                 userSession.setOnline(false);
+                broadcastOnlineUsers(); // Call a method to broadcast the updated list of online users
             } else {
                 log.info("Unknown client disconnected: {}", client.getSessionId());
             }
@@ -51,16 +52,21 @@ public class SocketIOService {
             String userEmail = getEmailFromToken(data);
             if (userEmail != null) {
                 clients.putIfAbsent(userEmail, new UserSession(client, true, data.getAccessToken(), userEmail));
-                clients.get(userEmail).setOnline(true);
-                log.info("User {} is now online with token {}", userEmail, data.getAccessToken());
-                Map<String, Boolean> onlineUsers = listOnlineUsers();
-                onlineUsers.forEach((email, online) -> System.out.println(email + " is online: " + online));
+//                clients.get(userEmail).setOnline(true);
+//                log.info("User {} is now online with token {}", userEmail, data.getAccessToken());
+                broadcastOnlineUsers(); // Update and broadcast online status when user sends a message
                 ackRequest.sendAckData("Message received");
-                client.sendEvent("onlineUsers", onlineUsers);
             }
         });
     }
 
+    private void broadcastOnlineUsers() {
+        Map<String, Boolean> onlineUsers = listOnlineUsers();
+        onlineUsers.forEach((email, online) -> log.info(email + " is online: " + online));
+        server.getAllClients().forEach(client -> {
+            client.sendEvent("onlineUsers", onlineUsers);
+        });
+    }
 
     private String getEmailFromToken(MessageData data) {
         String accessToken = data.getAccessToken();
