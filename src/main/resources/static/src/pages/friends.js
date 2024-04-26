@@ -248,7 +248,7 @@ async function rejectFriend(userId, friendId) {
 async function removeFriend(userId, friendId) {
     try {
         const response = await fetch(`/api/1.0/user/removeFriendRequest`, {
-            method: 'DELETE',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${accessToken}`
