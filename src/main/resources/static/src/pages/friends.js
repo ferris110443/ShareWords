@@ -74,10 +74,13 @@ async function getUserInformation(searchQuery) {
 
         // Add event listeners to newly created buttons
         document.querySelectorAll('.add-friend-btn').forEach(button => {
-            button.addEventListener('click', sendAddFriendRequest);
             button.addEventListener('click', function (event) {
+                event.target.disabled = true;
+                event.target.innerText = 'Wait accepted';
+
                 const userEmail = event.target.getAttribute('data-user-email');
                 socket.emit('addFriendRequest', {userEmail: userEmail, accessToken: accessToken});
+                sendAddFriendRequest(event);
             });
         });
 
@@ -101,7 +104,6 @@ async function sendAddFriendRequest(event) {
     console.log(data)
     if (response.ok) {
         alert('Friend request sent successfully');
-        window.location.reload();
     } else {
         alert(data.message);
     }
@@ -153,8 +155,8 @@ async function checkFriendshipStatus(event) {
             const friendRequestElement = document.createElement('div');
             friendRequestElement.className = 'friend-request-item';
             friendRequestElement.innerHTML = `
-            <div><strong>Name:</strong> ${item.userName}</div>
-            <div><strong>Email:</strong> ${item.userEmail}</div>
+            <div class="rq-name-${item.userName}"><strong>Name:</strong> ${item.userName}</div>
+            <div class="rq-email-${item.userEmail}"><strong>Email:</strong> ${item.userEmail}</div>
             <button id="btn-userId-${item.userId}" class="btn btn-primary accept-friend-btn" data-user-id="${item.friendId}" data-friend-id="${item.userId}">Accept Friend</button>
             <button id="btn-userId-${item.userId}" class="btn btn-primary reject-friend-btn" data-user-id="${item.friendId}" data-friend-id="${item.userId}">Reject Friend</button>
         `;
@@ -184,6 +186,8 @@ async function checkFriendshipStatus(event) {
             const userId = this.getAttribute('data-user-id');
             const friendId = this.getAttribute('data-friend-id');
             acceptFriend(userId, friendId);
+
+
         });
     });
 
@@ -211,7 +215,11 @@ async function acceptFriend(userId, friendId) {
         });
         const data = await response.json();
         console.log('Friend request accepted:', data);
-        window.location.reload()
+        const friendRequestDiv = document.querySelector(`#btn-userId-${friendId}`).closest('.friend-request-item');
+        friendRequestDiv.querySelector('.accept-friend-btn, .reject-friend-btn').remove(); // Remove accept and reject buttons
+        friendRequestDiv.classList.replace('friend-request-item', 'friend-item'); // Change class if necessary
+        friendsList.appendChild(friendRequestDiv);
+
     } catch (error) {
         console.error('Error accepting friend request:', error);
     }
@@ -230,7 +238,7 @@ async function rejectFriend(userId, friendId) {
 
         const data = await response.json();
         console.log('Friend request rejected:', data);
-        window.location.reload()
+        document.querySelector(`#btn-userId-${friendId}`).closest('.friend-request-item').remove();
     } catch (error) {
         console.error('Error rejecting friend request:', error);
     }
@@ -250,7 +258,8 @@ async function removeFriend(userId, friendId) {
 
         const data = await response.json();
         console.log('Friend relations removed :', data);
-        window.location.reload()
+        document.querySelector(`#btn-userId-${friendId}`).closest('.friend-item').remove();
+
     } catch (error) {
         console.error('Error rejecting friend request:', error);
     }

@@ -42,4 +42,18 @@ socket.on('friendRequest', function (requestUserEmail) {
 });
 
 
+socket.on('friendRequestAccepted', function (requestUserEmail) {
+    
+    alert('Your friend request to ' + requestUserEmail + ' has been accepted');
+});
+
+socket.on('friendRequestRejected', function (requestUserEmail) {
+    alert('Your friend request to ' + requestUserEmail + ' has been rejected');
+});
+
+socket.on('friendRequestRemoved', function (requestUserEmail) {
+    alert('Your friend request to ' + requestUserEmail + ' has been removed');
+});
+
+
 

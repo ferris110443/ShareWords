@@ -221,10 +221,21 @@
             const memberDiv = document.createElement('div');
             memberDiv.classList.add('member');
             memberDiv.innerHTML = `
-                <div class ="workspace-member-name">${member.name}</div>
-                <div class ="workspace-member-email">${member.email}</div>
+            <div class="member-info">
+                <div class="workspace-member-name">${member.name}</div>
+                <div class="workspace-member-email">${member.email}</div>
+            </div>
+            <button class="remove-member-btn btn btn-danger" data-memberid="${member.userId}">Remove</button>
             `;
             userListDiv.appendChild(memberDiv);
+
+            // const removeBtn = memberDiv.querySelector('.remove-member-btn');
+            // removeBtn.addEventListener('click', function () {
+            //     memberDiv.remove()
+            //     removeMemberFromWorkspace(member.userId);
+            // });
+
+
         });
     }
 
@@ -256,6 +267,30 @@
             alert('Failed to add user to workspace.');
         }
     }
+
+
+    // function removeMemberFromWorkspace(memberId, memberDiv) {
+    //     fetch(`/api/1.0/workspace/removeMember?workspaceName=${roomId}&memberId=${memberId}`, {
+    //         method: 'DELETE',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             'Authorization': `Bearer ${accessToken}`
+    //         }
+    //     })
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             if (!data.success) {
+    //                 alert('Failed to remove user from workspace: ' + data.error);
+    //             } else {
+    //                 alert('User removed from workspace successfully.');
+    //                 memberDiv.remove(); // Remove the member element from the DOM
+    //             }
+    //         })
+    //         .catch(error => {
+    //             console.error('Error:', error);
+    //             alert('Failed to remove user from workspace.');
+    //         });
+    // }
 
 
 </script>
