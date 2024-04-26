@@ -47,44 +47,44 @@
         window.location.href = `${domain}/admin/workspace?roomId=${roomId}`;
     }
 
-    window.addEventListener('message', function(event) {
-        if (event.origin !== "http://localhost:8080") {
-            return; // Ensure that the message is coming from the expected origin
-        }
-        if (event.data.jwt) {
-            console.log("Received JWT:", event.data.jwt);
-            localStorage.setItem('accessToken', event.data.jwt);
-        }
-    });
+    // window.addEventListener('message', function(event) {
+    //     if (event.origin !== domain) {
+    //         return; // Ensure that the message is coming from the expected origin
+    //     }
+    //     if (event.data.jwt) {
+    //         console.log("Received JWT:", event.data.jwt);
+    //         localStorage.setItem('accessToken', event.data.jwt);
+    //     }
+    // });
 
-    document.addEventListener("DOMContentLoaded", function() {
-        const token = localStorage.getItem('accessToken');
-        if (!token) {
-            console.error('Token not found');
-            alert('Please sign in to continue');
-            window.location.href = `${domain}/signin.html`;
-        } else {
-            fetch(`${domain}/api/1.0/validation/workspace`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({workspaceName:roomId})
-            })
-                .then(response => {
-                    if (response.ok) {
-                        console.log('Token validated successfully');
-                        // Proceed to load the application
-                    } else {
-                        alert('Please sign in to continue');
-                        console.error('Token validation failed');
-                        window.location.href = `${domain}/signin.html`;
-                    }
-                })
-                .catch(error => console.error('Error validating token:', error));
-        }
-    });
+    // document.addEventListener("DOMContentLoaded", function() {
+    //     const token = localStorage.getItem('accessToken');
+    //     if (!token) {
+    //         console.error('Token not found');
+    //         alert('Please sign in to continue!');
+    //         window.location.href = `${domain}/signin.html`;
+    //     } else {
+    //         fetch(`${domain}/api/1.0/validation/workspace`, {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'Authorization': `Bearer ${token}`
+    //             },
+    //             body: JSON.stringify({workspaceName:roomId})
+    //         })
+    //             .then(response => {
+    //                 if (response.ok) {
+    //                     console.log('Token validated successfully');
+    //                     // Proceed to load the application
+    //                 } else {
+    //                     alert('Please sign in to continue');
+    //                     console.error('Token validation failed');
+    //                     window.location.href = `${domain}/signin.html`;
+    //                 }
+    //             })
+    //             .catch(error => console.error('Error validating token:', error));
+    //     }
+    // });
 
 
 

@@ -55,7 +55,7 @@ window.addEventListener('load', () => {
                 ydoc.transact(() => {
                     console.log(ytext)
                     // Insert content if the document is empty
-                    if (ytext._start.content.toString() === '') {
+                    if (ytext && ytext._start && ytext._start.content && ytext._start.content.toString() === '') {
                         ytext.insert(0, data.data.content);
                         console.log("ytext is empty")
                     }

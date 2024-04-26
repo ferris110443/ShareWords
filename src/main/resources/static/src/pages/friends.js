@@ -117,6 +117,10 @@ async function checkFriendshipStatus(event) {
     friendsRequestList.innerHTML = '';
 
     data.data.forEach(item => {
+        const isOnline = onlineUsers.includes(item.friendId); // Check if the friendId is in the onlineUsers array
+        const friendStatus = isOnline ? "Online" : "Offline";
+        const friendStatusClass = isOnline ? "status-online" : "status-offline";
+
         if (item.status === 'accepted') {
             const friendElement = document.createElement('div');
             friendElement.className = 'friend-item';
@@ -125,14 +129,16 @@ async function checkFriendshipStatus(event) {
                 friendElement.innerHTML = `
                     <div><strong>Name:</strong> ${item.friendName}</div>
                     <div><strong>Email:</strong> ${item.friendEmail}</div>
-                    <button id="btn-userId-${item.friendId}" class="btn btn-primary remove-friend-btn" data-user-id="${item.userId}" data-friend-id="${item.friendId}">Remove Friend</button>
+                    <div class="${friendStatusClass}">${friendStatus}</div>
+                    <button id="btn-userId-${item.friendId}" class="btn btn-primary remove-friend-btn" data-user-id="${item.userId}" data-friend-id="${item.friendId}" data-email="${item.friendEmail}" >Remove Friend</button>
                 `;
 
             } else if (item.friendId === userId) {
                 friendElement.innerHTML = `
                     <div><strong>Name:</strong> ${item.userName}</div>
                     <div><strong>Email:</strong> ${item.userEmail}</div>
-                    <button id="btn-userId-${item.userId}" class="btn btn-primary remove-friend-btn" data-user-id="${item.friendId}" data-friend-id="${item.userId}">Remove Friend</button>
+                    <div class="${friendStatusClass}">${friendStatus}</div>
+                    <button id="btn-userId-${item.userId}" class="btn btn-primary remove-friend-btn" data-user-id="${item.friendId}" data-friend-id="${item.userId}" data-email="${item.userEmail}" >Remove Friend</button>
                 `;
             }
 
@@ -244,4 +250,18 @@ async function removeFriend(userId, friendId) {
     } catch (error) {
         console.error('Error rejecting friend request:', error);
     }
+}
+
+
+function updateOnlineStatus() {
+    document.querySelectorAll('.friend-item').forEach(item => {
+        const email = item.querySelector('button').getAttribute('data-email');
+        const isOnline = onlineUsers[email];  // Check the online status directly from the object
+
+        const statusDiv = item.querySelector('.status-online, .status-offline');
+        if (statusDiv) {
+            statusDiv.textContent = isOnline ? "Online" : "Offline";
+            statusDiv.className = isOnline ? "status-online" : "status-offline";
+        }
+    });
 }

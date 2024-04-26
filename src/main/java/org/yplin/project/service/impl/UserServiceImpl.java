@@ -227,14 +227,14 @@ public class UserServiceImpl implements UserService {
         Long userId = userRepository.findIdByEmail(userEmail).getId();
         Long friendId = friendRequestForm.getFriendId();
 
-        System.out.println("userId : " + userId);
-        System.out.println("friendId : " + friendId);
+//        System.out.println("userId : " + userId);
+//        System.out.println("friendId : " + friendId);
 
         // friend request in both possible directions
         FriendsModel existingFriendship = friendsRepository.findByUserIdAndFriendId(userId, friendId);
         FriendsModel existingFriendship2 = friendsRepository.findByUserIdAndFriendId(friendId, userId);
-        System.out.println("existingFriendship : " + existingFriendship);
-        System.out.println("existingFriendship2 : " + existingFriendship2);
+//        System.out.println("existingFriendship : " + existingFriendship);
+//        System.out.println("existingFriendship2 : " + existingFriendship2);
         if (existingFriendship != null) {
             existingFriendship.setStatus(StatusEnum.declined);
             existingFriendship.setCreatedAt(new Timestamp(System.currentTimeMillis()));
@@ -255,14 +255,14 @@ public class UserServiceImpl implements UserService {
         Long userId = userRepository.findIdByEmail(userEmail).getId();
         Long friendId = friendRequestForm.getFriendId();
 
-        System.out.println("userId : " + userId);
-        System.out.println("friendId : " + friendId);
+//        System.out.println("userId : " + userId);
+//        System.out.println("friendId : " + friendId);
 
         // friend request in both possible directions
         FriendsModel existingFriendship = friendsRepository.findByUserIdAndFriendId(userId, friendId);
         FriendsModel existingFriendship2 = friendsRepository.findByUserIdAndFriendId(friendId, userId);
-        System.out.println("existingFriendship : " + existingFriendship);
-        System.out.println("existingFriendship2 : " + existingFriendship2);
+//        System.out.println("existingFriendship : " + existingFriendship);
+//        System.out.println("existingFriendship2 : " + existingFriendship2);
         if (existingFriendship != null) {
             existingFriendship.setStatus(StatusEnum.pending);
             existingFriendship.setCreatedAt(new Timestamp(System.currentTimeMillis()));

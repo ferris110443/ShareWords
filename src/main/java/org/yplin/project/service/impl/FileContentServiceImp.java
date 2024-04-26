@@ -58,7 +58,7 @@ public class FileContentServiceImp implements FileContentService {
         FileContentModel fileContentModel = new FileContentModel();
 
         long workspaceId = queryWorkspaceIdFromWorkspaceName(createFileForm.getRoomId());
-        System.out.println(workspaceId);
+//        System.out.println(workspaceId);
         fileContentModel.setWorkspaceId(workspaceId);
         fileContentModel.setFileTitle(createFileForm.getFileName());
         fileContentModel.setContent("");
@@ -85,7 +85,7 @@ public class FileContentServiceImp implements FileContentService {
     public String saveImageContent(ImageDataForm imageDataForm) {
         try {
             String imageDataBase64 = imageDataForm.getImage().split(",")[1];
-            System.out.println(imageDataBase64);
+//            System.out.println(imageDataBase64);
             if (imageDataBase64 != null) {
                 byte[] decodedBytes = Base64.getDecoder().decode(imageDataBase64);
                 String filename = UUID.randomUUID() + ".png";
@@ -99,7 +99,7 @@ public class FileContentServiceImp implements FileContentService {
                 logger.info("Image uploaded successfully");
 
                 String imageURL = scheme + "://" + domain + ":" + port + "/images/" + filename;
-                System.out.println(imageURL);
+//                System.out.println(imageURL);
                 return imageURL;
 
             } else {
