@@ -14,6 +14,7 @@ socket.on('connect', () => {
         updateOnlineStatus();
     });
 });
+
 socket.io.on('reconnect', () => {
     console.log('reconnecting............');
 });
@@ -36,7 +37,9 @@ socket.on('message', (message) => {
     console.log('Received message:', message);
 });
 
-
+socket.on('friendRequest', function (requestUserEmail) {
+    alert('You received a friend request from: ' + requestUserEmail);
+});
 
 
 

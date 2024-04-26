@@ -52,20 +52,20 @@ async function getUserInformation(searchQuery) {
                 if (relation.status === 'pending') {
                     relationHTML += `<div><strong>Name:</strong> ${user.name}</div>
                                 <div><strong>Email:</strong> ${user.email}</div>
-                                <button id="btn-userId-${user.id}" class="btn btn-primary add-friend-btn" data-user-id="${user.id}" disabled>Wait accepted</button>`;
+                                <button id="btn-userId-${user.id}" class="btn btn-primary add-friend-btn" data-user-email="${user.email}" data-user-id="${user.id}" disabled>Wait accepted</button>`;
                 } else if (relation.status === 'accepted') {
                     relationHTML += `<div style="display: none"><strong>Name:</strong> ${user.name}</div>
                                 <div style="display: none"><strong>Email:</strong> ${user.email}</div>
-                                <button id="btn-userId-${user.id}" class="btn btn-primary add-friend-btn" data-user-id="${user.id}" style="display: none">Already Friends</button>`;
+                                <button id="btn-userId-${user.id}" class="btn btn-primary add-friend-btn" data-user-email="${user.email}" data-user-id="${user.id}" style="display: none">Already Friends</button>`;
                 } else if (relation.status === 'declined') {
                     relationHTML += `<div><strong>Name:</strong> ${user.name}</div>
                                 <div><strong>Email:</strong> ${user.email}</div>
-                                <button id="btn-userId-${user.id}" class="btn btn-primary add-friend-btn" data-user-id="${user.id}" disabled >Request declined</button>`;
+                                <button id="btn-userId-${user.id}" class="btn btn-primary add-friend-btn" data-user-email="${user.email}" data-user-id="${user.id}" disabled >Request declined</button>`;
                 }
             } else {
                 relationHTML += `<div><strong>Name:</strong> ${user.name}</div>
                                 <div><strong>Email:</strong> ${user.email}</div>
-                                <button id="btn-userId-${user.id}" class="btn btn-primary add-friend-btn" data-user-id="${user.id}">Add as Friend</button>`;
+                                <button id="btn-userId-${user.id}" class="btn btn-primary add-friend-btn" data-user-email="${user.email}" data-user-id="${user.id}">Add as Friend</button>`;
             }
 
             userElement.innerHTML = relationHTML;
@@ -75,6 +75,10 @@ async function getUserInformation(searchQuery) {
         // Add event listeners to newly created buttons
         document.querySelectorAll('.add-friend-btn').forEach(button => {
             button.addEventListener('click', sendAddFriendRequest);
+            button.addEventListener('click', function (event) {
+                const userEmail = event.target.getAttribute('data-user-email');
+                socket.emit('addFriendRequest', {userEmail: userEmail, accessToken: accessToken});
+            });
         });
 
     } catch (error) {

@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.yplin.project.configuration.JwtTokenUtil;
-import org.yplin.project.data.form.MessageData;
+import org.yplin.project.data.dto.socketio.MessageTokenData;
 import org.yplin.project.data.form.UserSession;
 
 import java.util.Map;
@@ -48,17 +48,36 @@ public class SocketIOService {
             }
         });
 
-        server.addEventListener("message", MessageData.class, (client, data, ackRequest) -> {
+        server.addEventListener("message", MessageTokenData.class, (client, data, ackRequest) -> {
             String userEmail = getEmailFromToken(data);
             if (userEmail != null) {
                 clients.putIfAbsent(userEmail, new UserSession(client, true, data.getAccessToken(), userEmail));
-//                clients.get(userEmail).setOnline(true);
-//                log.info("User {} is now online with token {}", userEmail, data.getAccessToken());
                 broadcastOnlineUsers(); // Update and broadcast online status when user sends a message
                 ackRequest.sendAckData("Message received");
             }
         });
+
+        server.addEventListener("addFriendRequest", MessageTokenData.class, (client, data, ackRequest) -> {
+
+            log.info("data: {}", data);
+            String userEmail = getEmailFromToken(data);
+            String friendEmail = data.getUserEmail();
+            log.info("User {} sent friend request to {}", userEmail, friendEmail);
+            broadcastInvitationToUser(userEmail, friendEmail);
+
+        });
+
+
     }
+
+    private void broadcastInvitationToUser(String userEmail, String friendEmail) {
+        UserSession friendSession = clients.get(friendEmail); // only frienduser user receive the invitation pop-up
+        System.out.println("friendSession: " + friendSession);
+        if (friendSession != null) {
+            friendSession.getClient().sendEvent("friendRequest", userEmail);
+        }
+    }
+
 
     private void broadcastOnlineUsers() {
         Map<String, Boolean> onlineUsers = listOnlineUsers();
@@ -68,7 +87,7 @@ public class SocketIOService {
         });
     }
 
-    private String getEmailFromToken(MessageData data) {
+    private String getEmailFromToken(MessageTokenData data) {
         String accessToken = data.getAccessToken();
         return jwtTokenUtil.extractUserEmail(accessToken);
     }
