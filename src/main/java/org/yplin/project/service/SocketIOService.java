@@ -3,12 +3,16 @@ package org.yplin.project.service;
 import com.corundumstudio.socketio.SocketIOServer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.yplin.project.configuration.JwtTokenUtil;
 import org.yplin.project.data.dto.socketio.MessageTokenData;
 import org.yplin.project.data.form.UserSession;
+import org.yplin.project.model.UserModel;
+import org.yplin.project.repository.user.UserRepository;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -21,6 +25,9 @@ public class SocketIOService {
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     public SocketIOService(SocketIOServer server) {
@@ -61,20 +68,22 @@ public class SocketIOService {
 
             log.info("data: {}", data);
             String userEmail = getEmailFromToken(data);
+            String userName = getNameFromToken(data);
             String friendEmail = data.getUserEmail();
-            log.info("User {} sent friend request to {}", userEmail, friendEmail);
-            broadcastInvitationToUser(userEmail, friendEmail);
+
+            broadcastInvitationToUser(userEmail, userName, friendEmail);
 
         });
 
 
     }
 
-    private void broadcastInvitationToUser(String userEmail, String friendEmail) {
-        UserSession friendSession = clients.get(friendEmail); // only frienduser user receive the invitation pop-up
+
+    private void broadcastInvitationToUser(String userEmail, String userName, String friendEmail) {
+        UserSession friendSession = clients.get(friendEmail); // only friend user receive the invitation pop-up
         System.out.println("friendSession: " + friendSession);
         if (friendSession != null) {
-            friendSession.getClient().sendEvent("friendRequest", userEmail);
+            friendSession.getClient().sendEvent("friendRequest", userEmail, userName);
         }
     }
 
@@ -91,6 +100,19 @@ public class SocketIOService {
         String accessToken = data.getAccessToken();
         return jwtTokenUtil.extractUserEmail(accessToken);
     }
+
+    private String getNameFromToken(MessageTokenData data) {
+        String accessToken = data.getAccessToken();
+        String email = jwtTokenUtil.extractUserEmail(accessToken);
+
+        Optional<UserModel> user = userRepository.findByEmail(email);
+        if (user.isPresent()) {
+            return user.get().getName();  // Assuming 'name' is the username you want to fetch
+        } else {
+            throw new UsernameNotFoundException("User not found with email: " + email);
+        }
+    }
+
 
     public Map<String, Boolean> listOnlineUsers() {
         Map<String, Boolean> onlineUsers = new ConcurrentHashMap<>();

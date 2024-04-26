@@ -52,20 +52,20 @@ async function getUserInformation(searchQuery) {
                 if (relation.status === 'pending') {
                     relationHTML += `<div><strong>Name:</strong> ${user.name}</div>
                                 <div><strong>Email:</strong> ${user.email}</div>
-                                <button id="btn-userId-${user.id}" class="btn btn-primary add-friend-btn" data-user-email="${user.email}" data-user-id="${user.id}" disabled>Wait accepted</button>`;
+                                <button id="btn-userId-${user.id}" class="btn btn-primary add-friend-btn"  data-user-name="${user.name}" data-user-email="${user.email}" data-user-id="${user.id}" disabled>Wait accepted</button>`;
                 } else if (relation.status === 'accepted') {
                     relationHTML += `<div style="display: none"><strong>Name:</strong> ${user.name}</div>
                                 <div style="display: none"><strong>Email:</strong> ${user.email}</div>
-                                <button id="btn-userId-${user.id}" class="btn btn-primary add-friend-btn" data-user-email="${user.email}" data-user-id="${user.id}" style="display: none">Already Friends</button>`;
+                                <button id="btn-userId-${user.id}" class="btn btn-primary add-friend-btn"  data-user-name="${user.name}" data-user-email="${user.email}" data-user-id="${user.id}" style="display: none">Already Friends</button>`;
                 } else if (relation.status === 'declined') {
                     relationHTML += `<div><strong>Name:</strong> ${user.name}</div>
                                 <div><strong>Email:</strong> ${user.email}</div>
-                                <button id="btn-userId-${user.id}" class="btn btn-primary add-friend-btn" data-user-email="${user.email}" data-user-id="${user.id}" disabled >Request declined</button>`;
+                                <button id="btn-userId-${user.id}" class="btn btn-primary add-friend-btn"  data-user-name="${user.name}" data-user-email="${user.email}" data-user-id="${user.id}" disabled >Request declined</button>`;
                 }
             } else {
                 relationHTML += `<div><strong>Name:</strong> ${user.name}</div>
                                 <div><strong>Email:</strong> ${user.email}</div>
-                                <button id="btn-userId-${user.id}" class="btn btn-primary add-friend-btn" data-user-email="${user.email}" data-user-id="${user.id}">Add as Friend</button>`;
+                                <button id="btn-userId-${user.id}" class="btn btn-primary add-friend-btn"  data-user-name="${user.name}" data-user-email="${user.email}" data-user-id="${user.id}">Add as Friend</button>`;
             }
 
             userElement.innerHTML = relationHTML;
@@ -77,9 +77,10 @@ async function getUserInformation(searchQuery) {
             button.addEventListener('click', function (event) {
                 event.target.disabled = true;
                 event.target.innerText = 'Wait accepted';
-
+                const userName = event.target.getAttribute('data-user-name');
                 const userEmail = event.target.getAttribute('data-user-email');
-                socket.emit('addFriendRequest', {userEmail: userEmail, accessToken: accessToken});
+                console.log(userName + " " + userEmail)
+                socket.emit('addFriendRequest', {userEmail: userEmail, userName: userName, accessToken: accessToken});
                 sendAddFriendRequest(event);
             });
         });
@@ -216,9 +217,8 @@ async function acceptFriend(userId, friendId) {
         const data = await response.json();
         console.log('Friend request accepted:', data);
         const friendRequestDiv = document.querySelector(`#btn-userId-${friendId}`).closest('.friend-request-item');
-        friendRequestDiv.querySelector('.accept-friend-btn, .reject-friend-btn').remove(); // Remove accept and reject buttons
-        friendRequestDiv.classList.replace('friend-request-item', 'friend-item'); // Change class if necessary
-        friendsList.appendChild(friendRequestDiv);
+        friendRequestDiv.remove();
+
 
     } catch (error) {
         console.error('Error accepting friend request:', error);

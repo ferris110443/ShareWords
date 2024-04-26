@@ -8,6 +8,7 @@ import org.yplin.project.model.UserModel;
 import org.yplin.project.service.impl.UserEmailNameProjection;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserModel, Long> {
@@ -24,4 +25,6 @@ public interface UserRepository extends JpaRepository<UserModel, Long> {
 
     @Query("SELECT u FROM UserModel u WHERE u.name LIKE %:name%")
     List<UserModel> findByNameContaining(@Param("name") String name);
+
+    Optional<UserModel> findByEmail(String email);
 }

@@ -9,4 +9,5 @@ import lombok.Data;
 public class MessageTokenData {
     private String accessToken;
     private String userEmail;
+    private String userName;
 }

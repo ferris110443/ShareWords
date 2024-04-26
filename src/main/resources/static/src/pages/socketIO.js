@@ -37,13 +37,12 @@ socket.on('message', (message) => {
     console.log('Received message:', message);
 });
 
-socket.on('friendRequest', function (requestUserEmail) {
-    alert('You received a friend request from: ' + requestUserEmail);
+socket.on('friendRequest', function (requestUserEmail, requestUserName) {
+    alert('You received a friend request from: ' + requestUserEmail + requestUserName);
 });
 
 
 socket.on('friendRequestAccepted', function (requestUserEmail) {
-    
     alert('Your friend request to ' + requestUserEmail + ' has been accepted');
 });
 
