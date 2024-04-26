@@ -40,6 +40,8 @@ public interface UserService {
 
     void removeFriendRequest(FriendRequestForm friendRequestForm, String userEmail);
 
+    void removeMemberFromWorkspace(UserAddMemberInWorkspaceForm userAddMemberInWorkspaceForm);
+
 
     sealed class UserException extends
             Exception permits UserExistException, UserNotExistException, UserPasswordMismatchException {

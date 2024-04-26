@@ -78,13 +78,6 @@
     const queryParams = new URLSearchParams(window.location.search);
     const roomId = decodeURIComponent(queryParams.get('roomId'));
 
-
-    // document.getElementById('myIframe').onload = function () {
-    //     this.contentWindow.postMessage({
-    //         jwt: accessToken
-    //     }, 'http://localhost:3000');
-    // };
-
     renderWorkspaceFileList()
     getWorkspaceMember()
     getUserFriendsForAddingMembers()
@@ -198,11 +191,17 @@
                     const friendEmail = userId === item.userId ? item.friendEmail : item.userEmail;
                     const friendId = userId === item.userId ? item.friendId : item.userId;
                     friendDiv.innerHTML = `
-                    <div class ="friend-name">${friendName}</div>
-                    <div class ="friend-email">${friendEmail}</div>
+                    <div class="member-info">
+                        <div class ="friend-name">${friendName}</div>
+                        <div class ="friend-email">${friendEmail}</div>
+                    </div>
                     <button class="add-member-btn btn btn-primary">Add to Workspace</button>`;
                     const addButton = friendDiv.querySelector('.add-member-btn');
-                    addButton.addEventListener('click', () => addFriendsToWorkspace(friendId));
+
+                    addButton.addEventListener('click', function () {
+                        friendDiv.remove()
+                        addFriendsToWorkspace(friendId)
+                    });
                     document.getElementById('add-friend-member').appendChild(friendDiv);
                 }
             });
@@ -212,32 +211,6 @@
         }
     }
 
-    function showWorkspaceMemberList(members) {
-        const userListDiv = document.getElementById('userList');
-        userListDiv.innerHTML = '';
-
-        // Add new members to the list
-        members.forEach(member => {
-            const memberDiv = document.createElement('div');
-            memberDiv.classList.add('member');
-            memberDiv.innerHTML = `
-            <div class="member-info">
-                <div class="workspace-member-name">${member.name}</div>
-                <div class="workspace-member-email">${member.email}</div>
-            </div>
-            <button class="remove-member-btn btn btn-danger" data-memberid="${member.userId}">Remove</button>
-            `;
-            userListDiv.appendChild(memberDiv);
-
-            // const removeBtn = memberDiv.querySelector('.remove-member-btn');
-            // removeBtn.addEventListener('click', function () {
-            //     memberDiv.remove()
-            //     removeMemberFromWorkspace(member.userId);
-            // });
-
-
-        });
-    }
 
     async function addFriendsToWorkspace(userId) {
         try {
@@ -259,7 +232,7 @@
                 alert('Failed to add user to workspace: ' + data.error);
             } else {
                 alert('User added to workspace successfully.');
-                window.location.reload();
+                // window.location.reload();
             }
 
         } catch (error) {
@@ -269,28 +242,50 @@
     }
 
 
-    // function removeMemberFromWorkspace(memberId, memberDiv) {
-    //     fetch(`/api/1.0/workspace/removeMember?workspaceName=${roomId}&memberId=${memberId}`, {
-    //         method: 'DELETE',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //             'Authorization': `Bearer ${accessToken}`
-    //         }
-    //     })
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             if (!data.success) {
-    //                 alert('Failed to remove user from workspace: ' + data.error);
-    //             } else {
-    //                 alert('User removed from workspace successfully.');
-    //                 memberDiv.remove(); // Remove the member element from the DOM
-    //             }
-    //         })
-    //         .catch(error => {
-    //             console.error('Error:', error);
-    //             alert('Failed to remove user from workspace.');
-    //         });
-    // }
+    async function removeMemberFromWorkspace(userId) {
+        const response = fetch(`/api/1.0/workspace/workspaceMembers`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            },
+            body: JSON.stringify({
+                userId: userId,
+                workspaceName: roomId
+            })
+        });
+
+        const data = response.json();
+    }
+
+    function showWorkspaceMemberList(members) {
+        const userListDiv = document.getElementById('userList');
+        userListDiv.innerHTML = '';
+
+        // Add new members to the list
+        members.forEach(member => {
+
+
+            const memberDiv = document.createElement('div');
+            memberDiv.classList.add('member');
+            memberDiv.innerHTML = `
+            <div class="member-info">
+                <div class="workspace-member-name">${member.name}</div>
+                <div class="workspace-member-email">${member.email}</div>
+            </div>
+            <button class="remove-member-btn btn btn-danger" data-memberid="${member.userId}">Remove</button>
+            `;
+            userListDiv.appendChild(memberDiv);
+
+            const removeBtn = memberDiv.querySelector('.remove-member-btn');
+            removeBtn.addEventListener('click', function () {
+                memberDiv.remove()
+                removeMemberFromWorkspace(member.userId);
+            });
+
+
+        });
+    }
 
 
 </script>

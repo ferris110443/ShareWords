@@ -158,4 +158,26 @@ public class WorkspaceRestController {
     }
 
 
+    @DeleteMapping(path = "/workspaceMembers")
+    public ResponseEntity<?> removeFriendToWorkspaceMembers(@RequestBody UserAddMemberInWorkspaceForm userAddMemberInWorkspaceForm, @RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        String creatorEmail = jwtTokenUtil.extractUserEmail(token);
+        System.out.println("userAddMemberInWorkspaceForm" + userAddMemberInWorkspaceForm);
+
+        try {
+            Map<String, List<UserOwnWorkspaceDetailsModel>> response = new HashMap<>();
+            userservice.removeMemberFromWorkspace(userAddMemberInWorkspaceForm);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (UserAlreadyMemberException e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "User already in the workspace");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Internal error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+
 }

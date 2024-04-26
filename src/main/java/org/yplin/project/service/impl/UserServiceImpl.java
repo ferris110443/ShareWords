@@ -194,6 +194,21 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+
+    @Override
+    public void removeMemberFromWorkspace(UserAddMemberInWorkspaceForm userAddMemberInWorkspaceForm) {
+        long userId = userAddMemberInWorkspaceForm.getUserId();
+        String workspaceName = userAddMemberInWorkspaceForm.getWorkspaceName();
+        long workspaceId = workspaceRepository.findIdByWorkspaceName(workspaceName);
+        Optional<UserWorkspaceModel> existingEntry = userWorkspaceRepository.findByUserIdAndWorkspaceId(userId, workspaceId);
+        if (existingEntry.isEmpty()) {
+            throw new UserAlreadyMemberException("User is not a member of the workspace.");
+        } else {
+            userWorkspaceRepository.delete(existingEntry.get());
+        }
+    }
+
+
     @Override
     public void acceptFriendRequest(FriendRequestForm friendRequestForm, String userEmail) {
         Long userId = userRepository.findIdByEmail(userEmail).getId();
@@ -227,14 +242,9 @@ public class UserServiceImpl implements UserService {
         Long userId = userRepository.findIdByEmail(userEmail).getId();
         Long friendId = friendRequestForm.getFriendId();
 
-//        System.out.println("userId : " + userId);
-//        System.out.println("friendId : " + friendId);
-
-        // friend request in both possible directions
         FriendsModel existingFriendship = friendsRepository.findByUserIdAndFriendId(userId, friendId);
         FriendsModel existingFriendship2 = friendsRepository.findByUserIdAndFriendId(friendId, userId);
-//        System.out.println("existingFriendship : " + existingFriendship);
-//        System.out.println("existingFriendship2 : " + existingFriendship2);
+
         if (existingFriendship != null) {
             existingFriendship.setStatus(StatusEnum.declined);
             existingFriendship.setCreatedAt(new Timestamp(System.currentTimeMillis()));
@@ -255,14 +265,8 @@ public class UserServiceImpl implements UserService {
         Long userId = userRepository.findIdByEmail(userEmail).getId();
         Long friendId = friendRequestForm.getFriendId();
 
-//        System.out.println("userId : " + userId);
-//        System.out.println("friendId : " + friendId);
-
-        // friend request in both possible directions
         FriendsModel existingFriendship = friendsRepository.findByUserIdAndFriendId(userId, friendId);
         FriendsModel existingFriendship2 = friendsRepository.findByUserIdAndFriendId(friendId, userId);
-//        System.out.println("existingFriendship : " + existingFriendship);
-//        System.out.println("existingFriendship2 : " + existingFriendship2);
         if (existingFriendship != null) {
             existingFriendship.setStatus(StatusEnum.pending);
             existingFriendship.setCreatedAt(new Timestamp(System.currentTimeMillis()));
