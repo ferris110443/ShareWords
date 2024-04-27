@@ -188,7 +188,6 @@ async function checkFriendshipStatus(event) {
             const friendId = this.getAttribute('data-friend-id');
             acceptFriend(userId, friendId);
 
-
         });
     });
 

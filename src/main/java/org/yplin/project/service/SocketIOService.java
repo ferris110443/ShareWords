@@ -8,9 +8,14 @@ import org.springframework.stereotype.Service;
 import org.yplin.project.configuration.JwtTokenUtil;
 import org.yplin.project.data.dto.socketio.MessageTokenData;
 import org.yplin.project.data.form.UserSession;
+import org.yplin.project.model.FriendsModel;
+import org.yplin.project.model.StatusEnum;
 import org.yplin.project.model.UserModel;
+import org.yplin.project.repository.FriendsRepository;
 import org.yplin.project.repository.user.UserRepository;
 
+import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,6 +33,9 @@ public class SocketIOService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private FriendsRepository friendsRepository;
 
     @Autowired
     public SocketIOService(SocketIOServer server) {
@@ -72,6 +80,39 @@ public class SocketIOService {
             String friendEmail = data.getUserEmail();
 
             broadcastInvitationToUser(userEmail, userName, friendEmail);
+
+        });
+
+        server.addEventListener("acceptFriendRequestWS", MessageTokenData.class, (client, data, ackRequest) -> {
+            String userEmail = getEmailFromToken(data);
+            String requestUserEmail = data.getRequestUserEmail();
+            long userId = userRepository.findByEmail(userEmail).get().getId();
+            long requestUserId = userRepository.findByEmail(requestUserEmail).get().getId();
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("userEmail", userEmail);
+            response.put("requestUserEmail", requestUserEmail);
+            response.put("userId", userId);
+            response.put("requestUserId", requestUserId);
+            ackRequest.sendAckData(response);
+
+            // update database
+            FriendsModel existingFriendship = friendsRepository.findByUserIdAndFriendId(userId, requestUserId);
+            FriendsModel existingFriendship2 = friendsRepository.findByUserIdAndFriendId(requestUserId, userId);
+            if (existingFriendship != null && (existingFriendship2.getStatus() == StatusEnum.pending || existingFriendship2.getStatus() == StatusEnum.accepted)) {
+                existingFriendship.setStatus(StatusEnum.accepted);
+                existingFriendship.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+                friendsRepository.save(existingFriendship);
+                log.info("Friend request accepted updated through websocket successfully");
+            } else if (existingFriendship2 != null && (existingFriendship2.getStatus() == StatusEnum.pending || existingFriendship2.getStatus() == StatusEnum.accepted)) {
+                existingFriendship2.setStatus(StatusEnum.accepted);
+                existingFriendship2.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+                friendsRepository.save(existingFriendship2);
+                log.info("Friend request accepted updated through websocket successfully");
+            } else {
+                throw new IllegalStateException("No pending friend request found or request already accepted");
+            }
+
 
         });
 

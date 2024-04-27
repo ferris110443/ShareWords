@@ -10,4 +10,5 @@ public class MessageTokenData {
     private String accessToken;
     private String userEmail;
     private String userName;
+    private String requestUserEmail;
 }
