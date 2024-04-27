@@ -124,7 +124,7 @@ async function checkFriendshipStatus(event) {
     friendsRequestList.innerHTML = '';
 
     data.data.forEach(item => {
-        const isOnline = onlineUsers.includes(item.friendId); // Check if the friendId is in the onlineUsers array
+        const isOnline = onlineUsers.hasOwnProperty(item.friendEmail); // Check if the friendId is in the onlineUsers array
         const friendStatus = isOnline ? "Online" : "Offline";
         const friendStatusClass = isOnline ? "status-online" : "status-offline";
 
@@ -266,11 +266,14 @@ async function removeFriend(userId, friendId) {
 
 
 function updateOnlineStatus() {
-    console.log("Updating online status...")
+    console.log("Updating online status...");
     document.querySelectorAll('.friend-item').forEach(item => {
         const email = item.querySelector('button').getAttribute('data-email');
         const isOnline = onlineUsers[email];
         const statusDiv = item.querySelector('.status-online, .status-offline');
+
+        console.log(email + " " + isOnline + " " + statusDiv);
+
         if (statusDiv) {
             statusDiv.textContent = isOnline ? "Online" : "Offline";
             statusDiv.className = isOnline ? "status-online" : "status-offline";

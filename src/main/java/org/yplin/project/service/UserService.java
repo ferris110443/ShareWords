@@ -32,7 +32,7 @@ public interface UserService {
 
     List<WorkspaceMemberDto> fetchUserOwnWorkspaceMembers(String workspaceName);
 
-    void addMemberToWorkspace(UserAddMemberInWorkspaceForm userAddMemberInWorkspaceForm);
+    void addMemberToWorkspace(UserAddRemoveMemberInWorkspaceForm userAddMemberInWorkspaceForm);
 
     void acceptFriendRequest(FriendRequestForm friendRequestForm, String userEmail);
 
@@ -40,7 +40,7 @@ public interface UserService {
 
     void removeFriendRequest(FriendRequestForm friendRequestForm, String userEmail);
 
-    void removeMemberFromWorkspace(UserAddMemberInWorkspaceForm userAddMemberInWorkspaceForm);
+    void removeMemberFromWorkspace(UserAddRemoveMemberInWorkspaceForm userAddMemberInWorkspaceForm);
 
 
     sealed class UserException extends

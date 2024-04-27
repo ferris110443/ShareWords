@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserAddMemberInWorkspaceForm {
+public class UserAddRemoveMemberInWorkspaceForm {
 
     @Nullable
     private long userId;

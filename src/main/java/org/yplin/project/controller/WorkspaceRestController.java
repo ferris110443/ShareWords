@@ -12,7 +12,7 @@ import org.yplin.project.configuration.JwtTokenUtil;
 import org.yplin.project.data.dto.WorkspaceMemberDto;
 import org.yplin.project.data.form.CreateFileForm;
 import org.yplin.project.data.form.CreateWorkspaceForm;
-import org.yplin.project.data.form.UserAddMemberInWorkspaceForm;
+import org.yplin.project.data.form.UserAddRemoveMemberInWorkspaceForm;
 import org.yplin.project.error.UserAlreadyMemberException;
 import org.yplin.project.model.FileContentModel;
 import org.yplin.project.model.UserOwnWorkspaceDetailsModel;
@@ -138,7 +138,7 @@ public class WorkspaceRestController {
 
     // update user workspace in user_workspace table when user add member into workspace
     @PostMapping(path = "/workspaceMembers")
-    public ResponseEntity<?> addFriendToWorkspaceMembers(@RequestBody UserAddMemberInWorkspaceForm userAddMemberInWorkspaceForm, @RequestHeader("Authorization") String authorizationHeader) {
+    public ResponseEntity<?> addFriendToWorkspaceMembers(@RequestBody UserAddRemoveMemberInWorkspaceForm userAddMemberInWorkspaceForm, @RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
         String creatorEmail = jwtTokenUtil.extractUserEmail(token);
 
@@ -158,10 +158,11 @@ public class WorkspaceRestController {
     }
 
 
+    // delete user workspace in user_workspace table when user add member into workspace
     @DeleteMapping(path = "/workspaceMembers")
-    public ResponseEntity<?> removeFriendToWorkspaceMembers(@RequestBody UserAddMemberInWorkspaceForm userAddMemberInWorkspaceForm, @RequestHeader("Authorization") String authorizationHeader) {
+    public ResponseEntity<?> removeFriendFromWorkspaceMembers(@RequestBody UserAddRemoveMemberInWorkspaceForm userAddMemberInWorkspaceForm, @RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
-        String creatorEmail = jwtTokenUtil.extractUserEmail(token);
+        String userEmail = jwtTokenUtil.extractUserEmail(token);
         System.out.println("userAddMemberInWorkspaceForm" + userAddMemberInWorkspaceForm);
 
         try {
@@ -172,6 +173,25 @@ public class WorkspaceRestController {
             Map<String, String> response = new HashMap<>();
             response.put("error", "User already in the workspace");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Internal error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+
+    // delete own workspace in homepage
+    @DeleteMapping(path = "/workspaceUserSelfRemove")
+    public ResponseEntity<?> removeSelfFromWorkspaceMembers(@RequestBody UserAddRemoveMemberInWorkspaceForm userAddMemberInWorkspaceForm, @RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        String userEmail = jwtTokenUtil.extractUserEmail(token);
+        userAddMemberInWorkspaceForm.setUserId(userservice.getUserIdByEmail(userEmail));
+        System.out.println("userAddMemberInWorkspaceForm" + userAddMemberInWorkspaceForm);
+        try {
+            Map<String, List<UserOwnWorkspaceDetailsModel>> response = new HashMap<>();
+            userservice.removeMemberFromWorkspace(userAddMemberInWorkspaceForm);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
             Map<String, String> response = new HashMap<>();
             response.put("error", "Internal error");

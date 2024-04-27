@@ -178,7 +178,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addMemberToWorkspace(UserAddMemberInWorkspaceForm userAddMemberInWorkspaceForm) {
+    public void addMemberToWorkspace(UserAddRemoveMemberInWorkspaceForm userAddMemberInWorkspaceForm) {
         long userId = userAddMemberInWorkspaceForm.getUserId();
         String workspaceName = userAddMemberInWorkspaceForm.getWorkspaceName();
         long workspaceId = workspaceRepository.findIdByWorkspaceName(workspaceName);
@@ -196,7 +196,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public void removeMemberFromWorkspace(UserAddMemberInWorkspaceForm userAddMemberInWorkspaceForm) {
+    public void removeMemberFromWorkspace(UserAddRemoveMemberInWorkspaceForm userAddMemberInWorkspaceForm) {
         long userId = userAddMemberInWorkspaceForm.getUserId();
         String workspaceName = userAddMemberInWorkspaceForm.getWorkspaceName();
         long workspaceId = workspaceRepository.findIdByWorkspaceName(workspaceName);

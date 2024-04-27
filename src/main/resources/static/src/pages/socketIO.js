@@ -1,7 +1,7 @@
 "use strict";
 
 const socket = io('http://localhost:9092');
-let onlineUsers = [];
+let onlineUsers = {};
 
 socket.on('connect', () => {
     console.log('Connected to Netty-SocketIO server');
@@ -10,7 +10,9 @@ socket.on('connect', () => {
     });
     socket.on("onlineUsers", function (users) {
         console.log("Online Users:", users);
-        onlineUsers = users;
+        onlineUsers = users;  // Update the global variable
+        console.log('Online Users:!!!!!!!!!', onlineUsers);
+        updateOnlineStatus();  // Update the status after the global variable is updated
     });
 });
 
