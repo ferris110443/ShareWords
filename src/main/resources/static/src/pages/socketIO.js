@@ -11,7 +11,6 @@ socket.on('connect', () => {
     socket.on("onlineUsers", function (users) {
         console.log("Online Users:", users);
         onlineUsers = users;
-        updateOnlineStatus();
     });
 });
 
@@ -107,6 +106,8 @@ socket.on('friendRequest', function (requestUserEmail, requestUserName) {
     async function rejectFriendWS(accessToken, requestUserEmail) {
         socket.emit('rejectFriendRequestWS', {accessToken: accessToken, requestUserEmail: requestUserEmail}, (ack) => {
             console.log('Acknowledgment from server:', ack);
+
+
         });
     }
 

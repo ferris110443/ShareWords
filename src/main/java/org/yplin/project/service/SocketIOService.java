@@ -117,6 +117,40 @@ public class SocketIOService {
         });
 
 
+        server.addEventListener("rejectFriendRequestWS", MessageTokenData.class, (client, data, ackRequest) -> {
+            String userEmail = getEmailFromToken(data);
+            String requestUserEmail = data.getRequestUserEmail();
+            long userId = userRepository.findByEmail(userEmail).get().getId();
+            long requestUserId = userRepository.findByEmail(requestUserEmail).get().getId();
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("userEmail", userEmail);
+            response.put("requestUserEmail", requestUserEmail);
+            response.put("userId", userId);
+            response.put("requestUserId", requestUserId);
+            ackRequest.sendAckData(response);
+
+            // update database
+            FriendsModel existingFriendship = friendsRepository.findByUserIdAndFriendId(userId, requestUserId);
+            FriendsModel existingFriendship2 = friendsRepository.findByUserIdAndFriendId(requestUserId, userId);
+            if (existingFriendship != null && (existingFriendship2.getStatus() == StatusEnum.pending || existingFriendship2.getStatus() == StatusEnum.declined)) {
+                existingFriendship.setStatus(StatusEnum.declined);
+                existingFriendship.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+                friendsRepository.save(existingFriendship);
+                log.info("Friend request declined updated through websocket successfully");
+            } else if (existingFriendship2 != null && (existingFriendship2.getStatus() == StatusEnum.pending || existingFriendship2.getStatus() == StatusEnum.declined)) {
+                existingFriendship2.setStatus(StatusEnum.declined);
+                existingFriendship2.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+                friendsRepository.save(existingFriendship2);
+                log.info("Friend request declined updated through websocket successfully");
+            } else {
+                throw new IllegalStateException("No pending friend request found or request already accepted");
+            }
+
+
+        });
+
+
     }
 
 
