@@ -125,8 +125,13 @@ public class FileContentServiceImp implements FileContentService {
 
     @Override
     public List<FileContentModel> getFileContentsByWorkspaceName(String workspaceName) {
-
         return fileContentRepository.findByWorkspaceId(workspaceRepository.findIdByWorkspaceName(workspaceName));
+    }
+
+    @Override
+    public void deleteFileInWorkspace(String fileId) {
+        logger.info("Deleting file with id: " + fileId);
+        fileContentRepository.deleteByFileId(fileId);
     }
 
 }

@@ -15,6 +15,9 @@
     <div id="user-sidebar-placeholder"></div>
     <div class="mid-workspace ">
         <h1>User Information</h1>
+        <div id="user-information-detail">
+
+        </div>
     </div>
     <div style="background-color: rgba(225, 225, 255, 0.7); width: 5px; display: block;"></div>
     <div class=" create-workspace-zone">
@@ -54,6 +57,9 @@
 <script src="/src/pages/socketIO.js"></script>
 <script>
     const accessToken = localStorage.getItem('accessToken');
+    $(document).ready(function () {
+        fetchUserInformation()
+    });
 
     $(document).on('submit', 'form', async function (event) {
         event.preventDefault();
@@ -113,6 +119,33 @@
 
     }
 
+    async function fetchUserInformation() {
+        const response = await fetch('/api/1.0/user/userPersonalInformation', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+        if (!response.ok) throw new Error('Failed to fetch user information');
+        const data = await response.json();
+        console.log(data);
+
+        let userInfoHTML = `
+
+            <div class="user-detail">
+                <img src="${data.picture}" alt="User Picture">
+<!--                <strong>Picture</strong>-->
+            </div>
+            <div class="user-detail"><strong>Name:</strong> ${data.name}</div>
+            <div class="user-detail"><strong>Email:</strong> ${data.email}</div>
+            <div class="user-detail"><strong>Account Created:</strong> ${data.AccountCreatedDate}</div>
+
+        `;
+
+        $('#user-information-detail').html(userInfoHTML);
+
+    }
 </script>
 </body>
 </html>

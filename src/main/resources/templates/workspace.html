@@ -99,25 +99,51 @@
                     <div class="file-entry" id="file${index}">
                         <p>File Name: ${file.fileTitle}</p>
                         <p>File Description: ${file.fileDescription}</p>
-                        <button aria-label="Edit File ${index}" class="edit-btn btn btn-primary " data-fileid="${file.fileId}">Edit</button>
-                        <button aria-label="Delete File ${index}" class="delete-btn btn btn-danger" data-fileid="${file.fileId}">Delete</button>
+                        <button aria-label="Edit File ${index}" class="edit-file-btn btn btn-primary " data-fileid="${file.fileId}">Edit</button>
+                        <button aria-label="Delete File ${index}" class="delete-file-btn btn btn-danger" data-fileid="${file.fileId}">Delete</button>
                     </div>
                 `;
             });
             document.getElementById("fileList").innerHTML += html;
             attachEditButtonListeners()
+            attachDeleteButtonListeners()
         } else {
             console.error('No files in workspace', data.data);
         }
 
 
         function attachEditButtonListeners() {
-            const editButtons = document.querySelectorAll('.edit-btn');
+            const editButtons = document.querySelectorAll('.edit-file-btn');
             editButtons.forEach(button => {
                 button.addEventListener('click', function () {
                     const fileId = this.getAttribute('data-fileid');
                     const editUrl = `http://localhost:3000/coeditor.html?roomId=${workspaceName}&fileId=${fileId}`;
                     window.location.href = editUrl;
+                });
+            });
+        }
+
+
+        function attachDeleteButtonListeners() {
+            const deleteButtons = document.querySelectorAll('.delete-file-btn');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', async function () {
+                    console.log('delete button clicked')
+                    const fileId = this.getAttribute('data-fileid');
+                    const response = await fetch(`/api/1.0/workspace/file?fileId=${fileId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${accessToken}`
+                        }
+                    });
+                    const data = await response.json();
+                    if (response.ok) {
+                        alert('File deleted successfully');
+                        window.location.reload();
+                    } else {
+                        alert('Failed to delete file: ' + data.error);
+                    }
                 });
             });
         }

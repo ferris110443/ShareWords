@@ -121,6 +121,26 @@ public class WorkspaceRestController {
         }
     }
 
+    @DeleteMapping(path = "/file")
+    public ResponseEntity<?> deleteFile(@RequestParam(value = "fileId") String fileId, @RequestHeader("Authorization") String authorizationHeader) {
+        try {
+
+            String token = authorizationHeader.replace("Bearer ", "");
+            String userEmail = jwtTokenUtil.extractUserEmail(token);
+            fileContentService.deleteFileInWorkspace(fileId);
+
+            Map<String, Object> response = new HashMap<>();
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+
+        } catch (Exception e) {
+            log.error("An error occurred: " + e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred: " + e.getMessage());
+        }
+    }
+
+
     // getWorkspaceMembers return all members in the workspace
     @GetMapping(path = "/workspaceMembers")
     public ResponseEntity<?> getWorkspaceMembers(@RequestParam(value = "workspaceName") String workspaceName, @RequestHeader("Authorization") String authorizationHeader) {
@@ -187,10 +207,11 @@ public class WorkspaceRestController {
         String token = authorizationHeader.replace("Bearer ", "");
         String userEmail = jwtTokenUtil.extractUserEmail(token);
         userAddMemberInWorkspaceForm.setUserId(userservice.getUserIdByEmail(userEmail));
-        System.out.println("userAddMemberInWorkspaceForm" + userAddMemberInWorkspaceForm);
+//        System.out.println("userAddMemberInWorkspaceForm" + userAddMemberInWorkspaceForm);
         try {
-            Map<String, List<UserOwnWorkspaceDetailsModel>> response = new HashMap<>();
+            Map<String, String> response = new HashMap<>();
             userservice.removeMemberFromWorkspace(userAddMemberInWorkspaceForm);
+            response.put("message", "User removed from workspace");
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
             Map<String, String> response = new HashMap<>();

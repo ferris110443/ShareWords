@@ -9,10 +9,10 @@ socket.on('connect', () => {
         console.log('Acknowledgment from server:', ack);
     });
     socket.on("onlineUsers", function (users) {
-        console.log("Online Users:", users);
+        // console.log("Online Users:", users);
         onlineUsers = users;  // Update the global variable
-        console.log('Online Users:!!!!!!!!!', onlineUsers);
-        updateOnlineStatus();  // Update the status after the global variable is updated
+        // console.log('Online Users:!!!!!!!!!', onlineUsers);
+        updateOnlineStatus();
     });
 });
 
@@ -128,6 +128,23 @@ socket.on('friendRequestRejected', function (requestUserEmail) {
 socket.on('friendRequestRemoved', function (requestUserEmail) {
     alert('Your friend request to ' + requestUserEmail + ' has been removed');
 });
+
+
+function updateOnlineStatus() {
+    console.log("Updating online status...");
+    document.querySelectorAll('.friend-item').forEach(item => {
+        const email = item.querySelector('button').getAttribute('data-email');
+        const isOnline = onlineUsers[email];
+        const statusDiv = item.querySelector('.status-online, .status-offline');
+
+        console.log(email + " " + isOnline + " " + statusDiv);
+
+        if (statusDiv) {
+            statusDiv.textContent = isOnline ? "Online" : "Offline";
+            statusDiv.className = isOnline ? "status-online" : "status-offline";
+        }
+    });
+}
 
 
 

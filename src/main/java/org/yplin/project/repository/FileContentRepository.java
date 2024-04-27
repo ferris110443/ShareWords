@@ -1,6 +1,7 @@
 package org.yplin.project.repository;
 
 
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -31,6 +32,10 @@ public interface FileContentRepository extends JpaRepository<FileContentModel, L
     FileContentModel findByFileId(String fileId);
 
     List<FileContentModel> findByWorkspaceId(long workspaceId);
+
+
+    @Transactional
+    void deleteByFileId(String fileId);
 }
 
 

@@ -30,9 +30,25 @@ public class UserInformationRestController {
     @Autowired
     JwtTokenUtil jwtTokenUtil;
 
+
+    @GetMapping("/userPersonalInformation")
+    public ResponseEntity<?> queryUserPrivateInformation(@RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        String userEmail = jwtTokenUtil.extractUserEmail(token);
+        UserModel userModel = userService.getUserPrivateInformation(userEmail);
+        System.out.println(userModel);
+        Map<String, Object> response = new HashMap<>();
+        response.put("name", userModel.getName());
+        response.put("email", userModel.getEmail());
+        response.put("picture", userModel.getUserImageUrl());
+        response.put("AccountCreatedDate", userModel.getAccountCreatedDate().toString());
+        return ResponseEntity.ok().body(response);
+    }
+
+
     @GetMapping("/userInformation")
-    public ResponseEntity<?> getUserInformation(@RequestHeader("Authorization") String authorizationHeader,
-                                                @RequestParam(name = "query", required = false) String query) {
+    public ResponseEntity<?> queryUserInformation(@RequestHeader("Authorization") String authorizationHeader,
+                                                  @RequestParam(name = "query", required = false) String query) {
 
         List<UserModel> userInformationList;
         userInformationList = userService.getSpecificUserInformation(query);

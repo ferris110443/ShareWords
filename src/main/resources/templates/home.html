@@ -15,7 +15,9 @@
     <div id="user-sidebar-placeholder"></div>
     <div class="mid-workspace ">
         <h1>User Information</h1>
-        <div id="user-information-detail"></div>
+        <div id="user-information-detail">
+
+        </div>
     </div>
     <div style="background-color: rgba(225, 225, 255, 0.7); width: 5px; display: block;"></div>
     <div class="user-workspace-container">
@@ -26,12 +28,6 @@
         </div>
         <div class="user-workspaceList">
             <div id="workspaceList">
-                <!--                <div>-->
-                <!--                    <div class="workspace-name">Workspace 1</div>-->
-                <!--                    <div class="workspace-description">Description 1</div>-->
-                <!--                    <button class="btn btn-primary">Join</button>-->
-                <!--                    <button class="btn btn-danger">Delete</button>-->
-                <!--                </div>-->
             </div>
 
         </div>
@@ -53,71 +49,6 @@
 <script src="/src/components/AsideWorkspace.js"></script>
 <script src="/src/pages/socketIO.js"></script>
 <script src="/src/pages/home.js"></script>
-<script>
-    const accessToken = localStorage.getItem('accessToken');
-    $(document).ready(function () {
-        const userWorkspaceHTML = "";
-        renderUserWorkspaceList(userWorkspaceHTML)
 
-    });
-
-
-    async function renderUserWorkspaceList() {
-        let userWorkspaceHTML = "";
-        try {
-            const response = await fetch('/api/1.0/workspace/userWorkspaceDetails', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            });
-            if (!response.ok) throw new Error('Failed to fetch workspace details');
-            const data = await response.json();
-            data.data.forEach(workspace => {
-                userWorkspaceHTML += `
-                    <div class="workspace-entry">
-                        <div class="workspace-name-description-container">
-                            <div class="workspace-description">Workspace Description : ${workspace.workspace_description}</div>
-                            <div class="workspace-name">Workspace Name : ${workspace.workspace_name}</div>
-                        </div>
-                        <div class="workspace-name-description-btn-container">
-                            <button class="btn btn-primary" onclick="joinWorkspace('${workspace.workspace_name}')">Join</button>
-                            <button class="btn btn-danger" onclick="deleteWorkspaceFromUserWorkspace('${workspace.workspace_name}')">Delete</button>
-                        </div>
-                    </div>
-                `;
-            });
-            $('#workspaceList').html(userWorkspaceHTML);
-        } catch (error) {
-            console.error('Error fetching user workspaces:', error);
-            // Handle errors appropriately in your application context
-        }
-    }
-
-
-    function joinWorkspace(workspaceName) {
-        window.location.href = `/admin/workspace?roomId=${workspaceName}`
-    }
-
-
-    async function deleteWorkspaceFromUserWorkspace(workspaceName) {
-        console.log(workspaceName);
-        const response = await fetch('/api/1.0/workspace/workspaceUserSelfRemove', {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
-            },
-            body: JSON.stringify({
-                workspaceName: workspaceName,
-            })
-        });
-        if (!response.ok) throw new Error('Failed to delete workspace');
-        const data = await response.json();
-
-    }
-
-</script>
 </body>
 </html>

@@ -42,6 +42,8 @@ public interface UserService {
 
     void removeMemberFromWorkspace(UserAddRemoveMemberInWorkspaceForm userAddMemberInWorkspaceForm);
 
+    UserModel getUserPrivateInformation(String userEmail);
+
 
     sealed class UserException extends
             Exception permits UserExistException, UserNotExistException, UserPasswordMismatchException {

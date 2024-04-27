@@ -208,6 +208,11 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public UserModel getUserPrivateInformation(String userEmail) {
+        return userRepository.findUserByEmail(userEmail);
+    }
+
 
     @Override
     public void acceptFriendRequest(FriendRequestForm friendRequestForm, String userEmail) {

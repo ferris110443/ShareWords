@@ -26,7 +26,7 @@ public class UserModel {
     private String password;
 
     @Column(name = "user_image_url", length = 500)
-    private String userImageUrl;
+    private String userImageUrl = "http://localhost:8080/logo/man.png";
 
 
     @Column(name = "account_created_date")

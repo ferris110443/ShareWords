@@ -28,15 +28,29 @@
     <button class="btn btn-primary" id="save-btn" type="button">Save</button>
 </div>
 <br>
-<div class="editor-title">
-    Markdown Editor
-</div>
-<div id="editor"></div>
 
-<div class="preview-title">
-    Preview
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link active" id="markdown-tab" href="#">Markdown</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="preview-tab" href="#">Preview</a>
+    </li>
+</ul>
+
+<div id="markdown-content" class="tab-content">
+    <div class="editor-title">
+        Markdown Editor
+    </div>
+    <div id="editor"></div>
 </div>
-<div id="preview-text"></div>
+
+<div id="preview-content" class="tab-content" style="display:none;">
+    <div class="preview-title">
+        Preview
+    </div>
+    <div id="preview-text"></div>
+</div>
 
 <script>
     const domain = 'http://localhost:8080';
@@ -46,46 +60,28 @@
     function redirectToPage() {
         window.location.href = `${domain}/admin/workspace?roomId=${roomId}`;
     }
+    document.addEventListener('DOMContentLoaded', () => {
+        const markdownTab = document.getElementById('markdown-tab');
+        const previewTab = document.getElementById('preview-tab');
+        const markdownContent = document.getElementById('markdown-content');
+        const previewContent = document.getElementById('preview-content');
 
-    // window.addEventListener('message', function(event) {
-    //     if (event.origin !== domain) {
-    //         return; // Ensure that the message is coming from the expected origin
-    //     }
-    //     if (event.data.jwt) {
-    //         console.log("Received JWT:", event.data.jwt);
-    //         localStorage.setItem('accessToken', event.data.jwt);
-    //     }
-    // });
+        markdownTab.addEventListener('click', function (e) {
+            e.preventDefault();
+            markdownContent.style.display = 'block';
+            previewContent.style.display = 'none';
+            markdownTab.classList.add('active');
+            previewTab.classList.remove('active');
+        });
 
-    // document.addEventListener("DOMContentLoaded", function() {
-    //     const token = localStorage.getItem('accessToken');
-    //     if (!token) {
-    //         console.error('Token not found');
-    //         alert('Please sign in to continue!');
-    //         window.location.href = `${domain}/signin.html`;
-    //     } else {
-    //         fetch(`${domain}/api/1.0/validation/workspace`, {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 'Authorization': `Bearer ${token}`
-    //             },
-    //             body: JSON.stringify({workspaceName:roomId})
-    //         })
-    //             .then(response => {
-    //                 if (response.ok) {
-    //                     console.log('Token validated successfully');
-    //                     // Proceed to load the application
-    //                 } else {
-    //                     alert('Please sign in to continue');
-    //                     console.error('Token validation failed');
-    //                     window.location.href = `${domain}/signin.html`;
-    //                 }
-    //             })
-    //             .catch(error => console.error('Error validating token:', error));
-    //     }
-    // });
-
+        previewTab.addEventListener('click', function (e) {
+            e.preventDefault();
+            previewContent.style.display = 'block';
+            markdownContent.style.display = 'none';
+            previewTab.classList.add('active');
+            markdownTab.classList.remove('active');
+        });
+    });
 
 
 </script>
