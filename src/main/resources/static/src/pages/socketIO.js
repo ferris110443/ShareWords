@@ -58,7 +58,7 @@ socket.on('friendRequest', function (requestUserEmail, requestUserName) {
     acceptButtons.forEach(button => {
         button.addEventListener('click', function () {
             const friendRequestItem = this.closest('.friend-request-item');
-            acceptFriendWS(accessToken, requestUserEmail)
+            acceptFriendWS(accessToken, requestUserEmail, requestUserName)
                 .then(() => {
                     friendRequestItem.remove(); // Remove the friend request from the DOM after successful operation
                 })
@@ -82,22 +82,23 @@ socket.on('friendRequest', function (requestUserEmail, requestUserName) {
         });
     });
 
-    async function acceptFriendWS(accessToken, requestUserEmail) {
+    async function acceptFriendWS(accessToken, requestUserEmail, requestUserName) {
         socket.emit('acceptFriendRequestWS', {accessToken: accessToken, requestUserEmail: requestUserEmail}, (ack) => {
             console.log('Acknowledgment from server:', ack);
             let userEmail = ack.userEmail;
             let userId = ack.userId;
-            let friendName = ack.requestUserEmail;
+            let friendEmail = ack.requestUserEmail;
             let friendId = ack.requestUserId;
+            let friendName = requestUserName;
 
 
             const friendElement = document.createElement('div');
             friendElement.className = 'friend-item';
             friendElement.innerHTML = `
-                    <div><strong>Name:</strong> ${userEmail}</div>
-                    <div><strong>Email:</strong> ${friendName}</div>
+                    <div><strong>Name:</strong> ${friendName}</div>
+                    <div><strong>Email:</strong> ${friendEmail}</div>
                     <div class="status-offline">Offline</div>
-                    <button class="btn btn-primary remove-friend-btn" data-user-id="${userId}" data-friend-id="${friendId}" data-email="${requestUserEmail}">Remove Friend</button>
+                    <button class="btn btn-primary remove-friend-btn" data-user-id="${userId}" data-friend-id="${friendId}" data-email="${friendEmail}">Remove Friend</button>
                 `;
 
             document.getElementById('friends-list').appendChild(friendElement);
@@ -110,25 +111,28 @@ socket.on('friendRequest', function (requestUserEmail, requestUserName) {
         socket.emit('rejectFriendRequestWS', {accessToken: accessToken, requestUserEmail: requestUserEmail}, (ack) => {
             console.log('Acknowledgment from server:', ack);
 
-
         });
     }
 
-
 });
 
 
-socket.on('friendRequestAccepted', function (requestUserEmail) {
-    alert('Your friend request to ' + requestUserEmail + ' has been accepted');
-});
+// socket.on(`chat${roomId}`, function () {
+//
+// })
 
-socket.on('friendRequestRejected', function (requestUserEmail) {
-    alert('Your friend request to ' + requestUserEmail + ' has been rejected');
-});
 
-socket.on('friendRequestRemoved', function (requestUserEmail) {
-    alert('Your friend request to ' + requestUserEmail + ' has been removed');
-});
+// socket.on('friendRequestAccepted', function (requestUserEmail) {
+//     alert('Your friend request to ' + requestUserEmail + ' has been accepted');
+// });
+//
+// socket.on('friendRequestRejected', function (requestUserEmail) {
+//     alert('Your friend request to ' + requestUserEmail + ' has been rejected');
+// });
+//
+// socket.on('friendRequestRemoved', function (requestUserEmail) {
+//     alert('Your friend request to ' + requestUserEmail + ' has been removed');
+// });
 
 
 function updateOnlineStatus() {

@@ -77,7 +77,7 @@ async function deleteWorkspaceFromUserWorkspace(workspaceName, event) {
 }
 
 async function fetchUserInformation() {
-    const response = await fetch('/api/1.0/user/userPersonalInformation', {
+    const response = await fetch('http://localhost:8080/api/1.0/user/userPersonalInformation', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ async function fetchUserInformation() {
     let userInfoHTML = `
 
             <div class="user-detail">
-                <img src="${data.picture}" alt="User Picture">
+                <img src="${data.picture}" id="user-picture" alt="User Picture" >
 <!--                <strong>Picture</strong>-->
             </div>
             <div class="user-detail"><strong>Name:</strong> ${data.name}</div>

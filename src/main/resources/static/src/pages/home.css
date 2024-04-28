@@ -1,0 +1,43 @@
+#user-information-detail {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
+}
+
+.user-detail {
+    margin-bottom: 10px;
+}
+
+
+.user-workspaceList {
+    margin-top: 20px;
+}
+
+.workspace-entry {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
+}
+
+.workspace-name-description-container {
+    margin-bottom: 10px;
+}
+
+.user-detail {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+#user-picture {
+    width: 400px;
+    height: 400px;
+    border-radius: 20%;
+    margin-right: 20px;
+    border: 1px solid #ccc;
+}
