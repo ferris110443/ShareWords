@@ -19,7 +19,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8888"})
 @RequestMapping("api/1.0/markdown")
 public class MarkdownRestController {
     public static final Logger logger = LoggerFactory.getLogger(MarkdownRestController.class);

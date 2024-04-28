@@ -25,8 +25,9 @@ async function renderUserWorkspaceList() {
             userWorkspaceHTML += `
                     <div class="workspace-entry">
                         <div class="workspace-name-description-container">
-                            <div class="workspace-description">Workspace Description : ${workspace.workspace_description}</div>
                             <div class="workspace-name">Workspace Name : ${workspace.workspace_name}</div>
+                            <div class="workspace-description">Workspace Description : ${workspace.workspace_description}</div>
+                            
                         </div>
                         <div class="workspace-name-description-btn-container">
                             <button class="btn btn-primary" onclick="joinWorkspace('${workspace.workspace_name}')">Join</button>

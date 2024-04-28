@@ -1,7 +1,11 @@
 #shareWords-logo {
     width: 6rem;
-    
     margin: 0 auto;
     display: block;
 
 }
+
+.nav-link:hover {
+    background-color: #6f7071;
+}
+

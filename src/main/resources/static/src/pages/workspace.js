@@ -3,6 +3,8 @@ const params = new URLSearchParams(window.location.search);
 const workspaceName = params.get('roomId');
 const queryParams = new URLSearchParams(window.location.search);
 const roomId = decodeURIComponent(queryParams.get('roomId'));
+const coeditorURL = 'http://localhost:8888/coeditor';
+
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('delete-workspace-btn').addEventListener('click', deleteWorkspace);
     document.getElementById('file-creation-form').addEventListener('submit', function (event) {
@@ -40,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert('File created successfully!');
 
                 // Uncomment the following line to redirect after success
-                window.location.href = `http://localhost:3000/coeditor.html?roomId=${roomId}&fileId=${fileId}`;
+                window.location.href = `${coeditorURL}/coeditor.html?roomId=${roomId}&fileId=${fileId}`;
             })
             .catch((error) => {
                 console.error('Error:', error);
@@ -118,7 +120,7 @@ async function renderWorkspaceFileList() {
         editButtons.forEach(button => {
             button.addEventListener('click', function () {
                 const fileId = this.getAttribute('data-fileid');
-                const editUrl = `http://localhost:3000/coeditor.html?roomId=${workspaceName}&fileId=${fileId}`;
+                const editUrl = `${coeditorURL}/coeditor.html?roomId=${workspaceName}&fileId=${fileId}`;
                 window.location.href = editUrl;
             });
         });
@@ -141,7 +143,8 @@ async function renderWorkspaceFileList() {
                 const data = await response.json();
                 if (response.ok) {
                     alert('File deleted successfully');
-                    window.location.reload();
+                    const fileEntry = button.closest('.file-entry');
+                    fileEntry.remove();
                 } else {
                     alert('Failed to delete file: ' + data.error);
                 }

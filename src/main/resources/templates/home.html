@@ -18,19 +18,22 @@
     <div id="user-sidebar-placeholder"></div>
     <div style="background-color: rgba(225, 225, 255, 0.7); width: 5px; display: block;"></div>
     <div class="mid-workspace ">
-        <h1>User Information</h1>
+        <div class="user-workspaceList-head-container">
+            <h1>User Information</h1>
+        </div>
         <div id="user-information-detail">
 
         </div>
     </div>
     <div style="background-color: rgba(225, 225, 255, 0.7); width: 5px; display: block;"></div>
     <div class="user-workspace-container">
-        <div class="header">
-            <h1>Workspace</h1>
-            <button class="btn btn-primary" id="create-new-workspace" onclick="redirectToPage()">Create New workspace
-            </button>
-        </div>
         <div class="user-workspaceList">
+            <div class="user-workspaceList-head-container">
+                <h1>My workspace</h1>
+                <button class="btn btn-success " id="create-new-workspace" onclick="redirectToPage()">Create New
+                    workspace
+                </button>
+            </div>
             <div id="workspaceList">
             </div>
 
@@ -50,7 +53,7 @@
         src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <!--<script src="/src/pages/createWorkspace.js"></script>-->
-<script src="/src/components/AsideWorkspace.js"></script>
+<script src="/src/components/asideWorkspace.js"></script>
 <script src="/src/pages/socketIO.js"></script>
 <script src="/src/pages/home.js"></script>
 

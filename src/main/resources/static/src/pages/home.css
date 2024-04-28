@@ -1,8 +1,17 @@
+
+body {
+    background-color: #f8f9fa;
+    font-size: 1.2rem;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+
 #user-information-detail {
     background-color: white;
     padding: 20px;
     border-radius: 8px;
-    margin-top: 20px;
+    margin: 20px;
     box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
 }
 
@@ -11,16 +20,23 @@
 }
 
 
-.user-workspaceList {
-    margin-top: 20px;
+.user-workspaceList, .user-workspaceList-head-container {
+    margin: 20px;
+}
+
+.user-workspaceList-head-container {
+    display: flex;
+    justify-content: space-between;
 }
 
 .workspace-entry {
     background-color: white;
     padding: 15px;
     border-radius: 8px;
-    margin-bottom: 20px;
+    margin: 20px;
     box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
+    display: flex;
+    justify-content: space-between;
 }
 
 .workspace-name-description-container {
@@ -40,4 +56,10 @@
     border-radius: 20%;
     margin-right: 20px;
     border: 1px solid #ccc;
+}
+
+
+.workspace-name-description-btn-container {
+    align-content: center;
+    /*justify-content: center;*/
 }

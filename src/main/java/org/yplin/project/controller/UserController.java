@@ -18,6 +18,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8888"})
 @RequestMapping("api/1.0/user")
 public class UserController {
     public static final Logger logger = LoggerFactory.getLogger(UserController.class);
