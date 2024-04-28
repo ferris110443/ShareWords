@@ -1,0 +1,25 @@
+body {
+    background-color: #f8f9fa;
+    font-size: 1.2rem;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+.user-friends-zone, .user-search-zone {
+    padding: 20px;
+}
+
+.friend-item, .friend-request-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    margin: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
+    background-color: white;
+}
+
+.remove-friend-btn-img {
+    width: 36px;
+    height: 36px;
+}

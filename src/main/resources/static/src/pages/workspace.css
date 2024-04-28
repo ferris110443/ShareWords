@@ -1,0 +1,38 @@
+body {
+    background-color: #f8f9fa;
+    font-size: 1.2rem;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+.member, .friend {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    margin: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
+    background-color: white;
+}
+
+
+.remove-member-btn-img, .add-member-btn-img {
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+}
+
+
+input[type="text"],
+textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.create-btn {
+    display: block;
+}

@@ -9,3 +9,6 @@
     background-color: #6f7071;
 }
 
+a:hover {
+    cursor: pointer;
+}

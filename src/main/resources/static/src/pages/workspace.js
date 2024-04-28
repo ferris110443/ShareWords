@@ -221,10 +221,12 @@ async function getUserFriendsForAddingMembers() {
                 const friendId = userId === item.userId ? item.friendId : item.userId;
                 friendDiv.innerHTML = `
                     <div class="member-info">
-                        <div class ="friend-name">${friendName}</div>
-                        <div class ="friend-email">${friendEmail}</div>
+                        <div class ="friend-name">User Name : ${friendName}</div>
+                        <div class ="friend-email">User Email : ${friendEmail}</div>
                     </div>
-                    <button class="add-member-btn btn btn-primary">Add to Workspace</button>`;
+                    <button class="add-member-btn btn ">
+                        <img class="add-member-btn-img" src="/logo/plus.png" alt="plus Friend">
+                    </button>`;
                 const addButton = friendDiv.querySelector('.add-member-btn');
 
                 addButton.addEventListener('click', function () {
@@ -311,10 +313,12 @@ function showWorkspaceMemberList(members) {
         memberDiv.classList.add('member');
         memberDiv.innerHTML = `
             <div class="member-info">
-                <div class="workspace-member-name">${member.name}</div>
-                <div class="workspace-member-email">${member.email}</div>
+                <div class="workspace-member-name">User Name : ${member.name}</div>
+                <div class="workspace-member-email">User Email : ${member.email}</div>
             </div>
-            <button class="remove-member-btn btn btn-danger" data-memberid="${member.userId}">Remove</button>
+            <button class="remove-member-btn btn " data-memberid="${member.userId}">
+                <img class="remove-member-btn-img" src="/logo/remove.png" alt="Remove Friend">
+            </button>
             `;
         userListDiv.appendChild(memberDiv);
 
@@ -335,10 +339,12 @@ function moveMemberToAddList(member) {
     memberDiv.classList.add('member');
     memberDiv.innerHTML = `
         <div class="member-info">
-            <div class="friend-name">${member.name}</div>
-            <div class="friend-email">${member.email}</div>
+            <div class="friend-name">User Name : ${member.name}</div>
+            <div class="friend-email">User Email : ${member.email}</div>
         </div>
-        <button class="add-member-btn btn btn-primary">Add to Workspace</button>
+        <button class="add-member-btn btn ">
+            <img class="add-member-btn-img" src="/logo/plus.png" alt="plus Friend">
+        </button>
     `;
     // Add the event listener to the new button
     const addButton = memberDiv.querySelector('.add-member-btn');
@@ -356,10 +362,12 @@ function moveMemberToWorkspaceList(member) {
     memberDiv.classList.add('member');
     memberDiv.innerHTML = `
         <div class="member-info">
-            <div class="workspace-member-name">${member.name}</div>
-            <div class="workspace-member-email">${member.email}</div>
+            <div class="workspace-member-name">User Name : ${member.name}</div>
+            <div class="workspace-member-email">User Email : ${member.email}</div>
         </div>
-        <button class="remove-member-btn btn btn-danger" data-memberid="${member.userId}">Remove</button>
+        <button class="remove-member-btn btn" data-memberid="${member.userId}">
+            <img class="remove-member-btn-img" src="/logo/remove.png" alt="Remove Friend">
+        </button>
     `;
     // Add the event listener to the new remove button
     const removeButton = memberDiv.querySelector('.remove-member-btn');

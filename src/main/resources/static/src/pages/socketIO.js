@@ -46,10 +46,14 @@ socket.on('friendRequest', function (requestUserEmail, requestUserName) {
     const friendRequestElement = document.createElement('div');
     friendRequestElement.className = 'friend-request-item';
     friendRequestElement.innerHTML = `
-            <div class="rq-name-${requestUserName}"><strong>Name:</strong> ${requestUserName}</div>
-            <div class="rq-email-${requestUserEmail}"><strong>Email:</strong> ${requestUserEmail}</div>
-            <button id="btn-userId" class="btn btn-primary accept-friend-btn-ws" >Accept Friend</button>
-            <button id="btn-userId" class="btn btn-primary reject-friend-btn-ws" >Reject Friend</button>
+            <div>
+                <div class="rq-name-${requestUserName}"><strong>Name:</strong> ${requestUserName}</div>
+                <div class="rq-email-${requestUserEmail}"><strong>Email:</strong> ${requestUserEmail}</div>
+            </div>
+            <div class="btn-accept-reject-container">
+                <button id="btn-userId" class="btn btn-success accept-friend-btn-ws" >Accept Friend</button>
+                <button id="btn-userId" class="btn btn-danger reject-friend-btn-ws" >Reject Friend</button>
+            </div>
         `;
     friendsRequestList.appendChild(friendRequestElement);
 
@@ -95,10 +99,14 @@ socket.on('friendRequest', function (requestUserEmail, requestUserName) {
             const friendElement = document.createElement('div');
             friendElement.className = 'friend-item';
             friendElement.innerHTML = `
-                    <div><strong>Name:</strong> ${friendName}</div>
-                    <div><strong>Email:</strong> ${friendEmail}</div>
-                    <div class="status-offline">Offline</div>
-                    <button class="btn btn-primary remove-friend-btn" data-user-id="${userId}" data-friend-id="${friendId}" data-email="${friendEmail}">Remove Friend</button>
+                    <div>
+                        <div><strong>Name:</strong> ${friendName}</div>
+                        <div><strong>Email:</strong> ${friendEmail}</div>
+                        <div class="status-offline">Offline</div>
+                    </div>
+                    <button class="btn remove-friend-btn" data-user-id="${userId}" data-friend-id="${friendId}" data-email="${friendEmail}">
+                        <img class="remove-friend-btn-img" src="/logo/remove-user.png" alt="Remove Friend">
+                    </button>
                 `;
 
             document.getElementById('friends-list').appendChild(friendElement);

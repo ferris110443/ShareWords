@@ -132,20 +132,27 @@ async function checkFriendshipStatus(event) {
             const friendElement = document.createElement('div');
             friendElement.className = 'friend-item';
             if (item.userId === userId) {
-
                 friendElement.innerHTML = `
-                    <div><strong>Name:</strong> ${item.friendName}</div>
-                    <div><strong>Email:</strong> ${item.friendEmail}</div>
-                    <div class="${friendStatusClass}">${friendStatus}</div>
-                    <button id="btn-userId-${item.friendId}" class="btn btn-primary remove-friend-btn" data-user-id="${item.userId}" data-friend-id="${item.friendId}" data-email="${item.friendEmail}" >Remove Friend</button>
+                    <div>
+                        <div><strong>Name:</strong> ${item.friendName}</div>
+                        <div><strong>Email:</strong> ${item.friendEmail}</div>
+                        <div class="${friendStatusClass}">${friendStatus}</div>
+                    </div>
+                    <button id="btn-userId-${item.friendId}" class="btn remove-friend-btn" data-user-id="${item.userId}" data-friend-id="${item.friendId}" data-email="${item.friendEmail}" >
+                        <img class="remove-friend-btn-img" src="/logo/remove-user.png" alt="Remove Friend">
+                    </button>
                 `;
 
             } else if (item.friendId === userId) {
                 friendElement.innerHTML = `
-                    <div><strong>Name:</strong> ${item.userName}</div>
-                    <div><strong>Email:</strong> ${item.userEmail}</div>
-                    <div class="${friendStatusClass}">${friendStatus}</div>
-                    <button id="btn-userId-${item.userId}" class="btn btn-primary remove-friend-btn" data-user-id="${item.friendId}" data-friend-id="${item.userId}" data-email="${item.userEmail}" >Remove Friend</button>
+                    <div>
+                        <div><strong>Name:</strong> ${item.userName}</div>
+                        <div><strong>Email:</strong> ${item.userEmail}</div>
+                        <div class="${friendStatusClass}">${friendStatus}</div>
+                    </div>
+                    <button id="btn-userId-${item.userId}" class="btn remove-friend-btn" data-user-id="${item.friendId}" data-friend-id="${item.userId}" data-email="${item.userEmail}" >
+                        <img class="remove-friend-btn-img" src="/logo/remove-user.png" alt="Remove Friend">
+                    </button>
                 `;
             }
 
@@ -156,10 +163,14 @@ async function checkFriendshipStatus(event) {
             const friendRequestElement = document.createElement('div');
             friendRequestElement.className = 'friend-request-item';
             friendRequestElement.innerHTML = `
-            <div class="rq-name-${item.userName}"><strong>Name:</strong> ${item.userName}</div>
-            <div class="rq-email-${item.userEmail}"><strong>Email:</strong> ${item.userEmail}</div>
-            <button id="btn-userId-${item.userId}" class="btn btn-primary accept-friend-btn" data-user-id="${item.friendId}" data-friend-id="${item.userId}">Accept Friend</button>
-            <button id="btn-userId-${item.userId}" class="btn btn-primary reject-friend-btn" data-user-id="${item.friendId}" data-friend-id="${item.userId}">Reject Friend</button>
+            <div>
+                <div class="rq-name-${item.userName}"><strong>Name:</strong> ${item.userName}</div>
+                <div class="rq-email-${item.userEmail}"><strong>Email:</strong> ${item.userEmail}</div>
+            </div>
+            <div class="btn-accept-reject-container">
+                <button id="btn-userId-${item.userId}" class="btn btn-success accept-friend-btn" data-user-id="${item.friendId}" data-friend-id="${item.userId}">Accept Friend</button>
+                <button id="btn-userId-${item.userId}" class="btn btn-danger reject-friend-btn" data-user-id="${item.friendId}" data-friend-id="${item.userId}">Reject Friend</button>
+            </div>
         `;
             friendsRequestList.appendChild(friendRequestElement);
         }

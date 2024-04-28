@@ -8,16 +8,16 @@ body {
 
 #root {
     display: flex;
-    height: 100vh; /* This sets the height of the root to fill the entire viewport height */
+    height: 100vh;
 }
 
 .left-container, .right-container {
-    flex: 1; /* This makes each container take up half of the available space */
+    flex: 1;
     background-color: #f8f9fa;
     flex-direction: column;
     padding: 20px;
-    align-items: center; /* Center items horizontally */
-    justify-content: center; /* Center items vertically */
+    align-items: center;
+    justify-content: center;
 }
 
 .right-container {
@@ -38,14 +38,14 @@ body {
 }
 
 .carousel {
-    width: 90%; /* Adjust the width of the carousel to your liking */
+    width: 90%;
     margin: 20px auto;
 }
 
 
 .carousel img {
-    max-width: 100%; /* Ensure images in the carousel fit to the container */
-    height: auto; /* Maintain aspect ratio */
+    max-width: 100%;
+    height: auto;
 }
 
 
