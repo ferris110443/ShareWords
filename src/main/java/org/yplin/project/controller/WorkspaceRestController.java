@@ -13,6 +13,7 @@ import org.yplin.project.data.dto.WorkspaceMemberDto;
 import org.yplin.project.data.form.CreateFileForm;
 import org.yplin.project.data.form.CreateWorkspaceForm;
 import org.yplin.project.data.form.UserAddRemoveMemberInWorkspaceForm;
+import org.yplin.project.error.NotWorkspaceOwnerException;
 import org.yplin.project.error.UserAlreadyMemberException;
 import org.yplin.project.model.FileContentModel;
 import org.yplin.project.model.UserOwnWorkspaceDetailsModel;
@@ -59,6 +60,24 @@ public class WorkspaceRestController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating workspace: " + e.getMessage());
         }
 
+    }
+
+    // delete Workspace delete a new workspace (only owner allows to delete workspace)
+    @DeleteMapping(path = "/workspace")
+    public ResponseEntity<?> deleteWorkspaceByOwner(@RequestParam(value = "workspaceName") String workspaceName,
+                                                    @RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            String token = authorizationHeader.replace("Bearer ", "");
+            String userEmail = jwtTokenUtil.extractUserEmail(token);
+            workspaceService.deleteWorkspace(workspaceName, userEmail);
+            return ResponseEntity.ok().body("Workspace deleted successfully");
+        } catch (NotWorkspaceOwnerException e) {
+            logger.error("Only workspace owner is allowed deleting this workspace", e);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        } catch (Exception e) {
+            logger.error("Error deleting workspace", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting workspace: " + e.getMessage());
+        }
     }
 
 

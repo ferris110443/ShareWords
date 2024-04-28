@@ -4,6 +4,7 @@ const socket = io('http://localhost:9092');
 let onlineUsers = {};
 
 socket.on('connect', () => {
+    const accessToken = localStorage.getItem('accessToken');
     console.log('Connected to Netty-SocketIO server');
     socket.emit('message', {accessToken: accessToken}, (ack) => {
         console.log('Acknowledgment from server:', ack);

@@ -1,45 +1,373 @@
-document.getElementById('file-creation-form').addEventListener('submit', function (event) {
-    event.preventDefault();  // Prevent the default form submission
-    const params = new URLSearchParams(window.location.search);
-    const roomId = params.get('roomId') || 'general';
-    const fileName = document.getElementById('file-name-input').value;
-    const fileDescription = document.getElementById('file-description').value;
-    const fileId = uuidv4();
-    const accessToken = localStorage.getItem('accessToken');
-    const data = {
-        fileName: fileName,
-        fileDescription: fileDescription,
-        fileId: fileId,
-        roomId: roomId
-    };
-    console.log(data)
-    // Fetch API to send data and handle response
-    fetch('/api/1.0/workspace/file', {
-        method: 'POST',
+const accessToken = localStorage.getItem('accessToken');
+const params = new URLSearchParams(window.location.search);
+const workspaceName = params.get('roomId');
+const queryParams = new URLSearchParams(window.location.search);
+const roomId = decodeURIComponent(queryParams.get('roomId'));
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('delete-workspace-btn').addEventListener('click', deleteWorkspace);
+    document.getElementById('file-creation-form').addEventListener('submit', function (event) {
+        event.preventDefault();  // Prevent the default form submission
+        const params = new URLSearchParams(window.location.search);
+        const roomId = params.get('roomId') || 'general';
+        const fileName = document.getElementById('file-name-input').value;
+        const fileDescription = document.getElementById('file-description').value;
+        const fileId = uuidv4();
+        const accessToken = localStorage.getItem('accessToken');
+        const data = {
+            fileName: fileName,
+            fileDescription: fileDescription,
+            fileId: fileId,
+            roomId: roomId
+        };
+        console.log(data)
+        // Fetch API to send data and handle response
+        fetch('/api/1.0/workspace/file', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Success:', data);
+                alert('File created successfully!');
+
+                // Uncomment the following line to redirect after success
+                window.location.href = `http://localhost:3000/coeditor.html?roomId=${roomId}&fileId=${fileId}`;
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Failed to create file. Please try again.');
+            });
+    });
+    renderWorkspaceFileList()
+    getWorkspaceMember()
+    getUserFriendsForAddingMembers()
+});
+
+
+async function deleteWorkspace() {
+
+    try {
+        const response = await fetch(`/api/1.0/workspace/workspace?workspaceName=${roomId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+
+        const errorMessage = await response.text();
+        if (response.status === 403) {
+            alert(errorMessage);
+
+        } else if (!response.ok) {
+            alert(errorMessage)
+            window.location.reload()
+        }
+
+        const result = await response.json();
+        console.log('Workspace deleted successfully:', result);
+        window.location.redirect = '/admin/home';
+    } catch (error) {
+        console.error('Failed to delete the workspace:', error);
+        // Handle errors, such as displaying a message to the user
+    }
+}
+
+
+async function renderWorkspaceFileList() {
+    const response = await fetch(`/api/1.0/workspace/workspace?workspaceName=${workspaceName}`, {
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${accessToken}`
-        },
-        body: JSON.stringify(data)
+        }
     })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Success:', data);
-            alert('File created successfully!');
+    const data = await response.json();
 
-            // Uncomment the following line to redirect after success
-            window.location.href = `http://localhost:3000/coeditor.html?roomId=${roomId}&fileId=${fileId}`;
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-            alert('Failed to create file. Please try again.');
+    if (Array.isArray(data.data)) {
+        let html = '';
+        data.data.forEach((file, index) => {
+            html += `
+                    <div class="file-entry" id="file${index}">
+                        <p>File Name: ${file.fileTitle}</p>
+                        <p>File Description: ${file.fileDescription}</p>
+                        <button aria-label="Edit File ${index}" class="edit-file-btn btn btn-primary " data-fileid="${file.fileId}">Edit</button>
+                        <button aria-label="Delete File ${index}" class="delete-file-btn btn btn-danger" data-fileid="${file.fileId}">Delete</button>
+                    </div>
+                `;
         });
-});
+        document.getElementById("fileList").innerHTML += html;
+        attachEditButtonListeners()
+        attachDeleteButtonListeners()
+    } else {
+        console.error('No files in workspace', data.data);
+    }
+
+
+    function attachEditButtonListeners() {
+        const editButtons = document.querySelectorAll('.edit-file-btn');
+        editButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const fileId = this.getAttribute('data-fileid');
+                const editUrl = `http://localhost:3000/coeditor.html?roomId=${workspaceName}&fileId=${fileId}`;
+                window.location.href = editUrl;
+            });
+        });
+    }
+
+
+    function attachDeleteButtonListeners() {
+        const deleteButtons = document.querySelectorAll('.delete-file-btn');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', async function () {
+                console.log('delete button clicked')
+                const fileId = this.getAttribute('data-fileid');
+                const response = await fetch(`/api/1.0/workspace/file?fileId=${fileId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    alert('File deleted successfully');
+                    window.location.reload();
+                } else {
+                    alert('Failed to delete file: ' + data.error);
+                }
+            });
+        });
+    }
+
+
+}
+
+async function getWorkspaceMember() {
+    try {
+        const response = await fetch(`/api/1.0/workspace/workspaceMembers?workspaceName=${roomId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log(data.data)
+        showWorkspaceMemberList(data.data);
+
+    } catch (error) {
+        console.error('Failed to update user:', error);
+    }
+}
+
+async function getUserFriendsForAddingMembers() {
+    try {
+        // Fetch the current members of the workspace
+        const membersResponse = await fetch(`/api/1.0/workspace/workspaceMembers?workspaceName=${roomId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            },
+        });
+        const membersData = await membersResponse.json();
+        const currentMemberIds = new Set(membersData.data.map(member => member.userId));
+
+        // Fetch user friends
+        const friendsResponse = await fetch(`/api/1.0/user/friendsRelationShip`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            },
+        });
+
+        if (!friendsResponse.ok) {
+            throw new Error(`HTTP error! status: ${friendsResponse.status}`);
+        }
+
+        const friendsData = await friendsResponse.json();
+        const userFriendsInformation = friendsData.data;
+        const userId = friendsData.userId;
+
+        console.log(userFriendsInformation);
+        console.log(userId);
+
+        // Display friends who are not already in the workspace
+        userFriendsInformation.forEach(item => {
+            if ((userId === item.userId && item.status === 'accepted' && !currentMemberIds.has(item.friendId)) ||
+                (userId === item.friendId && item.status === 'accepted' && !currentMemberIds.has(item.userId))) {
+                const friendDiv = document.createElement('div');
+                friendDiv.classList.add('friend');
+                const friendName = userId === item.userId ? item.friendName : item.userName;
+                const friendEmail = userId === item.userId ? item.friendEmail : item.userEmail;
+                const friendId = userId === item.userId ? item.friendId : item.userId;
+                friendDiv.innerHTML = `
+                    <div class="member-info">
+                        <div class ="friend-name">${friendName}</div>
+                        <div class ="friend-email">${friendEmail}</div>
+                    </div>
+                    <button class="add-member-btn btn btn-primary">Add to Workspace</button>`;
+                const addButton = friendDiv.querySelector('.add-member-btn');
+
+                addButton.addEventListener('click', function () {
+                    friendDiv.remove() // remove from UI
+                    addFriendsToWorkspace(friendId) // update in DB
+                    moveMemberToWorkspaceList({ // update in UI
+                        userId: friendId,
+                        name: friendName,
+                        email: friendEmail
+                    });
+                });
+                document.getElementById('add-friend-member').appendChild(friendDiv);
+            }
+        });
+
+    } catch (error) {
+        console.error('Failed to fetch data:', error);
+    }
+}
+
+async function addFriendsToWorkspace(userId) {
+    try {
+        const response = await fetch('/api/1.0/workspace/workspaceMembers', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            },
+            body: JSON.stringify({
+                userId: userId,
+                workspaceName: roomId
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert('Failed to add user to workspace: ' + data.error);
+        } else {
+            alert('User added to workspace successfully.');
+            // window.location.reload();
+        }
+
+
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to add user to workspace.');
+    }
+}
+
+async function removeMemberFromWorkspace(member) {
+    try {
+        const response = await fetch(`/api/1.0/workspace/workspaceMembers`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            },
+            body: JSON.stringify({
+                userId: member.userId,
+                workspaceName: roomId
+            })
+        });
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.error);
+        }
+        // If the remove was successful, update the UI
+        moveMemberToAddList(member);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+
+function showWorkspaceMemberList(members) {
+    const userListDiv = document.getElementById('userList');
+    userListDiv.innerHTML = '';
+
+    // Add new members to the list
+    members.forEach(member => {
+
+        const memberDiv = document.createElement('div');
+        memberDiv.classList.add('member');
+        memberDiv.innerHTML = `
+            <div class="member-info">
+                <div class="workspace-member-name">${member.name}</div>
+                <div class="workspace-member-email">${member.email}</div>
+            </div>
+            <button class="remove-member-btn btn btn-danger" data-memberid="${member.userId}">Remove</button>
+            `;
+        userListDiv.appendChild(memberDiv);
+
+        const removeBtn = memberDiv.querySelector('.remove-member-btn');
+        removeBtn.addEventListener('click', function () {
+            memberDiv.remove()
+            removeMemberFromWorkspace(member);
+        });
+
+
+    });
+}
+
+
+function moveMemberToAddList(member) {
+    const addListDiv = document.getElementById('add-friend-member');
+    const memberDiv = document.createElement('div');
+    memberDiv.classList.add('member');
+    memberDiv.innerHTML = `
+        <div class="member-info">
+            <div class="friend-name">${member.name}</div>
+            <div class="friend-email">${member.email}</div>
+        </div>
+        <button class="add-member-btn btn btn-primary">Add to Workspace</button>
+    `;
+    // Add the event listener to the new button
+    const addButton = memberDiv.querySelector('.add-member-btn');
+    addButton.addEventListener('click', function () {
+        memberDiv.remove();
+        addFriendsToWorkspace(member.userId);
+    });
+    // Append the new div to the add list
+    addListDiv.appendChild(memberDiv);
+}
+
+function moveMemberToWorkspaceList(member) {
+    const workspaceListDiv = document.getElementById('userList');
+    const memberDiv = document.createElement('div');
+    memberDiv.classList.add('member');
+    memberDiv.innerHTML = `
+        <div class="member-info">
+            <div class="workspace-member-name">${member.name}</div>
+            <div class="workspace-member-email">${member.email}</div>
+        </div>
+        <button class="remove-member-btn btn btn-danger" data-memberid="${member.userId}">Remove</button>
+    `;
+    // Add the event listener to the new remove button
+    const removeButton = memberDiv.querySelector('.remove-member-btn');
+    removeButton.addEventListener('click', function () {
+        memberDiv.remove(); // remove from UI
+        removeMemberFromWorkspace(member); // update in DB
+
+    });
+    // Append the new div to the workspace members list
+    workspaceListDiv.appendChild(memberDiv);
+}
 
 
 function uuidv4() {

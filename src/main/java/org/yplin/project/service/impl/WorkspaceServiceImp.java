@@ -3,6 +3,7 @@ package org.yplin.project.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.yplin.project.data.form.CreateWorkspaceForm;
+import org.yplin.project.error.NotWorkspaceOwnerException;
 import org.yplin.project.model.WorkspaceModel;
 import org.yplin.project.repository.WorkspaceRepository;
 import org.yplin.project.service.WorkspaceService;
@@ -24,5 +25,15 @@ public class WorkspaceServiceImp implements WorkspaceService {
         workspaceModel.setWorkspaceOwner(creatorEmail);
         workspaceModel.setWorkspaceCreatedAt(new Timestamp(System.currentTimeMillis()));
         workspaceRepository.save(workspaceModel);
+    }
+
+    @Override
+    public void deleteWorkspace(String workspaceName, String userEmail) {
+        boolean isOwner = workspaceRepository.isUserOwnerOfWorkspace(workspaceName, userEmail);
+        if (isOwner) {
+            workspaceRepository.deleteByWorkspaceNameAndWorkspaceOwner(workspaceName, userEmail);
+        } else {
+            throw new NotWorkspaceOwnerException("You are not the owner of this workspace");
+        }
     }
 }

@@ -5,4 +5,6 @@ import org.yplin.project.data.form.CreateWorkspaceForm;
 public interface WorkspaceService {
 
     void createWorkspace(CreateWorkspaceForm createWorkspaceForm, String creatorEmail);
+
+    void deleteWorkspace(String workspaceName, String userEmail);
 }
