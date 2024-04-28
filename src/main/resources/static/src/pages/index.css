@@ -1,0 +1,103 @@
+body {
+    background-color: #f8f9fa;
+    font-size: 1.2rem;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+
+#root {
+    display: flex;
+    height: 100vh; /* This sets the height of the root to fill the entire viewport height */
+}
+
+.left-container, .right-container {
+    flex: 1; /* This makes each container take up half of the available space */
+    background-color: #f8f9fa;
+    flex-direction: column;
+    padding: 20px;
+    align-items: center; /* Center items horizontally */
+    justify-content: center; /* Center items vertically */
+}
+
+.right-container {
+    background-color: #f8f9fa;
+    flex-direction: column;
+    padding: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+
+}
+
+.carousel {
+    width: 90%; /* Adjust the width of the carousel to your liking */
+    margin: 20px auto;
+}
+
+
+.carousel img {
+    max-width: 100%; /* Ensure images in the carousel fit to the container */
+    height: auto; /* Maintain aspect ratio */
+}
+
+
+#signupSection, #signInSection {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0.2, 0.2, 0.2, 0.2);
+    padding: 20px;
+    width: 600px;
+    height: 450px;
+    margin: 20px auto;
+    text-align: center;
+}
+
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 16px;
+    font-weight: bold;
+}
+
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    padding: 8px; /* Padding inside the input field */
+    margin-bottom: 16px; /* Margin bottom for spacing */
+    border: 1px solid #ccc; /* Border color */
+    border-radius: 4px; /* Rounded corners */
+}
+
+
+button[type="submit"] {
+    background-color: #007bff; /* Button background color */
+    color: #fff; /* Button text color */
+    padding: 10px 20px; /* Padding inside the button */
+    border: none; /* No border */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Cursor style */
+}
+
+
+a {
+    color: #007bff; /* Link color */
+    text-decoration: none; /* Remove underline */
+    cursor: pointer; /* Cursor style */
+}
+
+a:hover {
+    text-decoration: underline; /* Add underline on hover */
+}
