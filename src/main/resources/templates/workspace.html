@@ -36,30 +36,44 @@
             </div>
         </div>
     </div>
-
+    <div style="background-color: rgba(225, 225, 255, 0.7); width: 5px; display: block;"></div>
     <div class="right-workspace">
         <div id="create-new-file-container">
-            <h2>Creat New File</h2>
-            <form id="file-creation-form">
-                <div>
-                    <label for="file-name-input">File Name</label>
-                    <input aria-label="file-name-input" id="file-name-input" name="file" placeholder="Enter file name"
-                           type="text">
-                </div>
-                <div>
-                    <label for="file-description">File description</label>
-                    <textarea aria-label="file-description" id="file-description" name="file-description"
-                              placeholder="Enter file description"></textarea>
-                </div>
-                <button class="create-btn btn btn-success" type="submit">Create File</button>
-            </form>
+            <div id="create-new-file-container-head">
+                <h2>Creat New File</h2>
+            </div>
+            <div id="create-new-file">
+                <form id="file-creation-form">
+                    <div>
+                        <label for="file-name-input">File Name</label>
+                        <input aria-label="file-name-input" id="file-name-input" name="file"
+                               placeholder="Enter file name"
+                               type="text">
+                    </div>
+                    <div>
+                        <label for="file-description">File description</label>
+                        <textarea aria-label="file-description" id="file-description" name="file-description"
+                                  placeholder="Enter file description"></textarea>
+                    </div>
+                    <button class="create-btn btn btn-success" type="submit">Create File</button>
+                </form>
+            </div>
+
         </div>
-        <div id="delete-workspace-container">
-            <h2>Delete The Whole Workspace</h2>
-            <div>
+        <div id="workspace-information-container">
+            <div id="workspace-information-head">
+                <h2>Workspace Information</h2>
+            </div>
+
+            <div id="workspace-information">
+                <p><strong>Name:</strong> <span id="workspace-name"></span></p>
+                <p><strong>Description:</strong> <span id="workspace-description"></span></p>
+                <p><strong>Owner:</strong> <span id="workspace-owner"></span></p>
+                <p><strong>Creation Date:</strong> <span id="workspace-creation-date"></span></p>
                 <button class="delete-workspace-btn btn btn-danger" id="delete-workspace-btn" type="button">Delete
                     Workspace
                 </button>
+
             </div>
         </div>
 

@@ -5,7 +5,10 @@ document.querySelector('#searchBox').addEventListener('input', () => {
     const searchQuery = document.querySelector('#searchBox').value;
     getUserInformation(searchQuery);
 });
-checkFriendshipStatus();
+
+$(document).ready(function () {
+    checkFriendshipStatus();
+});
 
 
 async function getUserInformation(searchQuery) {

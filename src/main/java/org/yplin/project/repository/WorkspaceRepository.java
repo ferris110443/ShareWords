@@ -22,4 +22,6 @@ public interface WorkspaceRepository extends JpaRepository<WorkspaceModel, Long>
     @Transactional
     @Query("DELETE FROM WorkspaceModel w WHERE w.workspaceName = :workspaceName AND w.workspaceOwner = :workspaceOwner")
     void deleteByWorkspaceNameAndWorkspaceOwner(@Param("workspaceName") String workspaceName, @Param("workspaceOwner") String workspaceOwner);
+
+    WorkspaceModel findByWorkspaceName(String workspaceName);
 }

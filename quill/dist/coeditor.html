@@ -22,10 +22,14 @@
 </head>
 <body>
 <div>
-    <button class="btn btn-primary" id="y-connect-btn" type="button">Disconnect</button>
-    <button class="btn btn-primary" id="return-btn" onclick="redirectToPage()" type="button">Return to Workspace
-    </button>
-    <button class="btn btn-primary" id="save-btn" type="button">Save</button>
+    Workspace Name : <span id="workspace-name"></span><br>
+    File Name : <span id="file-name"></span><br>
+    File Description : <span id="file-description"></span>
+    Current User : <span id="current-user-email"></span>
+</div>
+<div>
+    <button class="btn btn-primary" id="y-connect-btn" type="button" style="display: none">Disconnect</button>
+    <button class="btn btn-primary" id="return-btn" onclick="redirectToPage()" type="button">Return to Workspace</button>
 </div>
 <br>
 
@@ -56,7 +60,8 @@
     const domain = 'http://localhost:8080';
     const queryParams = new URLSearchParams(window.location.search);
     const roomId = queryParams.get('roomId');
-
+    const fileId = queryParams.get('fileId');
+    const accessToken = localStorage.getItem('accessToken');
     function redirectToPage() {
         window.location.href = `/admin/workspace?roomId=${roomId}`;
     }
@@ -66,7 +71,7 @@
         const previewTab = document.getElementById('preview-tab');
         const markdownContent = document.getElementById('markdown-content');
         const previewContent = document.getElementById('preview-content');
-
+        getMarkdownInfo()
         markdownTab.addEventListener('click', function (e) {
             e.preventDefault();
             markdownContent.style.display = 'block';
@@ -84,12 +89,42 @@
         });
     });
 
+    async function getMarkdownInfo() {
+            const response = await fetch(`${domain}/api/1.0/markdown/markdownInfo?fileId=${fileId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`,
+            },
+        });
+        if(!response.ok) {
+            alert('Error occurred while fetching workspace info');
+            window.location.reload();
+        }
+        const data = await response.json();
+        console.log(data.data);
+
+        document.getElementById('workspace-name').innerText = roomId;
+        document.getElementById('file-name').innerText = data.data.fileTitle;
+        document.getElementById('file-description').innerText = data.data.fileDescription;
+        document.getElementById('current-user-email').innerText = data.userEmail;
+
+    }
+
+
+
+
 
 </script>
 <script crossorigin="anonymous"
         integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO"
         src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 <script src="http://localhost:8080/src/pages/socketIO.js"></script>
+<script>
 
+
+
+
+</script>
 </body>
 </html>

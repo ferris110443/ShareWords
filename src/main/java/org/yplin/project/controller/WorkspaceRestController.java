@@ -17,6 +17,7 @@ import org.yplin.project.error.NotWorkspaceOwnerException;
 import org.yplin.project.error.UserAlreadyMemberException;
 import org.yplin.project.model.FileContentModel;
 import org.yplin.project.model.UserOwnWorkspaceDetailsModel;
+import org.yplin.project.model.WorkspaceModel;
 import org.yplin.project.repository.user.UserOwnWorkspaceDetailsRepository;
 import org.yplin.project.service.FileContentService;
 import org.yplin.project.service.UserService;
@@ -74,7 +75,10 @@ public class WorkspaceRestController {
             return ResponseEntity.ok().body("Workspace deleted successfully");
         } catch (NotWorkspaceOwnerException e) {
             logger.error("Only workspace owner is allowed deleting this workspace", e);
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Only workspace owner is allowed deleting this workspace");
+        } catch (IllegalArgumentException e) {
+            logger.error("Error deleting workspace", e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error deleting workspace ");
         } catch (Exception e) {
             logger.error("Error deleting workspace", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting workspace: " + e.getMessage());
@@ -82,9 +86,21 @@ public class WorkspaceRestController {
     }
 
 
-    // getWorkspaceInformation including containing files in the workspace
-    @GetMapping(path = "/workspace")
+    @GetMapping(path = "/workspaceInformation")
     public ResponseEntity<?> getWorkspaceInformation(@RequestParam(value = "workspaceName") String workspaceName, @RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        String userEmail = jwtTokenUtil.extractUserEmail(token);
+        WorkspaceModel workspaceInformation = workspaceService.getWorkspaceInformation(workspaceName);
+        Map<String, WorkspaceModel> response = new HashMap<>();
+        response.put("data", workspaceInformation);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+
+    // getWorkspaceInformation including containing files in the workspace
+
+    @GetMapping(path = "/workspace")
+    public ResponseEntity<?> getWorkspaceFileInformation(@RequestParam(value = "workspaceName") String workspaceName, @RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
         String creatorEmail = jwtTokenUtil.extractUserEmail(token);
 

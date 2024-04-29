@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.yplin.project.configuration.JwtTokenUtil;
 import org.yplin.project.data.form.MarkdownForm;
 import org.yplin.project.model.FileContentModel;
 import org.yplin.project.service.FileContentService;
@@ -30,8 +31,12 @@ public class MarkdownRestController {
     @Autowired
     MarkdownStorageService markdownStorageService;
 
-    @PostMapping("/markdown")
+    @Autowired
+    JwtTokenUtil jwtTokenUtil;
 
+
+    @PostMapping("/markdown")
+    // update markdown content batch insert
     public ResponseEntity<?> updateMarkdownContent(@RequestBody MarkdownForm markdownForm) {
         markdownStorageService.addMarkdownForm(markdownForm);
         Map<String, MarkdownForm> response = new HashMap<>();
@@ -39,11 +44,23 @@ public class MarkdownRestController {
         return ResponseEntity.ok().body(response);
     }
 
+
+    // Get markdown content by fileId
     @GetMapping("/markdown")
     public ResponseEntity<?> getMarkdownContent(@RequestParam("roomId") String roomId, @RequestParam("fileId") String fileId) {
-
         Map<String, FileContentModel> response = new HashMap<>();
         response.put("data", fileContentService.getFileContent(fileId));
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/markdownInfo")
+    public ResponseEntity<?> getMarkdownInfo(@RequestParam("fileId") String fileId, @RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        String userEmail = jwtTokenUtil.extractUserEmail(token);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", fileContentService.getFileContent(fileId));
+        response.put("userEmail", userEmail);
         return ResponseEntity.ok().body(response);
     }
 

@@ -15,7 +15,6 @@ const accessToken = localStorage.getItem('accessToken');
 
 window.addEventListener('load', async () => {
 
-
     const provider = new WebsocketProvider(
         'wss://demos.yjs.dev/ws', // use the public ws server
         // `ws${location.protocol.slice(4)}//${location.host}/ws`, // alternatively: use the local ws server (run `npm start` in root directory)
@@ -126,12 +125,12 @@ window.addEventListener('load', async () => {
 
 
     const binding = new QuillBinding(ytext, editor, provider.awareness)
-
+    const currentUserEmail = document.getElementById('current-user-email').textContent;
 
     async function fetchUserDetails(accessToken) {
-        // Placeholder: replace with actual API call to get user details
+        console.log("currentUserEmail" + currentUserEmail)
         return {
-            name: `User-${accessToken}`,
+            name: `User-${currentUserEmail}`,
             color: `#${Math.floor(Math.random() * 16777215).toString(16)}`, // random color
             accessToken: accessToken
         };

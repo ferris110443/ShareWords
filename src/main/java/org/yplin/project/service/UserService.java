@@ -4,6 +4,7 @@ import org.yplin.project.data.dto.SignInDto;
 import org.yplin.project.data.dto.UserWorkspaceDto;
 import org.yplin.project.data.dto.WorkspaceMemberDto;
 import org.yplin.project.data.form.*;
+import org.yplin.project.error.UserAlreadyMemberException;
 import org.yplin.project.model.FriendsModel;
 import org.yplin.project.model.UserModel;
 import org.yplin.project.model.UserOwnWorkspaceDetailsModel;
@@ -32,7 +33,7 @@ public interface UserService {
 
     List<WorkspaceMemberDto> fetchUserOwnWorkspaceMembers(String workspaceName);
 
-    void addMemberToWorkspace(UserAddRemoveMemberInWorkspaceForm userAddMemberInWorkspaceForm);
+    void addMemberToWorkspace(UserAddRemoveMemberInWorkspaceForm userAddMemberInWorkspaceForm) throws UserNotExistException, UserAlreadyMemberException;
 
     void acceptFriendRequest(FriendRequestForm friendRequestForm, String userEmail);
 
@@ -40,7 +41,7 @@ public interface UserService {
 
     void removeFriendRequest(FriendRequestForm friendRequestForm, String userEmail);
 
-    void removeMemberFromWorkspace(UserAddRemoveMemberInWorkspaceForm userAddMemberInWorkspaceForm);
+    void removeMemberFromWorkspace(UserAddRemoveMemberInWorkspaceForm userAddMemberInWorkspaceForm) throws UserAlreadyMemberException;
 
     UserModel getUserPrivateInformation(String userEmail);
 

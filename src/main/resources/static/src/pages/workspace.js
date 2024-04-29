@@ -3,18 +3,15 @@ const params = new URLSearchParams(window.location.search);
 const workspaceName = params.get('roomId');
 const queryParams = new URLSearchParams(window.location.search);
 const roomId = decodeURIComponent(queryParams.get('roomId'));
-const coeditorURL = 'http://localhost:8888/coeditor/dist';
+const coeditorURL = 'http://localhost:8888/coeditor';
 
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('delete-workspace-btn').addEventListener('click', deleteWorkspace);
     document.getElementById('file-creation-form').addEventListener('submit', function (event) {
         event.preventDefault();  // Prevent the default form submission
-        const params = new URLSearchParams(window.location.search);
-        const roomId = params.get('roomId') || 'general';
         const fileName = document.getElementById('file-name-input').value;
         const fileDescription = document.getElementById('file-description').value;
         const fileId = uuidv4();
-        const accessToken = localStorage.getItem('accessToken');
         const data = {
             fileName: fileName,
             fileDescription: fileDescription,
@@ -50,6 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     });
     renderWorkspaceFileList()
+    renderWorkspaceInformation()
     getWorkspaceMember()
     getUserFriendsForAddingMembers()
 });
@@ -153,6 +151,27 @@ async function renderWorkspaceFileList() {
     }
 
 
+}
+
+async function renderWorkspaceInformation() {
+    const response = await fetch(`/api/1.0/workspace/workspaceInformation?workspaceName=${workspaceName}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`
+        }
+    })
+    if (!response.ok) {
+        alert("Failed to fetch workspace information. Please try again.")
+        window.location.reload();
+    }
+    const data = await response.json();
+    const workspaceInformation = data.data;
+    console.log("workspaceInformation : ", workspaceInformation)
+    document.getElementById('workspace-name').textContent = workspaceInformation.workspaceName;
+    document.getElementById('workspace-description').textContent = workspaceInformation.workspaceDescription;
+    document.getElementById('workspace-owner').textContent = workspaceInformation.workspaceOwner;
+    document.getElementById('workspace-creation-date').textContent = workspaceInformation.workspaceCreatedAt.substring(0, 10);
 }
 
 async function getWorkspaceMember() {
@@ -379,7 +398,6 @@ function moveMemberToWorkspaceList(member) {
     // Append the new div to the workspace members list
     workspaceListDiv.appendChild(memberDiv);
 }
-
 
 function uuidv4() {
     return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
