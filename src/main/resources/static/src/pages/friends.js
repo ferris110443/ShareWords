@@ -1,6 +1,10 @@
 const accessToken = localStorage.getItem('accessToken');
 const friendsList = document.getElementById("friends-list");
 const friendsRequestList = document.getElementById("friends-request-list");
+const acceptButtons = document.querySelectorAll('.accept-friend-btn');
+const rejectButtons = document.querySelectorAll('.reject-friend-btn');
+
+
 document.querySelector('#searchBox').addEventListener('input', () => {
     const searchQuery = document.querySelector('#searchBox').value;
     getUserInformation(searchQuery);
@@ -8,6 +12,16 @@ document.querySelector('#searchBox').addEventListener('input', () => {
 
 $(document).ready(function () {
     checkFriendshipStatus();
+});
+
+document.getElementById('friends-list').addEventListener('click', function (event) {
+    // Check if the clicked element is a remove-friend-btn
+    if (event.target.closest('.remove-friend-btn')) {
+        const button = event.target.closest('.remove-friend-btn');
+        const userId = button.dataset.userId;
+        const friendId = button.dataset.friendId;
+        removeFriend(userId, friendId);
+    }
 });
 
 
@@ -192,19 +206,6 @@ async function checkFriendshipStatus(event) {
 
     });
 
-    const acceptButtons = document.querySelectorAll('.accept-friend-btn');
-    const rejectButtons = document.querySelectorAll('.reject-friend-btn');
-    const removeButtons = document.querySelectorAll('.remove-friend-btn');
-
-
-    removeButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            const userId = this.getAttribute('data-user-id');
-            const friendId = this.getAttribute('data-friend-id');
-            removeFriend(userId, friendId);
-        });
-    })
-
 
     acceptButtons.forEach(button => {
         button.addEventListener('click', function () {
@@ -277,15 +278,18 @@ async function removeFriend(userId, friendId) {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${accessToken}`
             },
-            body: JSON.stringify({userId: userId, friendId: friendId, status: 'pending'})
+            body: JSON.stringify({userId: userId, friendId: friendId})
         });
 
         const data = await response.json();
-        console.log('Friend relations removed :', data);
-        document.querySelector(`#btn-userId-${friendId}`).closest('.friend-item').remove();
-
+        console.log('Friend removed:', data);
+        if (response.ok) {
+            document.querySelector(`#btn-userId-${friendId}`).closest('.friend-item').remove();
+        } else {
+            alert('Failed to remove friend: ' + data.message);
+        }
     } catch (error) {
-        console.error('Error rejecting friend request:', error);
+        console.error('Error removing friend:', error);
     }
 }
 

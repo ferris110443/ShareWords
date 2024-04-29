@@ -25,7 +25,7 @@ document.getElementById('signupForm').addEventListener('submit', async function 
         } else {
             const errorData = await response.json();
             console.log(errorData)
-            alert('Signup failed' + JSON.stringify(errorData));
+            alert('Signup failed : ' + JSON.stringify(errorData.error));
         }
     } catch (error) {
         console.error('Error:', error);
@@ -60,7 +60,8 @@ document.getElementById('signInForm').addEventListener('submit', async function 
         } else {
             const errorData = await response.json();
             console.log(errorData)
-            alert('SignIn failed' + JSON.stringify(errorData));
+            console.log(errorData.error)
+            alert('SignIn failed : ' + JSON.stringify(errorData.error));
         }
     } catch (error) {
         console.error('Error:', error);

@@ -10,9 +10,9 @@ socket.on('connect', () => {
         console.log('Acknowledgment from server:', ack);
     });
     socket.on("onlineUsers", function (users) {
-        // console.log("Online Users:", users);
-        onlineUsers = users;  // Update the global variable
-        // console.log('Online Users:!!!!!!!!!', onlineUsers);
+        console.log("Online Users:", users);
+        onlineUsers = users;
+        console.log('Online Users:!!!!!!!!!', onlineUsers);
         updateOnlineStatus();
     });
 });
@@ -104,7 +104,7 @@ socket.on('friendRequest', function (requestUserEmail, requestUserName) {
                         <div><strong>Email:</strong> ${friendEmail}</div>
                         <div class="status-offline">Offline</div>
                     </div>
-                    <button class="btn remove-friend-btn" data-user-id="${userId}" data-friend-id="${friendId}" data-email="${friendEmail}">
+                    <button id=btn-userId-${friendId} class="btn remove-friend-btn" data-user-id="${userId}" data-friend-id="${friendId}" data-email="${friendEmail}">
                         <img class="remove-friend-btn-img" src="/logo/remove-user.png" alt="Remove Friend">
                     </button>
                 `;
@@ -125,29 +125,12 @@ socket.on('friendRequest', function (requestUserEmail, requestUserName) {
 });
 
 
-// socket.on(`chat${roomId}`, function () {
-//
-// })
-
-
-// socket.on('friendRequestAccepted', function (requestUserEmail) {
-//     alert('Your friend request to ' + requestUserEmail + ' has been accepted');
-// });
-//
-// socket.on('friendRequestRejected', function (requestUserEmail) {
-//     alert('Your friend request to ' + requestUserEmail + ' has been rejected');
-// });
-//
-// socket.on('friendRequestRemoved', function (requestUserEmail) {
-//     alert('Your friend request to ' + requestUserEmail + ' has been removed');
-// });
-
-
 function updateOnlineStatus() {
     console.log("Updating online status...");
     document.querySelectorAll('.friend-item').forEach(item => {
         const email = item.querySelector('button').getAttribute('data-email');
         const isOnline = onlineUsers[email];
+        console.log(onlineUsers);
         const statusDiv = item.querySelector('.status-online, .status-offline');
 
         console.log(email + " " + isOnline + " " + statusDiv);

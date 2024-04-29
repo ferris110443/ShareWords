@@ -20,8 +20,8 @@ import java.util.Map;
 @RestController
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8888"})
 @RequestMapping("api/1.0/user")
-public class UserController {
-    public static final Logger logger = LoggerFactory.getLogger(UserController.class);
+public class UserRestController {
+    public static final Logger logger = LoggerFactory.getLogger(UserRestController.class);
 
 
     @Autowired
