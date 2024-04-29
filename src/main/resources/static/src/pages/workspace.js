@@ -64,18 +64,17 @@ async function deleteWorkspace() {
             }
         });
 
-        const errorMessage = await response.text();
         if (response.status === 403) {
-            alert(errorMessage);
-
+            alert("Only the owner can delete the workspace")
+            window.location.href = '/admin/home';
         } else if (!response.ok) {
-            alert(errorMessage)
-            window.location.reload()
+            alert("Internal error")
+            window.location.href = '/admin/home';
         }
 
         const result = await response.json();
         console.log('Workspace deleted successfully:', result);
-        window.location.redirect = '/admin/home';
+        window.location.href = '/admin/home';
     } catch (error) {
         console.error('Failed to delete the workspace:', error);
         // Handle errors, such as displaying a message to the user

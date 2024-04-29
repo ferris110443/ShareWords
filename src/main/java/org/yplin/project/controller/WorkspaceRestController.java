@@ -72,7 +72,8 @@ public class WorkspaceRestController {
             String token = authorizationHeader.replace("Bearer ", "");
             String userEmail = jwtTokenUtil.extractUserEmail(token);
             workspaceService.deleteWorkspace(workspaceName, userEmail);
-            return ResponseEntity.ok().body("Workspace deleted successfully");
+
+            return ResponseEntity.ok().body(Map.of("message", "Workspace deleted successfully"));
         } catch (NotWorkspaceOwnerException e) {
             logger.error("Only workspace owner is allowed deleting this workspace", e);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Only workspace owner is allowed deleting this workspace");

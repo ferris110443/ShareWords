@@ -12,14 +12,47 @@ body {
 .friend-item, .friend-request-item {
     display: flex;
     justify-content: space-between;
-    padding: 15px;
-    margin: 20px;
+    padding: 10px;
+    margin: 10px;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
     background-color: white;
+    line-height: 1.4;
 }
 
 .remove-friend-btn-img {
     width: 36px;
     height: 36px;
+}
+
+
+#friends-list, #friends-request-list {
+    max-height: 40vh; /* Adjust this value based on your needs */
+    overflow-y: auto; /* This enables vertical scrolling when necessary */
+    width: 100%; /* Optional: Adjust width as needed */
+}
+
+#userList {
+    max-height: 80vh; /* Adjust this value based on your needs */
+    overflow-y: auto; /* This enables vertical scrolling when necessary */
+    width: 100%; /* Optional: Adjust width as needed */
+}
+
+.user-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
+    background-color: white;
+    line-height: 1.4;
+}
+
+.user-item > button {
+    width: 200px;
+}
+
+.btn-accept-reject-container {
+    align-content: center;
 }

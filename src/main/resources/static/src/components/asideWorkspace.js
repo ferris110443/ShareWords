@@ -11,6 +11,7 @@ function loadAsideWorkspace() {
       <a class="workspace-partial nav-link py-0 border-bottom rounded-0" aria-current="page" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Home" data-bs-original-title="user" data-target="room-zone">
         <svg class="bi pe-none" width="36" height="36" role="img" aria-label="Home"><use xlink:href="#home"></use></svg>
         <img src=/logo/user.png width="48" height="48">
+        <div style="font-size: 14px">Members</div>
         <svg class="bi pe-none" width="36" height="36" role="img" aria-label="Home"><use xlink:href="#home"></use></svg>
       </a>
     </li>
@@ -18,6 +19,7 @@ function loadAsideWorkspace() {
       <a class="workspace-partial nav-link py-0 border-bottom rounded-0" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Dashboard" data-bs-original-title="file" data-target="file-zone">
         <svg class="bi pe-none" width="36" height="36" role="img" aria-label="Dashboard"><use xlink:href="#speedometer2"></use></svg>
         <img src= /logo/file.png width="48" height="48">
+        <div style="font-size: 14px ">Files</div>
         <svg class="bi pe-none" width="36" height="36" role="img" aria-label="Home"><use xlink:href="#home"></use></svg>
 
       </a>
@@ -32,6 +34,8 @@ function loadAsideWorkspace() {
       <a href="/admin/home" class="nav-link py-0 border-bottom rounded-0" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Orders" data-bs-original-title="Orders">
         <svg class="bi pe-none" width="36" height="36" role="img" aria-label="Orders"><use xlink:href="#table"></use></svg>
         <img src=/logo/logout.png width="48" height="48">
+        <div style="font-size: 14px">Home</div>
+        <svg class="bi pe-none" width="36" height="36" role="img" aria-label="Orders"><use xlink:href="#table"></use></svg>
       </a>
     </li>
   </ul>
@@ -80,6 +84,7 @@ function loadAsideUserHomePage() {
         <a href="/admin/home" class="nav-link py-0 border-bottom rounded-0" aria-current="page" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Home" data-bs-original-title="Home">
           <svg class="bi pe-none" width="36" height="36" role="img" aria-label="Home"><use xlink:href="#home"></use></svg>
           <img src=/logo/workspace.png width="48" height="48">
+          <div style="font-size: 14px">Workspace</div>
           <svg class="bi pe-none" width="36" height="36" role="img" aria-label="Home"><use xlink:href="#home"></use></svg>
 
         </a>
@@ -88,6 +93,7 @@ function loadAsideUserHomePage() {
         <a href="/admin/friends" class="nav-link py-0 border-bottom rounded-0" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Dashboard" data-bs-original-title="Dashboard">
           <svg class="bi pe-none" width="36" height="36" role="img" aria-label="Dashboard"><use xlink:href="#speedometer2"></use></svg>
           <img src=/logo/friends.png width="48" height="48">
+          <div style="font-size: 14px">Friends</div>
           <svg class="bi pe-none" width="36" height="36" role="img" aria-label="Home"><use xlink:href="#home"></use></svg>
 
         </a>
@@ -96,6 +102,7 @@ function loadAsideUserHomePage() {
         <a href="/index.html" class="nav-link py-0 border-bottom rounded-0" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Orders" data-bs-original-title="Orders">
           <svg class="bi pe-none" width="36" height="36" role="img" aria-label="Orders"><use xlink:href="#table"></use></svg>
           <img src=/logo/logout.png width="48" height="48">
+          <div style="font-size: 14px">LogOut</div>
           <svg class="bi pe-none" width="36" height="36" role="img" aria-label="Home"><use xlink:href="#home"></use></svg>
 
         </a>

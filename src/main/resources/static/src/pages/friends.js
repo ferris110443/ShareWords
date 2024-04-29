@@ -46,28 +46,39 @@ async function getUserInformation(searchQuery) {
         // Process and display each user
         data.forEach(user => {
             const userElement = document.createElement('div');
-            userElement.className = 'user-item';
+
 
             let relationHTML = ``;
 
             const relation = dataRelationShip.data.find(item => (item.userId === user.id || item.friendId === user.id));
             if (relation) {
                 if (relation.status === 'pending') {
-                    relationHTML += `<div><strong>Name:</strong> ${user.name}</div>
-                                <div><strong>Email:</strong> ${user.email}</div>
-                                <button id="btn-userId-${user.id}" class="btn btn-primary add-friend-btn"  data-user-name="${user.name}" data-user-email="${user.email}" data-user-id="${user.id}" disabled>Wait accepted</button>`;
+                    userElement.className = 'user-item';
+                    relationHTML += `<div>
+                                        <div><strong>Name:</strong> ${user.name}</div>
+                                        <div><strong>Email:</strong> ${user.email}</div>
+                                    </div>
+                                    <button id="btn-userId-${user.id}" class="btn btn-secondary add-friend-btn"  data-user-name="${user.name}" data-user-email="${user.email}" data-user-id="${user.id}" disabled>Wait accepted</button>`;
                 } else if (relation.status === 'accepted') {
-                    relationHTML += `<div style="display: none"><strong>Name:</strong> ${user.name}</div>
-                                <div style="display: none"><strong>Email:</strong> ${user.email}</div>
-                                <button id="btn-userId-${user.id}" class="btn btn-primary add-friend-btn"  data-user-name="${user.name}" data-user-email="${user.email}" data-user-id="${user.id}" style="display: none">Already Friends</button>`;
+                    relationHTML += `<div>
+                                        <div style="display: none"><strong>Name:</strong> ${user.name}</div>
+                                        <div style="display: none"><strong>Email:</strong> ${user.email}</div>
+                                    </div>
+                                    <button id="btn-userId-${user.id}" class="btn btn-secondary add-friend-btn"  data-user-name="${user.name}" data-user-email="${user.email}" data-user-id="${user.id}" style="display: none">Already Friends</button>`;
                 } else if (relation.status === 'declined') {
-                    relationHTML += `<div><strong>Name:</strong> ${user.name}</div>
-                                <div><strong>Email:</strong> ${user.email}</div>
-                                <button id="btn-userId-${user.id}" class="btn btn-primary add-friend-btn"  data-user-name="${user.name}" data-user-email="${user.email}" data-user-id="${user.id}" disabled >Request declined</button>`;
+                    userElement.className = 'user-item';
+                    relationHTML += `<div>
+                                        <div><strong>Name:</strong> ${user.name}</div>
+                                        <div><strong>Email:</strong> ${user.email}</div>
+                                     </div>
+                                     <button id="btn-userId-${user.id}" class="btn btn-secondary add-friend-btn"  data-user-name="${user.name}" data-user-email="${user.email}" data-user-id="${user.id}" disabled >Request declined</button>`;
                 }
             } else {
-                relationHTML += `<div><strong>Name:</strong> ${user.name}</div>
-                                <div><strong>Email:</strong> ${user.email}</div>
+                userElement.className = 'user-item';
+                relationHTML += `<div>
+                                    <div><strong>Name:</strong> ${user.name}</div>
+                                    <div><strong>Email:</strong> ${user.email}</div>
+                                </div>
                                 <button id="btn-userId-${user.id}" class="btn btn-primary add-friend-btn"  data-user-name="${user.name}" data-user-email="${user.email}" data-user-id="${user.id}">Add as Friend</button>`;
             }
 
