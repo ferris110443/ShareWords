@@ -136,10 +136,34 @@ window.addEventListener('load', async () => {
         };
     }
 
+    async function getMarkdownInfo() {
+        const response = await fetch(`${domain}/api/1.0/markdown/markdownInfo?fileId=${fileId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`,
+            },
+        });
+        if (!response.ok) {
+            alert('Error occurred while fetching workspace info');
+            window.location.reload();
+        }
+        const data = await response.json();
+        console.log(data.data);
+
+        document.getElementById('workspace-name').innerText = roomId;
+        document.getElementById('file-name').innerText = data.data.fileTitle;
+        document.getElementById('file-description').innerText = data.data.fileDescription;
+        document.getElementById('current-user-email').innerText = data.userEmail;
+        return data.userEmail
+    }
+
+
+    const userName = await getMarkdownInfo()
     const userDetails = await fetchUserDetails(accessToken);
 
     provider.awareness.setLocalStateField('user', {
-        name: userDetails.name,
+        name: userName,
         color: userDetails.color
     });
 
