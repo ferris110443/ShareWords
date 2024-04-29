@@ -129,10 +129,10 @@ window.addEventListener('load', () => {
 
     // Define user name and user name
     // Check the quill-cursors package on how to change the way cursors are rendered
-    // provider.awareness.setLocalStateField('user', {
-    //     name: 'Typing Jimmy',
-    //     color: 'blue'
-    // })
+    provider.awareness.setLocalStateField('user', {
+        name: 'Typing Jimmy',
+        color: 'blue'
+    })
 
 
     const connectBtn = document.getElementById('y-connect-btn')
