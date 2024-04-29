@@ -11,8 +11,9 @@ const ydoc = new Y.Doc()
 const params = new URLSearchParams(window.location.search)
 const roomId = params.get('roomId') || 'general'
 const fileId = params.get('fileId') || 'general'
+const accessToken = localStorage.getItem('accessToken');
 
-window.addEventListener('load', () => {
+window.addEventListener('load', async () => {
 
 
     const provider = new WebsocketProvider(
@@ -127,12 +128,21 @@ window.addEventListener('load', () => {
     const binding = new QuillBinding(ytext, editor, provider.awareness)
 
 
-    // Define user name and user name
-    // Check the quill-cursors package on how to change the way cursors are rendered
+    async function fetchUserDetails(accessToken) {
+        // Placeholder: replace with actual API call to get user details
+        return {
+            name: `User-${accessToken}`,
+            color: `#${Math.floor(Math.random() * 16777215).toString(16)}`, // random color
+            accessToken: accessToken
+        };
+    }
+
+    const userDetails = await fetchUserDetails(accessToken);
+
     provider.awareness.setLocalStateField('user', {
-        name: 'Typing Jimmy',
-        color: 'blue'
-    })
+        name: userDetails.name,
+        color: userDetails.color
+    });
 
 
     const connectBtn = document.getElementById('y-connect-btn')

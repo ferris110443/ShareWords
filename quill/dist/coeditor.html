@@ -31,21 +31,21 @@
 
 <ul class="nav nav-tabs">
     <li class="nav-item">
-        <a class="nav-link active" id="markdown-tab" href="#">Markdown</a>
+        <a class="nav-link active" href="#" id="markdown-tab">Markdown</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" id="preview-tab" href="#">Preview</a>
+        <a class="nav-link" href="#" id="preview-tab">Preview</a>
     </li>
 </ul>
 
-<div id="markdown-content" class="tab-content">
+<div class="tab-content" id="markdown-content">
     <div class="editor-title">
         Markdown Editor
     </div>
     <div id="editor"></div>
 </div>
 
-<div id="preview-content" class="tab-content" style="display:none;">
+<div class="tab-content" id="preview-content" style="display:none;">
     <div class="preview-title">
         Preview
     </div>
@@ -60,6 +60,7 @@
     function redirectToPage() {
         window.location.href = `/admin/workspace?roomId=${roomId}`;
     }
+
     document.addEventListener('DOMContentLoaded', () => {
         const markdownTab = document.getElementById('markdown-tab');
         const previewTab = document.getElementById('preview-tab');
