@@ -32,7 +32,6 @@ public class ValidationRestController {
         try {
             String token = authorizationHeader.replace("Bearer ", "");
             String creatorEmail = jwtTokenUtil.extractUserEmail(token);
-            System.out.println("creatorEmail" + creatorEmail);
 
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (JwtException error) {
@@ -45,4 +44,6 @@ public class ValidationRestController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+
 }
