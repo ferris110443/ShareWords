@@ -21,40 +21,45 @@
           rel=stylesheet>
 </head>
 <body>
-<div>
-    Workspace Name : <span id="workspace-name"></span><br>
-    File Name : <span id="file-name"></span><br>
-    File Description : <span id="file-description"></span>
-    Current User : <span id="current-user-email"></span>
-</div>
-<div>
-    <button class="btn btn-primary" id="y-connect-btn" type="button" style="display: none">Disconnect</button>
-    <button class="btn btn-primary" id="return-btn" onclick="redirectToPage()" type="button">Return to Workspace</button>
-</div>
-<br>
-
-<ul class="nav nav-tabs">
-    <li class="nav-item">
-        <a class="nav-link active" href="#" id="markdown-tab">Markdown</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#" id="preview-tab">Preview</a>
-    </li>
-</ul>
-
-<div class="tab-content" id="markdown-content">
-    <div class="editor-title">
-        Markdown Editor
+<div id="markdown-info-container">
+    <div>
+        <div>Workspace Name : <span id="workspace-name"></span><br></div>
+        <div>File Name : <span id="file-name"></span><br></div>
+        <div>File Description : <span id="file-description"></span></div>
+        <div>Current User : <span id="current-user-email"></span></div>
     </div>
-    <div id="editor"></div>
+    <div>
+        <button class="btn btn-primary" id="y-connect-btn" type="button" style="display: none">Disconnect</button>
+        <button class="btn btn-primary" id="return-btn" onclick="redirectToPage()" type="button">Return to Workspace</button>
+    </div>
 </div>
 
-<div class="tab-content" id="preview-content" style="display:none;">
-    <div class="preview-title">
-        Preview
+<div id="markdown-preview-container">
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" href="#" id="markdown-tab">Markdown</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" id="preview-tab">Preview</a>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="markdown-content">
+        <div class="editor-title">
+            Markdown Editor
+        </div>
+        <div id="editor"></div>
     </div>
-    <div id="preview-text"></div>
+
+    <div class="tab-content" id="preview-content" style="display:none;">
+        <div class="preview-title">
+            Preview
+        </div>
+        <div id="preview-text"></div>
+    </div>
 </div>
+
+
 
 <script>
     const domain = 'http://localhost:8080';
@@ -71,7 +76,7 @@
         const previewTab = document.getElementById('preview-tab');
         const markdownContent = document.getElementById('markdown-content');
         const previewContent = document.getElementById('preview-content');
-        getMarkdownInfo()
+        // getMarkdownInfo()
         markdownTab.addEventListener('click', function (e) {
             e.preventDefault();
             markdownContent.style.display = 'block';

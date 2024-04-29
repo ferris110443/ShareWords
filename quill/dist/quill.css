@@ -1,3 +1,9 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    margin: 10px;
+    padding: 0;
+}
 
 #editor {
     width: 100%;
@@ -5,8 +11,8 @@
     background-color: white;
     border: 5px solid #ccc;
     padding: 10px;
-    margin-top: 10px;
-
+    margin: 10px;
+    overflow-y: auto;
 
     .ql-editor {
         max-height: 100%;
@@ -18,6 +24,7 @@
     height: 90vh;
     border: 5px solid #ccc;
     padding: 10px;
+    margin: 10px;
     overflow-y: auto;
     background-color: white;
 }
@@ -26,4 +33,36 @@
 .editor-title, .preview-title {
     font-size: 20px;
     font-weight: bold;
+}
+
+
+#markdown-preview-container{
+    margin: 20px;
+}
+
+.nav-link {
+    border: 2px solid #1e1e21;
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+
+.nav-link:hover {
+    background-color: #0056b3;
+    color: white;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+}
+
+.editor-title, .preview-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
 }
