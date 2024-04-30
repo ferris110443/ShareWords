@@ -5,15 +5,31 @@ const acceptButtons = document.querySelectorAll('.accept-friend-btn');
 const rejectButtons = document.querySelectorAll('.reject-friend-btn');
 
 
+document.addEventListener('DOMContentLoaded', function () {
+    document.body.addEventListener('click', function (event) {
+        if (event.target.matches('.accept-friend-btn')) {
+            const userId = event.target.getAttribute('data-user-id');
+            const friendId = event.target.getAttribute('data-friend-id');
+            const friendName = event.target.getAttribute('data-friend-name');
+            const friendEmail = event.target.getAttribute('data-friend-email');
+            acceptFriend(userId, friendId);
+        }
+
+        if (event.target.matches('.reject-friend-btn')) {
+            const userId = event.target.getAttribute('data-user-id');
+            const friendId = event.target.getAttribute('data-friend-id');
+            rejectFriend(userId, friendId);
+        }
+    });
+
+    // Load initial data or perform initial checks when DOM is fully loaded
+    checkFriendshipStatus();
+});
+
 document.querySelector('#searchBox').addEventListener('input', () => {
     const searchQuery = document.querySelector('#searchBox').value;
     getUserInformation(searchQuery);
 });
-
-$(document).ready(function () {
-    checkFriendshipStatus();
-});
-
 document.getElementById('friends-list').addEventListener('click', function (event) {
     // Check if the clicked element is a remove-friend-btn
     if (event.target.closest('.remove-friend-btn')) {
@@ -205,27 +221,6 @@ async function checkFriendshipStatus(event) {
 
 
     });
-
-
-    acceptButtons.forEach(button => {
-        button.addEventListener('click', function () {
-
-            const userId = this.getAttribute('data-user-id');
-            const friendId = this.getAttribute('data-friend-id');
-            acceptFriend(userId, friendId);
-
-        });
-    });
-
-    rejectButtons.forEach(button => {
-        button.addEventListener('click', function () {
-
-            const userId = this.getAttribute('data-user-id');
-            const friendId = this.getAttribute('data-friend-id');
-            rejectFriend(userId, friendId);
-        });
-    });
-
 }
 
 
@@ -240,9 +235,25 @@ async function acceptFriend(userId, friendId) {
             body: JSON.stringify({userId: userId, friendId: friendId, status: 'pending'})
         });
         const data = await response.json();
-        console.log('Friend request accepted:', data);
+        console.log('Friend request accepted:', data.data);
         const friendRequestDiv = document.querySelector(`#btn-userId-${friendId}`).closest('.friend-request-item');
         friendRequestDiv.remove();
+
+        const friendElement = document.createElement('div');
+        friendElement.className = 'friend-item';
+        friendElement.innerHTML = `
+                    <div>
+                        <div><strong>Name:</strong> ${friendName}</div>
+                        <div><strong>Email:</strong> ${friendEmail}</div>
+                        <div class="status-offline">Offline</div>
+                    </div>
+                    <button id=btn-userId-${friendId} class="btn remove-friend-btn" data-user-id="${userId}" data-friend-id="${friendId}" data-email="${friendEmail}">
+                        <img class="remove-friend-btn-img" src="/logo/remove-user.png" alt="Remove Friend">
+                    </button>
+                `;
+
+        document.getElementById('friends-list').appendChild(friendElement);
+        updateOnlineStatus();
 
 
     } catch (error) {

@@ -65,7 +65,7 @@
 
 
 <script>
-    const domain = 'http://localhost:8080';
+    // const domain = 'http://localhost:8080';
     const queryParams = new URLSearchParams(window.location.search);
     const roomId = queryParams.get('roomId');
     const workspaceName = decodeURIComponent(roomId)
@@ -109,7 +109,7 @@
         }
 
         try {
-            const response = await fetch(`${domain}/api/1.0/validation/workspace?workspaceName=${roomId}`, {
+            const response = await fetch(`/api/1.0/validation/workspace?workspaceName=${roomId}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${accessToken}`

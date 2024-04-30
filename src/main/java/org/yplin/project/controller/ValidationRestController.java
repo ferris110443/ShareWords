@@ -34,7 +34,7 @@ public class ValidationRestController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping(path = "/workspace")
-    public ResponseEntity<?> workspaceCheckValidation(@RequestParam("workspaceName") String workspaceName,
+    public ResponseEntity<?> checkWorkspaceValidation(@RequestParam("workspaceName") String workspaceName,
                                                       @RequestHeader("Authorization") String authorizationHeader) {
         Map<String, Object> response = new HashMap<>();
         try {
@@ -43,6 +43,31 @@ public class ValidationRestController {
             boolean isUserMember = validationService.checkWorkspaceValidation(workspaceName, userEmail);
             if (!isUserMember) {
                 response.put("error", "You are not a member of this workspace");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (JwtException error) {
+            logger.error("Error checking workspace validation due to token error : ", error);
+            response.put("error", "Invalid token: " + error.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        } catch (Exception e) {
+            logger.error("Error checking workspace validation fail", e);
+            response.put("error", "Error checking workspace validation fail : " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping(path = "/user")
+    public ResponseEntity<?> checkUserValidation(@RequestHeader("Authorization") String authorizationHeader) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            String token = authorizationHeader.replace("Bearer ", "");
+            String userEmail = jwtTokenUtil.extractUserEmail(token);
+            boolean isUserMember = validationService.checkUserValidation(userEmail);
+            if (!isUserMember) {
+                response.put("error", "You are not a member. Please sign up first.");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
             }
             return ResponseEntity.status(HttpStatus.OK).body(response);
