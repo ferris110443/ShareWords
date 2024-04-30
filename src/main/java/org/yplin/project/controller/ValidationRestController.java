@@ -40,7 +40,10 @@ public class ValidationRestController {
         try {
             String token = authorizationHeader.replace("Bearer ", "");
             String userEmail = jwtTokenUtil.extractUserEmail(token);
+//            System.out.println("userEmail: " + userEmail);
+//            System.out.println("workspaceName: " + workspaceName);
             boolean isUserMember = validationService.checkWorkspaceValidation(workspaceName, userEmail);
+
             if (!isUserMember) {
                 response.put("error", "You are not a member of this workspace");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);

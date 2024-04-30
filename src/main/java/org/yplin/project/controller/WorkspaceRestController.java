@@ -104,7 +104,6 @@ public class WorkspaceRestController {
     public ResponseEntity<?> getWorkspaceFileInformation(@RequestParam(value = "workspaceName") String workspaceName, @RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
         String creatorEmail = jwtTokenUtil.extractUserEmail(token);
-
         List<FileContentModel> fileList = fileContentService.getFileContentsByWorkspaceName(workspaceName);
 
         Map<String, List<FileContentModel>> response = new HashMap<>();
