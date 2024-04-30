@@ -137,7 +137,7 @@ window.addEventListener('load', async () => {
     }
 
     async function getMarkdownInfo() {
-        const response = await fetch(`${domain}/api/1.0/markdown/markdownInfo?fileId=${fileId}`, {
+        const response = await fetch(`/api/1.0/markdown/markdownInfo?fileId=${fileId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

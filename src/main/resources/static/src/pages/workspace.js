@@ -5,7 +5,10 @@ const queryParams = new URLSearchParams(window.location.search);
 const roomId = decodeURIComponent(queryParams.get('roomId'));
 const coeditorURL = 'http://localhost:8888/coeditor';
 
+
 document.addEventListener('DOMContentLoaded', function () {
+    checkAuthentication()
+
     document.getElementById('delete-workspace-btn').addEventListener('click', deleteWorkspace);
     document.getElementById('file-creation-form').addEventListener('submit', function (event) {
         event.preventDefault();  // Prevent the default form submission
@@ -404,3 +407,40 @@ function uuidv4() {
     );
 }
 
+async function checkAuthentication() {
+    if (!accessToken) {
+        alert('No access token found. Please login.');
+        redirectToLogin();
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/1.0/validation/workspace?workspaceName=${roomId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+        const data = await response.json();
+        if (!response.ok) {
+            alert('You are not authenticated in this workspace. Redirecting to home page.');
+            redirectToLogin();
+        } else {
+            document.querySelector('body').classList.remove('hidden');
+        }
+
+
+    } catch (error) {
+        console.error('Error checking authentication:', error);
+        alert('Error checking authentication. Please try again.');
+    }
+}
+
+
+function redirectToLogin() {
+    window.location.href = '/admin/home';
+}
+
+function redirectToPage() {
+    window.location.href = `/admin/workspace?roomId=${roomId}`;
+}

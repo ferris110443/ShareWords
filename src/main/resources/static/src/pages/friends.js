@@ -6,6 +6,7 @@ const rejectButtons = document.querySelectorAll('.reject-friend-btn');
 
 
 document.addEventListener('DOMContentLoaded', function () {
+    checkAuthentication()
     document.body.addEventListener('click', function (event) {
         if (event.target.matches('.accept-friend-btn')) {
             const userId = event.target.getAttribute('data-user-id');
@@ -21,8 +22,6 @@ document.addEventListener('DOMContentLoaded', function () {
             rejectFriend(userId, friendId);
         }
     });
-
-    // Load initial data or perform initial checks when DOM is fully loaded
     checkFriendshipStatus();
 });
 
@@ -305,3 +304,34 @@ async function removeFriend(userId, friendId) {
 }
 
 
+async function checkAuthentication() {
+    if (!accessToken) {
+        alert('No access token found. Please login.');
+        redirectToLogin();
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/1.0/validation/user`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+        if (!response.ok) {
+            alert('You are not authenticated. Redirecting to login page.');
+            redirectToLogin();
+            return false;
+        }
+        return true;
+    } catch (error) {
+        console.error('Error checking authentication:', error);
+        alert('Error checking authentication. Please try again.');
+        redirectToLogin();
+        return false;
+    }
+}
+
+function redirectToLogin() {
+    window.location.href = '/index.html';
+}

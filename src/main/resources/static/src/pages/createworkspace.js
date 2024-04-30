@@ -1,5 +1,6 @@
 const accessToken = localStorage.getItem('accessToken');
 $(document).ready(function () {
+    checkAuthentication()
     fetchUserInformation()
 });
 
@@ -86,4 +87,36 @@ async function fetchUserInformation() {
 
     $('#user-information-detail').html(userInfoHTML);
 
+}
+
+async function checkAuthentication() {
+    if (!accessToken) {
+        alert('No access token found. Please login.');
+        redirectToLogin();
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/1.0/validation/user`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+        if (!response.ok) {
+            alert('You are not authenticated. Redirecting to login page.');
+            redirectToLogin();
+            return false;
+        }
+        return true;
+    } catch (error) {
+        console.error('Error checking authentication:', error);
+        alert('Error checking authentication. Please try again.');
+        redirectToLogin();
+        return false;
+    }
+}
+
+function redirectToLogin() {
+    window.location.href = '/index.html';
 }
