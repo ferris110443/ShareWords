@@ -20,7 +20,7 @@
           href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/monokai-sublime.min.css"
           rel=stylesheet>
 </head>
-<body>
+<body class="hidden">
 <div id="markdown-info-container">
     <div>
         <h1 style="text-align: center">
@@ -68,18 +68,21 @@
     const domain = 'http://localhost:8080';
     const queryParams = new URLSearchParams(window.location.search);
     const roomId = queryParams.get('roomId');
+    const workspaceName = decodeURIComponent(roomId)
     const fileId = queryParams.get('fileId');
     const accessToken = localStorage.getItem('accessToken');
-    function redirectToPage() {
-        window.location.href = `/admin/workspace?roomId=${roomId}`;
-    }
 
     document.addEventListener('DOMContentLoaded', () => {
+        checkAuthentication();
+        setupTabs();
+    });
+
+    function setupTabs() {
         const markdownTab = document.getElementById('markdown-tab');
         const previewTab = document.getElementById('preview-tab');
         const markdownContent = document.getElementById('markdown-content');
         const previewContent = document.getElementById('preview-content');
-        // getMarkdownInfo()
+
         markdownTab.addEventListener('click', function (e) {
             e.preventDefault();
             markdownContent.style.display = 'block';
@@ -95,10 +98,46 @@
             previewTab.classList.add('active');
             markdownTab.classList.remove('active');
         });
-    });
+    }
 
 
+    async function checkAuthentication() {
+        if (!accessToken) {
+            alert('No access token found. Please login.');
+            redirectToLogin();
+            return;
+        }
 
+        try {
+            const response = await fetch(`${domain}/api/1.0/validation/workspace?workspaceName=${roomId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                alert('You are not authenticated. Redirecting to login page.');
+                redirectToLogin();
+            }else{
+                document.querySelector('body').classList.remove('hidden');
+            }
+
+
+        } catch (error) {
+            console.error('Error checking authentication:', error);
+            alert('Error checking authentication. Please try again.');
+        }
+    }
+
+
+    function redirectToLogin() {
+        window.location.href = '/admin/home';
+    }
+
+    function redirectToPage() {
+        window.location.href = `/admin/workspace?roomId=${roomId}`;
+    }
 
 
 </script>

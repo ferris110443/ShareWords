@@ -10,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.yplin.project.configuration.JwtTokenUtil;
-import org.yplin.project.data.form.WorkspaceCheckValidationForm;
+import org.yplin.project.service.UserService;
+import org.yplin.project.service.ValidationService;
+import org.yplin.project.service.WorkspaceService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,24 +25,34 @@ public class ValidationRestController {
     private static final Logger logger = LoggerFactory.getLogger(ValidationRestController.class);
     @Autowired
     JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    UserService userService;
+    @Autowired
+    WorkspaceService workspaceService;
+    @Autowired
+    ValidationService validationService;
 
     @CrossOrigin(origins = "http://localhost:3000")
-    @PostMapping(path = "/workspace")
-    public ResponseEntity<?> workspaceCheckValidation(@RequestBody WorkspaceCheckValidationForm workspaceCheckValidationForm,
+    @GetMapping(path = "/workspace")
+    public ResponseEntity<?> workspaceCheckValidation(@RequestParam("workspaceName") String workspaceName,
                                                       @RequestHeader("Authorization") String authorizationHeader) {
         Map<String, Object> response = new HashMap<>();
         try {
             String token = authorizationHeader.replace("Bearer ", "");
-            String creatorEmail = jwtTokenUtil.extractUserEmail(token);
-
+            String userEmail = jwtTokenUtil.extractUserEmail(token);
+            boolean isUserMember = validationService.checkWorkspaceValidation(workspaceName, userEmail);
+            if (!isUserMember) {
+                response.put("error", "You are not a member of this workspace");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+            }
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (JwtException error) {
-            logger.error("Error checking workspace validation due to token error", error);
+            logger.error("Error checking workspace validation due to token error : ", error);
             response.put("error", "Invalid token: " + error.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         } catch (Exception e) {
             logger.error("Error checking workspace validation fail", e);
-            response.put("error", "Error checking workspace validation fail" + e.getMessage());
+            response.put("error", "Error checking workspace validation fail : " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }

@@ -66,7 +66,7 @@ window.addEventListener('load', async () => {
             }
         } catch (error) {
             console.error('Failed to fetch markdown content:', error);
-            // Optionally, update the UI to show an error message
+
         }
     }
 

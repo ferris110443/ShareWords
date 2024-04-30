@@ -24,4 +24,6 @@ public interface WorkspaceRepository extends JpaRepository<WorkspaceModel, Long>
     void deleteByWorkspaceNameAndWorkspaceOwner(@Param("workspaceName") String workspaceName, @Param("workspaceOwner") String workspaceOwner);
 
     WorkspaceModel findByWorkspaceName(String workspaceName);
+
+
 }

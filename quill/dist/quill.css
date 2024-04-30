@@ -76,3 +76,7 @@ body {
 #return-btn-container{
     margin: auto 0 ;
 }
+
+.hidden {
+    display: none;
+}
