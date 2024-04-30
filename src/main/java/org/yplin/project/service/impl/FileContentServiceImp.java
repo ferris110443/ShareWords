@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.yplin.project.data.form.CreateFileForm;
 import org.yplin.project.data.form.ImageDataForm;
 import org.yplin.project.data.form.MarkdownForm;
@@ -14,9 +15,11 @@ import org.yplin.project.model.FileContentModel;
 import org.yplin.project.repository.FileContentBatchInsertRepository;
 import org.yplin.project.repository.FileContentRepository;
 import org.yplin.project.repository.WorkspaceRepository;
+import org.yplin.project.repository.user.UserRepository;
 import org.yplin.project.service.FileContentService;
 import org.yplin.project.service.WorkspaceFileContentProjection;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -29,14 +32,16 @@ import java.util.UUID;
 public class FileContentServiceImp implements FileContentService {
 
     public static final Logger logger = LoggerFactory.getLogger(FileContentServiceImp.class);
+
     @Autowired
     FileContentRepository fileContentRepository;
-
     @Autowired
     FileContentBatchInsertRepository fileContentBatchInsertRepository;
-
     @Autowired
     WorkspaceRepository workspaceRepository;
+    @Autowired
+    UserRepository userRepository;
+
 
     @Value("${project.domain}")
     private String domain;
@@ -45,13 +50,11 @@ public class FileContentServiceImp implements FileContentService {
     @Value("${project.scheme}")
     private String scheme;
 
-
     @Override
     public void updateFileContent(MarkdownForm markdownForm) {
         List<MarkdownForm> markdownForms = List.of(markdownForm);
         fileContentBatchInsertRepository.updateFileContentInBatch(markdownForms);
     }
-
 
     @Override
     public void createFile(CreateFileForm createFileForm) {
@@ -69,7 +72,6 @@ public class FileContentServiceImp implements FileContentService {
         fileContentRepository.save(fileContentModel);
     }
 
-
     public long queryWorkspaceIdFromWorkspaceName(String workspaceName) {
 
         Long id = workspaceRepository.findIdByWorkspaceName(workspaceName);
@@ -79,7 +81,6 @@ public class FileContentServiceImp implements FileContentService {
             throw new EntityNotFoundException("Workspace not found with name: " + workspaceName);
         }
     }
-
 
     @Override
     public String saveImageContent(ImageDataForm imageDataForm) {
@@ -113,7 +114,6 @@ public class FileContentServiceImp implements FileContentService {
         }
     }
 
-
     public List<WorkspaceFileContentProjection> getWorkspaceFilesContent(String roomId) {
         return fileContentRepository.getWorkspaceFilesContent(roomId);
     }
@@ -132,6 +132,46 @@ public class FileContentServiceImp implements FileContentService {
     public void deleteFileInWorkspace(String fileId) {
         logger.info("Deleting file with id: " + fileId);
         fileContentRepository.deleteByFileId(fileId);
+    }
+
+    @Override
+    public String saveUserImage(MultipartFile file, long userId) throws IOException {
+        final String DIRECTORY = "C:\\Users\\USER\\OneDrive\\Programming\\JavaProject\\AppWorks\\Personal project\\yplin\\project\\src\\main\\resources\\static\\userPicture";
+        String prefix = String.valueOf(userId);
+
+        if (file.isEmpty()) {
+            throw new IllegalStateException("Cannot save empty file.");
+        }
+
+        Path directoryPath = Paths.get(DIRECTORY);
+        System.out.println(directoryPath);
+        if (!Files.exists(directoryPath)) {
+            Files.createDirectories(directoryPath);
+            logger.error("can't not find the directory");
+        }
+
+        String originalFileName = file.getOriginalFilename();
+        String baseName = originalFileName.substring(0, originalFileName.lastIndexOf('.'));
+        String extension = originalFileName.substring(originalFileName.lastIndexOf('.'));
+
+        logger.info("originalFileName: " + originalFileName);
+        logger.info("Base name: " + baseName);
+        logger.info("Extension: " + extension);
+
+        String fileName = prefix + "_" + baseName + extension;
+        String fileURL = scheme + "://" + domain + ":" + port + "/userPicture/" + fileName;
+        userRepository.updateUserImageURL(fileURL, userId);
+        System.out.println("fileURL : " + fileURL);
+
+
+        Path targetLocation = directoryPath.resolve(fileName);
+        logger.info("Target location: " + targetLocation);
+
+        // Save the file
+        file.transferTo(targetLocation.toFile());
+
+        // Return the path or URL to access the file
+        return targetLocation.toString();
     }
 
 }

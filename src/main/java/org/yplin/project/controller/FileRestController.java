@@ -8,9 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.yplin.project.configuration.JwtTokenUtil;
 import org.yplin.project.data.form.ImageDataForm;
+import org.yplin.project.repository.user.UserRepository;
 import org.yplin.project.service.FileContentService;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,10 +24,12 @@ import java.util.Map;
 @RequestMapping("api/1.0/upload")
 public class FileRestController {
     public static final Logger logger = LoggerFactory.getLogger(FileRestController.class);
-
-
+    @Autowired
+    JwtTokenUtil jwtTokenUtil;
     @Autowired
     FileContentService fileContentService;
+    @Autowired
+    UserRepository userRepository;
 
     @PostMapping(path = "/Image", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, String>> uploadImage(@RequestBody ImageDataForm imageDataForm) {
@@ -33,11 +39,25 @@ public class FileRestController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/userImage")
+    public ResponseEntity<Map<String, String>> uploadUserImage(@RequestParam("file") MultipartFile file, @RequestHeader("Authorization") String authorizationHeader) throws IOException {
+        String accessToken = authorizationHeader.replace("Bearer ", "");
+        String userEmail = jwtTokenUtil.extractUserEmail(accessToken);
+        long userId = userRepository.findIdByEmail(userEmail).getId();
 
-//    @PostMapping("/File")
-//    public void uploadFile() {
-//
-//    }
+        Map<String, String> response = new HashMap<>();
+        if (file.isEmpty()) {
+            response.put("message", "Failed to upload. File is empty.");
+            return ResponseEntity.badRequest().body(Map.of("error", "Failed to upload. File is empty."));
+        }
+
+
+        String imageURL = fileContentService.saveUserImage(file, userId);
+//        System.out.println(imageURL);
+        response.put("message", "File uploaded successfully: " + file.getOriginalFilename());
+        return ResponseEntity.ok(response);
+    }
+
 
 //    public void downloadFile() {
 //

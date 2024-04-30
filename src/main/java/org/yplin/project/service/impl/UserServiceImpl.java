@@ -216,8 +216,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void acceptFriendRequest(FriendRequestForm friendRequestForm, String userEmail) {
-        Long userId = userRepository.findIdByEmail(userEmail).getId();
-        Long friendId = friendRequestForm.getFriendId();
+        long userId = userRepository.findIdByEmail(userEmail).getId();
+        long friendId = friendRequestForm.getFriendId();
 
         // Retrieve the existing friendship model from the database
         FriendsModel existingFriendship = friendsRepository.findByUserIdAndFriendId(userId, friendId);

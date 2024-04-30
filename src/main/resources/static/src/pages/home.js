@@ -8,7 +8,9 @@ $(document).ready(async function () {
     if (await checkAuthentication()) {
         renderUserWorkspaceList();
         fetchUserInformation();
+
     }
+
 });
 
 async function renderUserWorkspaceList() {
@@ -95,7 +97,7 @@ async function fetchUserInformation() {
 
             <div class="user-detail">
                 <img src="${data.picture}" id="user-picture" alt="User Picture" >
-<!--                <strong>Picture</strong>-->
+                <input type="file" id="fileInput" name="file" style="display: none;" onchange="uploadFile()">
             </div>
             <div class="user-detail"><strong>Name:</strong> ${data.name}</div>
             <div class="user-detail"><strong>Email:</strong> ${data.email}</div>
@@ -104,6 +106,11 @@ async function fetchUserInformation() {
         `;
 
     $('#user-information-detail').html(userInfoHTML);
+
+    document.getElementById('user-picture').addEventListener('click', function () {
+        document.getElementById('fileInput').click();
+        console.log('File input clicked')
+    });
 
 }
 
@@ -134,6 +141,36 @@ async function checkAuthentication() {
         return false;
     }
 }
+
+async function uploadFile() {
+    const fileInput = document.getElementById('fileInput');
+    if (fileInput.files.length === 0) {
+        alert('No file selected!');
+        return;
+    }
+    const formData = new FormData();
+    formData.append('file', fileInput.files[0]);
+
+    try {
+        const response = await fetch('/api/1.0/upload/userImage', {
+            method: 'POST',
+            headers: {
+                "Authorization": `Bearer ${accessToken}`
+            },
+            body: formData,
+        });
+        if (!response.ok) {
+            throw new Error('Upload failed: ' + response.statusText);
+        }
+        const data = await response.json();
+        console.log(data);
+        alert(data.message);  // Display the server response message
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error uploading file: ' + error.message);
+    }
+}
+
 
 function redirectToLogin() {
     window.location.href = '/index.html';

@@ -19,6 +19,10 @@ body {
 }
 
 
+#user-picture {
+    cursor: pointer;
+}
+
 .user-workspaceList, .user-workspaceList-head-container {
     margin: 20px;
 }
