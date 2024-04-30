@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const friendId = event.target.getAttribute('data-friend-id');
             const friendName = event.target.getAttribute('data-friend-name');
             const friendEmail = event.target.getAttribute('data-friend-email');
-            acceptFriend(userId, friendId);
+            acceptFriend(userId, friendId, friendName, friendEmail);
         }
 
         if (event.target.matches('.reject-friend-btn')) {
@@ -212,8 +212,8 @@ async function checkFriendshipStatus(event) {
                 <div class="rq-email-${item.userEmail}"><strong>Email:</strong> ${item.userEmail}</div>
             </div>
             <div class="btn-accept-reject-container">
-                <button id="btn-userId-${item.userId}" class="btn btn-success accept-friend-btn" data-user-id="${item.friendId}" data-friend-id="${item.userId}">Accept Friend</button>
-                <button id="btn-userId-${item.userId}" class="btn btn-danger reject-friend-btn" data-user-id="${item.friendId}" data-friend-id="${item.userId}">Reject Friend</button>
+                <button id="btn-userId-${item.userId}" class="btn btn-success accept-friend-btn" data-friend-name="${item.userName}" data-friend-email="${item.userEmail}"  "data-user-id="${item.friendId}" data-friend-id="${item.userId}">Accept Friend</button>
+                <button id="btn-userId-${item.userId}" class="btn btn-danger reject-friend-btn" data-friend-name="${item.userName}" data-friend-email="${item.userEmail}"  "data-user-id="${item.friendId}" data-friend-id="${item.userId}">Reject Friend</button>
             </div>
         `;
             friendsRequestList.appendChild(friendRequestElement);
@@ -224,7 +224,7 @@ async function checkFriendshipStatus(event) {
 }
 
 
-async function acceptFriend(userId, friendId) {
+async function acceptFriend(userId, friendId, friendName, friendEmail) {
     try {
         const response = await fetch(`/api/1.0/user/acceptFriendRequest`, {
             method: 'POST',
