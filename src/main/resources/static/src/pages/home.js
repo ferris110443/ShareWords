@@ -82,7 +82,7 @@ async function deleteWorkspaceFromUserWorkspace(workspaceName, event) {
 }
 
 async function fetchUserInformation() {
-    const response = await fetch('http://localhost:8080/api/1.0/user/userPersonalInformation', {
+    const response = await fetch('/api/1.0/user/userPersonalInformation', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

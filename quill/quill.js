@@ -218,7 +218,7 @@ function updatePreview(markdownText) {
 
 async function uploadImage(data) {
     try {
-        const response = await fetch('http://localhost:8080/api/1.0/upload/Image', {
+        const response = await fetch('/api/1.0/upload/Image', {
             method: 'POST',
             body: JSON.stringify({image: data}),
             headers: {'Content-Type': 'application/json'}
