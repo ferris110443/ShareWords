@@ -12,6 +12,7 @@ body {
 }
 
 .left-container, .right-container {
+    display: flex;
     flex: 1;
     background-color: #f8f9fa;
     flex-direction: column;
@@ -40,6 +41,8 @@ body {
 .carousel {
     width: 90%;
     margin: 20px auto;
+    align-items: center;
+    justify-content: center;
 }
 
 
@@ -100,4 +103,25 @@ a {
 
 a:hover {
     text-decoration: underline; /* Add underline on hover */
+}
+
+.carousel-caption > h1 {
+    display: inline-block;
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+
+}
+
+.carousel-caption {
+    padding: 10px;
+    background-color: rgb(111, 112, 113, 0.5);
+}
+
+
+@media (max-width: 1400px) {
+
+    .left-container {
+        display: none;
+    }
 }

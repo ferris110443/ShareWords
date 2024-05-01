@@ -40,7 +40,13 @@ socket.on('message', (message) => {
 });
 
 socket.on('friendRequest', function (requestUserEmail, requestUserName) {
-    alert('You received a friend request from: ' + requestUserEmail + requestUserName);
+    // alert('You received a friend request from: ' + requestUserEmail + requestUserName);
+    let message = `You have received a friend request <br>
+                         User : <strong>${requestUserName}</strong><br> 
+                         Email : <strong>${requestUserEmail}</strong>`;
+    document.getElementById('friendRequestMessage').innerHTML = message;
+    let modal = new bootstrap.Modal(document.getElementById('friendRequestModal'));
+    modal.show();
 
     const friendsRequestList = document.getElementById("friends-request-list");
     const friendRequestElement = document.createElement('div');

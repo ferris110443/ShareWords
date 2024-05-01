@@ -1,5 +1,5 @@
 body {
-    background-color: #f7f7f7;
+    background-color: #495464;
     font-size: 1.2rem;
     font-family: Arial, sans-serif;
     line-height: 1.6;
@@ -15,6 +15,29 @@ body {
     background-color: white;
 }
 
+#fileList {
+    height: 80vh;
+    overflow-y: auto;
+}
+
+#userList, #add-friend-member {
+    height: 40vh;
+    overflow-y: auto;
+}
+
+.file-entry {
+    padding: 15px;
+    margin: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
+    background-color: white;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.file-name-description {
+    font-size: 1rem;
+}
 
 .remove-member-btn-img, .add-member-btn-img {
     width: 36px;
@@ -56,4 +79,8 @@ textarea {
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
+}
+
+.member, .friend, #workspace-information, #create-new-file, .file-entry {
+    background-color: #F4F4F2;
 }

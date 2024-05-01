@@ -12,3 +12,10 @@
 a:hover {
     cursor: pointer;
 }
+
+
+#user-sidebar-placeholder, #sidebar-placeholder {
+    background-color: #F4F4F2;
+}
+
+

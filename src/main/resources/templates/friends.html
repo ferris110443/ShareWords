@@ -17,11 +17,11 @@
     <div id="user-sidebar-placeholder"></div>
     <div style="background-color: rgba(225, 225, 255, 0.7); width: 5px; display: block;"></div>
     <div class="user-friends-zone">
-        <h1>User Friends</h1>
+        <h2>User Friends</h2>
         <div id="friends-list">
         </div>
 
-        <h1> Friend Request </h1>
+        <h2> Friend Request </h2>
         <div id="friends-request-list">
             <div class="friend-request-item">
             </div>
@@ -29,7 +29,7 @@
     </div>
     <div style="background-color: rgba(225, 225, 255, 0.7); width: 5px; display: block;"></div>
     <div class="user-search-zone">
-        <h1>Search Users</h1>
+        <h2>Search Users</h2>
         <label for="searchBox"></label><input id="searchBox" placeholder="search" type="text">
         <button class="btn btn-primary" id="search-user-list" type="submit">Search</button>
         <div id="userList">
@@ -37,6 +37,25 @@
         </div>
     </div>
 </div>
+
+
+<div class="modal" id="friendRequestModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">New Friend Request</h5>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+            </div>
+            <div class="modal-body">
+                <p id="friendRequestMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script crossorigin="anonymous"

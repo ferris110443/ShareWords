@@ -100,8 +100,8 @@ async function renderWorkspaceFileList() {
         data.data.forEach((file, index) => {
             html += `
                     <div class="file-entry" id="file${index}">
-                        <p>File Name: ${file.fileTitle}</p>
-                        <p>File Description: ${file.fileDescription}</p>
+                        <p class="file-name-title"><strong>${file.fileTitle}</strong></p>
+                        <p class="file-name-description">${file.fileDescription}</p>
                         <button aria-label="Edit File ${index}" class="edit-file-btn btn btn-primary " data-fileid="${file.fileId}">Edit</button>
                         <button aria-label="Delete File ${index}" class="delete-file-btn btn btn-danger" data-fileid="${file.fileId}">Delete</button>
                     </div>

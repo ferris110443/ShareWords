@@ -87,7 +87,7 @@ async function getUserInformation(searchQuery) {
                                         <div><strong>Name:</strong> ${user.name}</div>
                                         <div><strong>Email:</strong> ${user.email}</div>
                                     </div>
-                                    <button id="btn-userId-${user.id}" class="btn btn-secondary add-friend-btn"  data-user-name="${user.name}" data-user-email="${user.email}" data-user-id="${user.id}" disabled>Wait accepted</button>`;
+                                    <button id="btn-userId-${user.id}" class="btn btn-warning add-friend-btn"  data-user-name="${user.name}" data-user-email="${user.email}" data-user-id="${user.id}" disabled>Wait accepted</button>`;
                 } else if (relation.status === 'accepted') {
                     relationHTML += `<div>
                                         <div style="display: none"><strong>Name:</strong> ${user.name}</div>
@@ -120,6 +120,8 @@ async function getUserInformation(searchQuery) {
             button.addEventListener('click', function (event) {
                 event.target.disabled = true;
                 event.target.innerText = 'Wait accepted';
+                event.target.classList.remove('btn-primary');
+                event.target.classList.add('btn-warning');
                 const userName = event.target.getAttribute('data-user-name');
                 const userEmail = event.target.getAttribute('data-user-email');
                 console.log(userName + " " + userEmail)

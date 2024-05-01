@@ -2,8 +2,15 @@ body, html {
     height: 100%;
     margin: 0;
     font-family: 'Source Code Pro', monospace;
+
 }
 
+h2 {
+    padding: 0 0 0 15px;
+    margin: 5px;
+    color: #F4F4F2;
+
+}
 
 .container {
     margin: 0;
