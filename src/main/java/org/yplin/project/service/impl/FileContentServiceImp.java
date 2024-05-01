@@ -136,7 +136,7 @@ public class FileContentServiceImp implements FileContentService {
 
     @Override
     public String saveUserImage(MultipartFile file, long userId) throws IOException {
-        final String DIRECTORY = "C:\\Users\\USER\\OneDrive\\Programming\\JavaProject\\AppWorks\\Personal project\\yplin\\project\\src\\main\\resources\\static\\userPicture";
+        final String DIRECTORY = "/src/main/resources/static/userPicture/";
         String prefix = String.valueOf(userId);
 
         if (file.isEmpty()) {

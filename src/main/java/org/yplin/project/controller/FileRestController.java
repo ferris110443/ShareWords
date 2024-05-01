@@ -53,7 +53,6 @@ public class FileRestController {
 
 
         String imageURL = fileContentService.saveUserImage(file, userId);
-//        System.out.println(imageURL);
         response.put("message", "File uploaded successfully: " + file.getOriginalFilename());
         return ResponseEntity.ok(response);
     }
