@@ -90,7 +90,7 @@ public class FileContentServiceImp implements FileContentService {
             if (imageDataBase64 != null) {
                 byte[] decodedBytes = Base64.getDecoder().decode(imageDataBase64);
                 String filename = UUID.randomUUID() + ".png";
-                Path destinationPath = Paths.get("C:\\Users\\USER\\OneDrive\\Programming\\JavaProject\\AppWorks\\Personal project\\yplin\\project\\src\\main\\resources\\static\\images");
+                Path destinationPath = Paths.get("/home/ubuntu/sharewords/ShareWords/src/main/resources/static/userPicture/static/images");
                 if (!Files.exists(destinationPath)) {
                     Files.createDirectories(destinationPath);
                 }
@@ -99,7 +99,7 @@ public class FileContentServiceImp implements FileContentService {
                 Files.write(destinationFile, decodedBytes);
                 logger.info("Image uploaded successfully");
 
-                String imageURL = scheme + "://" + domain + ":" + port + "/images/" + filename;
+                String imageURL = scheme + "://" + domain + "/images/" + filename;
 //                System.out.println(imageURL);
                 return imageURL;
 
