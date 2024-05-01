@@ -32,7 +32,7 @@ public class ValidationRestController {
     @Autowired
     ValidationService validationService;
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8888", "http://34.230.138.53"})
     @GetMapping(path = "/workspace")
     public ResponseEntity<?> checkWorkspaceValidation(@RequestParam("workspaceName") String workspaceName,
                                                       @RequestHeader("Authorization") String authorizationHeader) {
