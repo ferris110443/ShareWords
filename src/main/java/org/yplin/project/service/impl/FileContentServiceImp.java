@@ -144,7 +144,7 @@ public class FileContentServiceImp implements FileContentService {
         }
 
         Path directoryPath = Paths.get(DIRECTORY);
-        System.out.println(directoryPath);
+        logger.info(String.valueOf(directoryPath));
         if (!Files.exists(directoryPath)) {
             Files.createDirectories(directoryPath);
             logger.error("can't not find the directory");
