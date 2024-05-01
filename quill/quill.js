@@ -44,7 +44,7 @@ window.addEventListener('load', async () => {
 
     async function fetchFileContentAndRenderMarkdown(roomId, fileId) {
         try {
-            const response = await fetch(`http://localhost:8080/api/1.0/markdown/markdown?roomId=${encodeURIComponent(roomId)}&fileId=${encodeURIComponent(fileId)}`, {
+            const response = await fetch(`/api/1.0/markdown/markdown?roomId=${encodeURIComponent(roomId)}&fileId=${encodeURIComponent(fileId)}`, {
                 method: 'GET',
             });
             if (!response.ok) {
@@ -185,7 +185,7 @@ window.addEventListener('load', async () => {
 
 
 async function saveText(markdownText) {
-    const response = await fetch(`http://localhost:8080/api/1.0/markdown/markdown`, {
+    const response = await fetch(`/api/1.0/markdown/markdown`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

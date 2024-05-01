@@ -32,7 +32,7 @@ import java.util.UUID;
 public class FileContentServiceImp implements FileContentService {
 
     public static final Logger logger = LoggerFactory.getLogger(FileContentServiceImp.class);
-
+    final String DIRECTORY = "/home/ubuntu/sharewords/ShareWords/src/main/resources/static/userPicture/";
     @Autowired
     FileContentRepository fileContentRepository;
     @Autowired
@@ -136,7 +136,7 @@ public class FileContentServiceImp implements FileContentService {
 
     @Override
     public String saveUserImage(MultipartFile file, long userId) throws IOException {
-        final String DIRECTORY = "/home/ubuntu/sharewords/ShareWords/src/main/resources/static/userPicture/";
+
         String prefix = String.valueOf(userId);
 
         if (file.isEmpty()) {
