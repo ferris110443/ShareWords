@@ -117,7 +117,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserOwnWorkspaceDetailsModel> fetchUserOwnWorkspaceDetails(String userEmail) {
-        System.out.println(userOwnWorkspaceDetailsRepository.fetchWorkspaceDetailsWithNativeQuery(userEmail));
+//        System.out.println(userOwnWorkspaceDetailsRepository.fetchWorkspaceDetailsWithNativeQuery(userEmail));
         return userOwnWorkspaceDetailsRepository.fetchWorkspaceDetailsWithNativeQuery(userEmail);
     }
 
@@ -166,7 +166,7 @@ public class UserServiceImpl implements UserService {
             friendsModel.setUserEmail(userEmailName.getEmail());
             friendsModel.setUserName(userEmailName.getName());
         });
-        System.out.println(friendsModelList);
+//        System.out.println(friendsModelList);
 
 
         return friendsModelList;

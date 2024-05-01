@@ -37,7 +37,7 @@ public class UserInformationRestController {
         String token = authorizationHeader.replace("Bearer ", "");
         String userEmail = jwtTokenUtil.extractUserEmail(token);
         UserModel userModel = userService.getUserPrivateInformation(userEmail);
-        System.out.println(userModel);
+
         Map<String, Object> response = new HashMap<>();
         response.put("name", userModel.getName());
         response.put("email", userModel.getEmail());

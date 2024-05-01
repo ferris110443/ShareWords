@@ -156,7 +156,7 @@ public class SocketIOService {
 
     private void broadcastInvitationToUser(String userEmail, String userName, String friendEmail) {
         UserSession friendSession = clients.get(friendEmail); // only friend user receive the invitation pop-up
-        System.out.println("friendSession: " + friendSession);
+//        System.out.println("friendSession: " + friendSession);
         if (friendSession != null) {
             friendSession.getClient().sendEvent("friendRequest", userEmail, userName);
         }

@@ -50,8 +50,8 @@ public class WorkspaceServiceImp implements WorkspaceService {
             throw new IllegalArgumentException("Workspace name must not be empty");
         }
         try {
-            System.out.println(workspaceName);
-            System.out.println(workspaceRepository.findByWorkspaceName(workspaceName));
+//            System.out.println(workspaceName);
+//            System.out.println(workspaceRepository.findByWorkspaceName(workspaceName));
             return workspaceRepository.findByWorkspaceName(workspaceName);
         } catch (Exception e) {
             throw new ServiceException("Failed to retrieve workspace information for " + workspaceName, e);

@@ -219,7 +219,7 @@ public class WorkspaceRestController {
     public ResponseEntity<?> removeFriendFromWorkspaceMembers(@RequestBody UserAddRemoveMemberInWorkspaceForm userAddMemberInWorkspaceForm, @RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
         String userEmail = jwtTokenUtil.extractUserEmail(token);
-        System.out.println("userAddMemberInWorkspaceForm" + userAddMemberInWorkspaceForm);
+//        System.out.println("userAddMemberInWorkspaceForm" + userAddMemberInWorkspaceForm);
 
         try {
             Map<String, List<UserOwnWorkspaceDetailsModel>> response = new HashMap<>();
