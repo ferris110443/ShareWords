@@ -90,7 +90,7 @@ public class FileContentServiceImp implements FileContentService {
             if (imageDataBase64 != null) {
                 byte[] decodedBytes = Base64.getDecoder().decode(imageDataBase64);
                 String filename = UUID.randomUUID() + ".png";
-                Path destinationPath = Paths.get("/home/ubuntu/sharewords/ShareWords/src/main/resources/static/userPicture/static/images");
+                Path destinationPath = Paths.get("/home/ubuntu/sharewords/ShareWords/src/main/resources/static/images");
                 if (!Files.exists(destinationPath)) {
                     Files.createDirectories(destinationPath);
                 }
