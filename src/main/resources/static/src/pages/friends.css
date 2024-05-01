@@ -67,3 +67,44 @@ body {
 .btn-accept-reject-container {
     align-content: center;
 }
+
+
+.friend-item div div:nth-child(2) {
+    font-style: italic;
+    font-size: 0.8rem;
+}
+
+.friend-request-item div div:nth-child(2) {
+    font-style: italic;
+    font-size: 0.8rem;
+}
+
+.user-item div div:nth-child(2) {
+    font-style: italic;
+    font-size: 0.8rem;
+}
+
+
+@media (max-width: 992px) {
+    .btn-accept-reject-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .btn-accept-reject-container .btn {
+        width: 100%;
+        margin-bottom: 5px;
+        font-size: 0.8rem;
+    }
+
+    .btn-accept-reject-container .btn {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .user-item .btn {
+        margin-bottom: 5px;
+        font-size: 0.8rem;
+    }
+
+}

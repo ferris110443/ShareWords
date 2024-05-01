@@ -84,3 +84,8 @@ textarea {
 .member, .friend, #workspace-information, #create-new-file, .file-entry {
     background-color: #F4F4F2;
 }
+
+.workspace-member-email, .friend-email {
+    font-style: italic;
+    font-size: 0.8rem;
+}

@@ -79,3 +79,29 @@ body {
 .workspace-description {
     font-size: 0.8rem;
 }
+
+
+@media (max-width: 992px) {
+    .workspace-name-description-container, .workspace-name-description-btn-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .btn {
+        width: 100%; /* Full width buttons */
+        margin-top: 10px; /* Extra margin for stacked layout */
+    }
+}
+
+@media (max-width: 992px) {
+    .user-detail {
+        flex-direction: column; /* Stack information vertically */
+        align-items: center; /* Center align to maintain aesthetics */
+        text-align: center; /* Text aligned center */
+    }
+
+    .user-detail img {
+        margin-bottom: 10px; /* Space between image and name when stacked */
+    }
+}
