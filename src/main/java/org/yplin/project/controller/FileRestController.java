@@ -51,7 +51,6 @@ public class FileRestController {
             return ResponseEntity.badRequest().body(Map.of("error", "Failed to upload. File is empty."));
         }
 
-
         String imageURL = fileContentService.saveUserImage(file, userId);
         response.put("message", "File uploaded successfully: " + file.getOriginalFilename());
         return ResponseEntity.ok(response);

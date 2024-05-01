@@ -159,9 +159,9 @@ public class FileContentServiceImp implements FileContentService {
         logger.info("Extension: " + extension);
 
         String fileName = prefix + "_" + baseName + extension;
-        String fileURL = scheme + "://" + domain + ":" + port + "/userPicture/" + fileName;
+        String fileURL = scheme + "://" + domain + "/userPicture/" + fileName;
         userRepository.updateUserImageURL(fileURL, userId);
-        System.out.println("fileURL : " + fileURL);
+        logger.info("fileURL : " + fileURL);
 
 
         Path targetLocation = directoryPath.resolve(fileName);
