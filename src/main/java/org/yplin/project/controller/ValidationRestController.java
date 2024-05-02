@@ -19,7 +19,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8888"})
+@CrossOrigin(origins = {"https://localhost:3000", "https://localhost:8888", "https://34.230.138.53"})
 @RequestMapping("api/1.0/validation")
 public class ValidationRestController {
     private static final Logger logger = LoggerFactory.getLogger(ValidationRestController.class);

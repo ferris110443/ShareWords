@@ -20,7 +20,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8888", "http://34.230.138.53"})
+@CrossOrigin(origins = {"https://localhost:3000", "https://localhost:8888", "https://34.230.138.53"})
 @RequestMapping("api/1.0/upload")
 public class FileRestController {
     public static final Logger logger = LoggerFactory.getLogger(FileRestController.class);
