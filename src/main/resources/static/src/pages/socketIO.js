@@ -1,6 +1,6 @@
 "use strict";
 
-const socket = io('http://34.230.138.53:9092');
+const socket = io('http://sharewords.org:9092');
 // const socket = io('http://localhost:9092');
 let onlineUsers = {};
 
