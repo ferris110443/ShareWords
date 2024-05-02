@@ -1,6 +1,7 @@
 "use strict";
 
 const socket = io('http://34.230.138.53:9092');
+// const socket = io('http://localhost:9092');
 let onlineUsers = {};
 
 socket.on('connect', () => {
@@ -10,9 +11,8 @@ socket.on('connect', () => {
         console.log('Acknowledgment from server:', ack);
     });
     socket.on("onlineUsers", function (users) {
-        console.log("Online Users:", users);
         onlineUsers = users;
-        console.log('Online Users:!!!!!!!!!', onlineUsers);
+        console.log('Online Users !!!', onlineUsers);
         updateOnlineStatus();
     });
 });

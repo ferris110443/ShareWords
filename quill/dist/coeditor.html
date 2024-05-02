@@ -32,11 +32,14 @@
     </div>
     <div id = "return-btn-container">
         <button class="btn btn-primary" id="y-connect-btn" type="button" style="display: none">Disconnect</button>
+
         <button class="btn btn-primary" id="return-btn" onclick="redirectToPage()" type="button">Return to Workspace</button>
+
     </div>
 </div>
 
 <div id="markdown-preview-container">
+
     <ul class="nav nav-tabs">
         <li class="nav-item">
             <a class="nav-link active" href="#" id="markdown-tab">Markdown</a>
@@ -44,18 +47,32 @@
         <li class="nav-item">
             <a class="nav-link" href="#" id="preview-tab">Preview</a>
         </li>
+
     </ul>
+
 
     <div class="tab-content" id="markdown-content">
         <div class="editor-title">
-            Markdown Editor
+            <div>Markdown Editor</div>
+            <button class="btn btn-primary" id="download-md" type="button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-download-fill" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 4.095 0 5.555 0 7.318 0 9.366 1.708 11 3.781 11H7.5V5.5a.5.5 0 0 1 1 0V11h4.188C14.502 11 16 9.57 16 7.773c0-1.636-1.242-2.969-2.834-3.194C12.923 1.999 10.69 0 8 0m-.354 15.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 14.293V11h-1v3.293l-2.146-2.147a.5.5 0 0 0-.708.708z"/>
+                </svg>
+                Download Markdown
+            </button>
         </div>
         <div id="editor"></div>
     </div>
 
     <div class="tab-content" id="preview-content" style="display:none;">
         <div class="preview-title">
-            Preview
+            <div>Preview</div>
+            <button class="btn btn-primary" id="download-html" type="button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-download-fill" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 4.095 0 5.555 0 7.318 0 9.366 1.708 11 3.781 11H7.5V5.5a.5.5 0 0 1 1 0V11h4.188C14.502 11 16 9.57 16 7.773c0-1.636-1.242-2.969-2.834-3.194C12.923 1.999 10.69 0 8 0m-.354 15.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 14.293V11h-1v3.293l-2.146-2.147a.5.5 0 0 0-.708.708z"/>
+                </svg>
+                Download HTML
+            </button>
         </div>
         <div id="preview-text"></div>
     </div>
@@ -75,6 +92,38 @@
         checkAuthentication();
         setupTabs();
     });
+    document.addEventListener('DOMContentLoaded', () => {
+        const downloadMdBtn = document.getElementById('download-md');
+        const downloadHtmlBtn = document.getElementById('download-html');
+
+        downloadMdBtn.addEventListener('click', downloadMarkdown);
+        downloadHtmlBtn.addEventListener('click', downloadHTML);
+    });
+
+    function downloadMarkdown() {
+        const element = document.createElement('a');
+        const text = document.querySelector('.ql-editor').innerText;
+        const file = new Blob([text], {type: 'text/plain'});
+        const fileName = document.getElementById('file-name').innerText;
+        element.href = URL.createObjectURL(file);
+        element.download = `${fileName}.md`;
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    }
+
+
+    function downloadHTML() {
+        const element = document.createElement('a');
+        const htmlContent = document.getElementById('preview-text').innerHTML;
+        const file = new Blob([htmlContent], {type: 'text/html'});
+        const fileName = document.getElementById('file-name').innerText;
+        element.href = URL.createObjectURL(file);
+        element.download = `${fileName}.html`;
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    }
 
     function setupTabs() {
         const markdownTab = document.getElementById('markdown-tab');

@@ -32,17 +32,19 @@ import java.util.UUID;
 public class FileContentServiceImp implements FileContentService {
 
     public static final Logger logger = LoggerFactory.getLogger(FileContentServiceImp.class);
-    final String DIRECTORY = "/home/ubuntu/sharewords/ShareWords/src/main/resources/static/userPicture/";
     @Autowired
     FileContentRepository fileContentRepository;
+
+    //    final String userPictureDirectory = "/home/ubuntu/sharewords/ShareWords/src/main/resources/static/userPicture/";
+//    final String upLoadImageDirectory = "/home/ubuntu/sharewords/ShareWords/src/main/resources/static/images/";
     @Autowired
     FileContentBatchInsertRepository fileContentBatchInsertRepository;
     @Autowired
     WorkspaceRepository workspaceRepository;
     @Autowired
     UserRepository userRepository;
-
-
+    @Value("${static.folder.path}")
+    private String staticFolderPath;
     @Value("${project.domain}")
     private String domain;
     @Value("${project.port}")
@@ -86,11 +88,15 @@ public class FileContentServiceImp implements FileContentService {
     public String saveImageContent(ImageDataForm imageDataForm) {
         try {
             String imageDataBase64 = imageDataForm.getImage().split(",")[1];
+            final String upLoadImageDirectory = staticFolderPath + "images/";
+
 //            System.out.println(imageDataBase64);
             if (imageDataBase64 != null) {
                 byte[] decodedBytes = Base64.getDecoder().decode(imageDataBase64);
                 String filename = UUID.randomUUID() + ".png";
-                Path destinationPath = Paths.get("/home/ubuntu/sharewords/ShareWords/src/main/resources/static/images");
+
+
+                Path destinationPath = Paths.get(upLoadImageDirectory);
                 if (!Files.exists(destinationPath)) {
                     Files.createDirectories(destinationPath);
                 }
@@ -138,12 +144,15 @@ public class FileContentServiceImp implements FileContentService {
     public String saveUserImage(MultipartFile file, long userId) throws IOException {
 
         String prefix = String.valueOf(userId);
+        System.out.println("staticFolderPath : " + staticFolderPath);
+//        final String userPictureDirectory = staticFolderPath + "userPicture/";
+        final String userPictureDirectory = staticFolderPath + "userPicture\\";
+        System.out.println("userPictureDirectory : " + userPictureDirectory);
 
         if (file.isEmpty()) {
             throw new IllegalStateException("Cannot save empty file.");
         }
-
-        Path directoryPath = Paths.get(DIRECTORY);
+        Path directoryPath = Paths.get(userPictureDirectory);
         logger.info(String.valueOf(directoryPath));
         if (!Files.exists(directoryPath)) {
             Files.createDirectories(directoryPath);

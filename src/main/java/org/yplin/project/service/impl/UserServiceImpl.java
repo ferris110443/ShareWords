@@ -47,6 +47,15 @@ public class UserServiceImpl implements UserService {
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private @Value("${jwt.signKey}") String jwtSignKey;
 
+    @Value("${project.domain}")
+    private String domain;
+    @Value("${project.port}")
+    private int port;
+    @Value("${project.scheme}")
+    private String scheme;
+
+
+    private final String userImageUrl = scheme + "://" + domain + "/logo/man.png";
 
     @Override
     public SignInDto signup(SignupForm signupForm) throws UserExistException {
@@ -63,8 +72,9 @@ public class UserServiceImpl implements UserService {
         user.setLastOnlineDate(new Timestamp(System.currentTimeMillis()));
         user.setAccessToken(token);
         user.setAccessExpired(jwtTokenUtil.getExpirationDateFromToken(token).getTime());
-
+        user.setUserImageUrl(userImageUrl);
         userRepository.save(user);
+
 
         return SignInDto.from(user);
     }

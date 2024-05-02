@@ -13,9 +13,9 @@ public class WebSocketConfiguration {
 
     public static final Logger logger = LoggerFactory.getLogger(WebSocketConfiguration.class);
 
-
     @Value("${socket-server.host}")
     private String host;
+
 
     @Value("${socket-server.port}")
     private Integer port;
