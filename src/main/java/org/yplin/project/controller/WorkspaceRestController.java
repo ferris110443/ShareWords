@@ -29,7 +29,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@CrossOrigin(origins = {"https://localhost:3000", "https://localhost:8888", "https://34.230.138.53"})
+@CrossOrigin(origins = {"https://localhost:3000", "https://localhost:8888", "https://34.230.138.53", "https://sharewords.org"})
 @RequestMapping("api/1.0/workspace")
 public class WorkspaceRestController {
 
