@@ -23,7 +23,7 @@ public class WebSocketConfiguration {
     @Bean
     public SocketIOServer socketIOServer() {
         com.corundumstudio.socketio.Configuration config = new com.corundumstudio.socketio.Configuration();
-        config.setHostname("0.0.0.0"); // Listen on all IPv4 addresses
+        config.setHostname(host); // Listen on all IPv4 addresses
         config.setPort(port);
 
         return new SocketIOServer(config);
