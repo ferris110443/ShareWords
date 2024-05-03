@@ -112,9 +112,11 @@
 <script src="/src/pages/workspace.js"></script>
 <script src="/src/pages/socketIO.js"></script>
 <script>
+    const now = new Date();
     const messagesContainer = document.getElementById('chat-messages');
     const inputBox = document.getElementById('chat-input-box');
     const sendButton = document.getElementById('chat-send-btn');
+    const formattedDateTime = now.toLocaleString('en-CN').replace(',', '');
 
     socket.on('connect', () => {
         socket.emit('joinRoom', roomId);
@@ -127,7 +129,6 @@
             const messageDiv = document.createElement('div');
             messageDiv.classList.add('message');
             messageDiv.textContent = messageText;
-            // messagesContainer.appendChild(messageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
             inputBox.value = '';
         }
@@ -150,12 +151,15 @@
             messageElement.className = 'self-message';
             messageElement.innerHTML = `
                 <div class="chat-message-text"> ${chatMessageDto.message}</div>
+                <div class="chat-message-time">${formattedDateTime}</div>
             `;
 
         } else {
             messageElement.className = 'message';
             messageElement.innerHTML = `
-                <div class="chat-message-text-friends">${chatMessageDto.userEmail} : ${chatMessageDto.message}</div>
+                <div class="chat-message-friends"><strong>${chatMessageDto.userEmail} : </strong></div>
+                <div class="chat-message-text-friends">${chatMessageDto.message}</div>
+                <div class="chat-message-time">${formattedDateTime}</div>
             `;
         }
 

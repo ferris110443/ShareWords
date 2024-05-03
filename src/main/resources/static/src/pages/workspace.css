@@ -87,7 +87,6 @@ textarea {
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
-    width: 100%;
 }
 
 #chat-box {
@@ -118,6 +117,11 @@ textarea {
 
 }
 
+.chat-message-time {
+    font-size: 0.6rem;
+    color: #6c757d;
+}
+
 
 .member, .friend, #workspace-information, #create-new-file, .file-entry {
     background-color: #F4F4F2;
@@ -135,10 +139,6 @@ textarea {
     border-radius: 5px;
 }
 
-.self-message {
-    text-align: right;
-}
-
 
 #chat-box {
     width: 100%;
@@ -148,4 +148,39 @@ textarea {
     border-top: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
     padding: 10px;
+}
+
+#chat-messages {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.message {
+    align-self: flex-start;
+    background-color: #e4e6eb; /* Light gray bubble for friend's messages */
+}
+
+.self-message {
+    align-self: flex-end;
+    background-color: #0084ff; /* Messenger blue for own messages */
+    color: white;
+}
+
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    height: 90vh; /* Adjust based on your layout */
+    overflow-y: scroll;
+    background-color: #f0f2f5; /* Light gray background similar to Messenger */
+}
+
+.message, .self-message {
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    border-radius: 18px;
+    max-width: 80%;
+    word-wrap: break-word;
 }
