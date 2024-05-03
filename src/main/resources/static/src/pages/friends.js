@@ -220,7 +220,7 @@ async function checkFriendshipStatus(event) {
         `;
             friendsRequestList.appendChild(friendRequestElement);
         }
-
+        updateOnlineStatus()
     });
 }
 
