@@ -19,10 +19,7 @@ import org.yplin.project.repository.user.UserRepository;
 import org.yplin.project.service.FileContentService;
 import org.yplin.project.service.WorkspaceFileContentProjection;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.*;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
@@ -43,6 +40,8 @@ public class FileContentServiceImp implements FileContentService {
     WorkspaceRepository workspaceRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    private S3Uploader s3Uploader;
     @Value("${static.folder.path}")
     private String staticFolderPath;
     @Value("${project.domain}")
@@ -51,6 +50,17 @@ public class FileContentServiceImp implements FileContentService {
     private int port;
     @Value("${project.scheme}")
     private String scheme;
+
+    @Value("${cloudfront.domain}")
+    private String cloudFrontDomain;
+
+    private static File convertMultipartToFile(MultipartFile multipartFile) throws IOException {
+        File file = new File(multipartFile.getOriginalFilename());
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write(multipartFile.getBytes());
+        fos.close();
+        return file;
+    }
 
     @Override
     public void updateFileContent(MarkdownForm markdownForm) {
@@ -88,25 +98,19 @@ public class FileContentServiceImp implements FileContentService {
     public String saveImageContent(ImageDataForm imageDataForm) {
         try {
             String imageDataBase64 = imageDataForm.getImage().split(",")[1];
-            final String upLoadImageDirectory = staticFolderPath + "images/";
 
-//            System.out.println(imageDataBase64);
             if (imageDataBase64 != null) {
                 byte[] decodedBytes = Base64.getDecoder().decode(imageDataBase64);
-                String filename = UUID.randomUUID() + ".png";
+                String fileName = UUID.randomUUID() + ".png";
 
-
-                Path destinationPath = Paths.get(upLoadImageDirectory);
-                if (!Files.exists(destinationPath)) {
-                    Files.createDirectories(destinationPath);
+                String userFileS3Name = "sharewords/images/" + fileName;
+                try (InputStream inputStream = new ByteArrayInputStream(decodedBytes)) {
+                    s3Uploader.uploadFileToS3(inputStream, userFileS3Name, decodedBytes.length);
                 }
-                Path destinationFile = destinationPath.resolve(filename);
-                // resolve() method returns a path that is this path with given path appended to it.
-                Files.write(destinationFile, decodedBytes);
-                logger.info("Image uploaded successfully");
 
-                String imageURL = scheme + "://" + domain + "/images/" + filename;
-//                System.out.println(imageURL);
+
+                logger.info("Image uploaded successfully");
+                String imageURL = scheme + "://" + cloudFrontDomain + "/sharewords/images/" + fileName;
                 return imageURL;
 
             } else {
@@ -140,47 +144,70 @@ public class FileContentServiceImp implements FileContentService {
         fileContentRepository.deleteByFileId(fileId);
     }
 
+//    @Override
+//    public String saveUserImage(MultipartFile file, long userId) throws IOException {
+//
+//        String prefix = String.valueOf(userId);
+//        System.out.println("staticFolderPath : " + staticFolderPath);
+////        final String userPictureDirectory = staticFolderPath + "userPicture/";
+//        final String userPictureDirectory = staticFolderPath + "userPicture\\";
+//
+//        if (file.isEmpty()) {
+//            throw new IllegalStateException("Cannot save empty file.");
+//        }
+//        Path directoryPath = Paths.get(userPictureDirectory);
+//        logger.info(String.valueOf(directoryPath));
+//        if (!Files.exists(directoryPath)) {
+//            Files.createDirectories(directoryPath);
+//            logger.error("can't not find the directory");
+//        }
+//
+//        String originalFileName = file.getOriginalFilename();
+//        String baseName = originalFileName.substring(0, originalFileName.lastIndexOf('.'));
+//        String extension = originalFileName.substring(originalFileName.lastIndexOf('.'));
+//
+//        String fileName = prefix + "_" + baseName + extension;
+//        String fileURL = scheme + "://" + domain + "/userPicture/" + fileName;
+//        userRepository.updateUserImageURL(fileURL, userId);
+//        logger.info("fileURL : " + fileURL);
+//
+//
+//        Path targetLocation = directoryPath.resolve(fileName);
+//        logger.info("Target location: " + targetLocation);
+//
+//        // Save the file
+//        file.transferTo(targetLocation.toFile());
+//
+//
+//        // Return the path or URL to access the file
+//        return targetLocation.toString();
+//    }
+//
+
     @Override
     public String saveUserImage(MultipartFile file, long userId) throws IOException {
-
-        String prefix = String.valueOf(userId);
-        System.out.println("staticFolderPath : " + staticFolderPath);
-//        final String userPictureDirectory = staticFolderPath + "userPicture/";
-        final String userPictureDirectory = staticFolderPath + "userPicture\\";
-        System.out.println("userPictureDirectory : " + userPictureDirectory);
-
         if (file.isEmpty()) {
             throw new IllegalStateException("Cannot save empty file.");
         }
-        Path directoryPath = Paths.get(userPictureDirectory);
-        logger.info(String.valueOf(directoryPath));
-        if (!Files.exists(directoryPath)) {
-            Files.createDirectories(directoryPath);
-            logger.error("can't not find the directory");
-        }
 
         String originalFileName = file.getOriginalFilename();
-        String baseName = originalFileName.substring(0, originalFileName.lastIndexOf('.'));
-        String extension = originalFileName.substring(originalFileName.lastIndexOf('.'));
+        String fileName = userId + "_" + originalFileName;
+        String fileURL = scheme + "://" + cloudFrontDomain + "/sharewords/userPicture/" + fileName;
 
-        logger.info("originalFileName: " + originalFileName);
-        logger.info("Base name: " + baseName);
-        logger.info("Extension: " + extension);
+        // Upload to S3 directly from MultipartFile
+        String userFileS3Name = "sharewords/userPicture/" + fileName;
+        try {
+            s3Uploader.uploadFileToS3(file, userFileS3Name);
+        } catch (IOException e) {
+            logger.error("Error uploading file to S3: " + e.getMessage());
+            throw new RuntimeException(e);
+        }
 
-        String fileName = prefix + "_" + baseName + extension;
-        String fileURL = scheme + "://" + domain + "/userPicture/" + fileName;
+        // Update user image URL in the repository
         userRepository.updateUserImageURL(fileURL, userId);
-        logger.info("fileURL : " + fileURL);
+        logger.info("Uploaded Image URL: " + fileURL);
 
-
-        Path targetLocation = directoryPath.resolve(fileName);
-        logger.info("Target location: " + targetLocation);
-
-        // Save the file
-        file.transferTo(targetLocation.toFile());
-
-        // Return the path or URL to access the file
-        return targetLocation.toString();
+        return fileURL;  // Return the S3 URL or internal access URL as needed
     }
 
 }
