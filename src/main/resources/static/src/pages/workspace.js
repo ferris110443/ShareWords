@@ -170,7 +170,7 @@ async function renderWorkspaceInformation() {
     }
     const data = await response.json();
     const workspaceInformation = data.data;
-    console.log("workspaceInformation : ", workspaceInformation)
+    // console.log("workspaceInformation : ", workspaceInformation)
     document.getElementById('workspace-name').textContent = workspaceInformation.workspaceName;
     document.getElementById('workspace-description').textContent = workspaceInformation.workspaceDescription;
     document.getElementById('workspace-owner').textContent = workspaceInformation.workspaceOwner;
@@ -191,7 +191,7 @@ async function getWorkspaceMember() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        console.log(data.data)
+        // console.log(data.data)
         showWorkspaceMemberList(data.data);
 
     } catch (error) {
@@ -229,8 +229,8 @@ async function getUserFriendsForAddingMembers() {
         const userFriendsInformation = friendsData.data;
         const userId = friendsData.userId;
 
-        console.log(userFriendsInformation);
-        console.log(userId);
+        // console.log(userFriendsInformation);
+        // console.log(userId);
 
         // Display friends who are not already in the workspace
         userFriendsInformation.forEach(item => {

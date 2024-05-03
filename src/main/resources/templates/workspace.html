@@ -116,6 +116,11 @@
     const inputBox = document.getElementById('chat-input-box');
     const sendButton = document.getElementById('chat-send-btn');
 
+    socket.on('connect', () => {
+        socket.emit('joinRoom', roomId);
+    });
+
+
     sendButton.addEventListener('click', function () {
         const messageText = inputBox.value.trim();
         if (messageText) {
@@ -123,9 +128,11 @@
             messageDiv.classList.add('message');
             messageDiv.textContent = messageText;
             messagesContainer.appendChild(messageDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight; // Scroll to the bottom
-            inputBox.value = ''; // Clear input after sending
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            inputBox.value = '';
         }
+        socket.emit('chatMessage', {message: messageText, accessToken: accessToken, roomId: roomId}); // Send message to server
+
     });
 
     inputBox.addEventListener('keyup', function (event) {
@@ -135,6 +142,19 @@
             sendButton.click();
         }
     });
+
+    socket.on("chatMessage", function (message) {
+        console.log('Received chat message:', message);
+        const chatMessages = document.getElementById('chat-messages');
+        const messageElement = document.createElement('div');
+        messageElement.className = 'message';
+        messageElement.innerHTML = `
+            <div class="chat-message-text">${message}</div>
+        `;
+        chatMessages.appendChild(messageElement);
+    });
+
+
 </script>
 
 </body>

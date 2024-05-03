@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.yplin.project.configuration.JwtTokenUtil;
+import org.yplin.project.data.dto.socketio.ChatMessageDto;
 import org.yplin.project.data.dto.socketio.MessageTokenData;
 import org.yplin.project.data.form.UserSession;
 import org.yplin.project.model.FriendsModel;
@@ -72,6 +73,26 @@ public class SocketIOService {
             }
         });
 
+
+        server.addEventListener("joinRoom", String.class, (client, roomId, ackRequest) -> {
+            client.joinRoom(roomId);
+            log.info("Client {} joined room {}", client.getSessionId(), roomId);
+            ackRequest.sendAckData("Joined room: " + roomId);
+        });
+
+        server.addEventListener("chatMessage", ChatMessageDto.class, (client, data, ackRequest) -> {
+            String userEmail = getEmailFromToken(data);
+            String message = data.getMessage();
+            String roomId = data.getRoomId();
+            System.out.println("Message received: " + message);
+            System.out.println("User email: " + userEmail);
+            System.out.println("Room ID: " + roomId);
+            ackRequest.sendAckData("Message received from clients");
+            broadcastMessageToRoom(userEmail, message, roomId);
+
+        });
+
+
         server.addEventListener("addFriendRequest", MessageTokenData.class, (client, data, ackRequest) -> {
 
             log.info("data: {}", data);
@@ -82,6 +103,7 @@ public class SocketIOService {
             broadcastInvitationToUser(userEmail, userName, friendEmail);
 
         });
+
 
         server.addEventListener("acceptFriendRequestWS", MessageTokenData.class, (client, data, ackRequest) -> {
             String userEmail = getEmailFromToken(data);
@@ -153,6 +175,13 @@ public class SocketIOService {
 
     }
 
+    private void broadcastMessageToRoom(String userEmail, String message, String roomId) {
+
+        String formattedMessage = userEmail + ": " + message;
+        System.out.println("formattedMessage: " + formattedMessage);
+        server.getRoomOperations(roomId).sendEvent("chatMessage", formattedMessage);
+    }
+
 
     private void broadcastInvitationToUser(String userEmail, String userName, String friendEmail) {
         UserSession friendSession = clients.get(friendEmail); // only friend user receive the invitation pop-up
@@ -175,13 +204,18 @@ public class SocketIOService {
         return jwtTokenUtil.extractUserEmail(accessToken);
     }
 
+    private String getEmailFromToken(ChatMessageDto data) {
+        String accessToken = data.getAccessToken();
+        return jwtTokenUtil.extractUserEmail(accessToken);
+    }
+
     private String getNameFromToken(MessageTokenData data) {
         String accessToken = data.getAccessToken();
         String email = jwtTokenUtil.extractUserEmail(accessToken);
 
         Optional<UserModel> user = userRepository.findByEmail(email);
         if (user.isPresent()) {
-            return user.get().getName();  // Assuming 'name' is the username you want to fetch
+            return user.get().getName();
         } else {
             throw new UsernameNotFoundException("User not found with email: " + email);
         }

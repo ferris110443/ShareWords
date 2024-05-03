@@ -9,7 +9,7 @@ socket.on('connect', () => {
     const accessToken = localStorage.getItem('accessToken');
     console.log('Connected to Netty-SocketIO server');
     socket.emit('message', {accessToken: accessToken}, (ack) => {
-        console.log('Acknowledgment from server:', ack);
+        // console.log('Acknowledgment from server:', ack);
     });
     socket.on("onlineUsers", function (users) {
         onlineUsers = users;
@@ -18,18 +18,6 @@ socket.on('connect', () => {
     });
 
 
-});
-
-socket.on("chatMessage", function (message) {
-    console.log('Received chat message:', message);
-    const chatMessages = document.getElementById('chat-messages');
-    const messageElement = document.createElement('div');
-    messageElement.className = 'chat-message';
-    messageElement.innerHTML = `
-            <div class="chat-message-user">${message.user}</div>
-            <div class="chat-message-text">${message.text}</div>
-        `;
-    chatMessages.appendChild(messageElement);
 });
 
 
