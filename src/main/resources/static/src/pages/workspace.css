@@ -132,13 +132,6 @@ textarea {
     font-size: 0.8rem;
 }
 
-#chat-messages .message {
-    margin-bottom: 10px;
-    padding: 5px;
-    background-color: #e9ecef;
-    border-radius: 5px;
-}
-
 
 #chat-box {
     width: 100%;
@@ -157,16 +150,6 @@ textarea {
 
 }
 
-.message {
-    align-self: flex-start;
-    background-color: #e4e6eb; /* Light gray bubble for friend's messages */
-}
-
-.self-message {
-    align-self: flex-end;
-    background-color: #0084ff; /* Messenger blue for own messages */
-    color: white;
-}
 
 .chat-container {
     display: flex;
@@ -181,6 +164,30 @@ textarea {
     margin-bottom: 10px;
     padding: 8px 12px;
     border-radius: 18px;
-    max-width: 80%;
+    word-break: break-all;
+}
+
+
+#chat-messages .message {
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    background-color: #e9ecef;
+    border-radius: 18px;
+}
+
+.message {
+    align-self: flex-start;
+    display: inline-block;
+    background-color: #e4e6eb; /* Light gray bubble for friend's messages */
     word-wrap: break-word;
+    max-width: 60%;
+}
+
+.self-message {
+    align-self: flex-end;
+    display: inline-block;
+    background-color: #0084ff; /* Messenger blue for own messages */
+    color: white;
+    word-wrap: break-word;
+    max-width: 60%;
 }

@@ -155,11 +155,12 @@
             `;
 
         } else {
-            messageElement.className = 'message';
             messageElement.innerHTML = `
                 <div class="chat-message-friends"><strong>${chatMessageDto.userEmail} : </strong></div>
-                <div class="chat-message-text-friends">${chatMessageDto.message}</div>
-                <div class="chat-message-time">${formattedDateTime}</div>
+                <div class="message">
+                    <div class="chat-message-text-friends">${chatMessageDto.message}</div>
+                    <div class="chat-message-time">${formattedDateTime}</div>
+                </div>
             `;
         }
 
