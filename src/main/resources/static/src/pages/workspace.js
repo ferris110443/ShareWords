@@ -3,8 +3,8 @@ const params = new URLSearchParams(window.location.search);
 const workspaceName = params.get('roomId');
 const queryParams = new URLSearchParams(window.location.search);
 const roomId = decodeURIComponent(queryParams.get('roomId'));
-// const coeditorURL = 'https://34.230.138.53/coeditor';
-const coeditorURL = 'http://localhost:8888/coeditor';
+const coeditorURL = 'https://sharewords.org/coeditor';
+// const coeditorURL = 'http://localhost:8888/coeditor';
 
 
 document.addEventListener('DOMContentLoaded', function () {
