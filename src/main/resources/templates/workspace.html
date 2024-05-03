@@ -127,7 +127,7 @@
             const messageDiv = document.createElement('div');
             messageDiv.classList.add('message');
             messageDiv.textContent = messageText;
-            messagesContainer.appendChild(messageDiv);
+            // messagesContainer.appendChild(messageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
             inputBox.value = '';
         }
@@ -136,21 +136,29 @@
     });
 
     inputBox.addEventListener('keyup', function (event) {
-        // Send message when Enter is pressed and prevent newline
         if (event.key === 'Enter') {
             event.preventDefault();
             sendButton.click();
         }
     });
 
-    socket.on("chatMessage", function (message) {
-        console.log('Received chat message:', message);
+    socket.on("chatMessage", function (chatMessageDto) {
+        console.log('Received chat message:', chatMessageDto);
         const chatMessages = document.getElementById('chat-messages');
         const messageElement = document.createElement('div');
-        messageElement.className = 'message';
-        messageElement.innerHTML = `
-            <div class="chat-message-text">${message}</div>
-        `;
+        if (chatMessageDto.accessToken === accessToken) {
+            messageElement.className = 'self-message';
+            messageElement.innerHTML = `
+                <div class="chat-message-text"> ${chatMessageDto.message}</div>
+            `;
+
+        } else {
+            messageElement.className = 'message';
+            messageElement.innerHTML = `
+                <div class="chat-message-text">${chatMessageDto.userEmail} : ${chatMessageDto.message}</div>
+            `;
+        }
+
         chatMessages.appendChild(messageElement);
     });
 

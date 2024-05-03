@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
     checkFriendshipStatus();
+    updateOnlineStatus()
 });
 
 document.querySelector('#searchBox').addEventListener('input', () => {
@@ -219,7 +220,6 @@ async function checkFriendshipStatus(event) {
         `;
             friendsRequestList.appendChild(friendRequestElement);
         }
-
 
     });
 }

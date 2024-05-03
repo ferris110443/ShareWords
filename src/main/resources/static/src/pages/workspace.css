@@ -97,6 +97,10 @@ textarea {
     border-radius: 5px;
 }
 
+.self-message {
+    text-align: right;
+}
+
 
 #chat-box {
     width: 100%;

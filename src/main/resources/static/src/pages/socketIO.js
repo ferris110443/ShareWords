@@ -137,14 +137,17 @@ socket.on('friendRequest', function (requestUserEmail, requestUserName) {
 
 function updateOnlineStatus() {
     console.log("Updating online status...");
+    console.log("testing...")
+    console.log("onlineUsers: " + JSON.stringify(onlineUsers));
+
     document.querySelectorAll('.friend-item').forEach(item => {
         const email = item.querySelector('button').getAttribute('data-email');
+        console.log("email from updateOnlineStatus: " + email)
         const isOnline = onlineUsers[email];
         console.log(onlineUsers);
         const statusDiv = item.querySelector('.status-online, .status-offline');
 
         console.log(email + " " + isOnline + " " + statusDiv);
-
         if (statusDiv) {
             statusDiv.textContent = isOnline ? "Online" : "Offline";
             statusDiv.className = isOnline ? "status-online" : "status-offline";

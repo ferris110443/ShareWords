@@ -84,11 +84,14 @@ public class SocketIOService {
             String userEmail = getEmailFromToken(data);
             String message = data.getMessage();
             String roomId = data.getRoomId();
+            String accessToken = data.getAccessToken();
+            data.setUserEmail(userEmail);
             System.out.println("Message received: " + message);
             System.out.println("User email: " + userEmail);
             System.out.println("Room ID: " + roomId);
+            System.out.println("Access token: " + accessToken);
             ackRequest.sendAckData("Message received from clients");
-            broadcastMessageToRoom(userEmail, message, roomId);
+            broadcastMessageToRoom(data);
 
         });
 
@@ -175,11 +178,9 @@ public class SocketIOService {
 
     }
 
-    private void broadcastMessageToRoom(String userEmail, String message, String roomId) {
-
-        String formattedMessage = userEmail + ": " + message;
-        System.out.println("formattedMessage: " + formattedMessage);
-        server.getRoomOperations(roomId).sendEvent("chatMessage", formattedMessage);
+    private void broadcastMessageToRoom(ChatMessageDto data) {
+        System.out.println("Broadcasting message to room: " + data);
+        server.getRoomOperations(data.getRoomId()).sendEvent("chatMessage", data);
     }
 
 
