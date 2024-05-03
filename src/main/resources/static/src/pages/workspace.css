@@ -81,6 +81,44 @@ textarea {
     box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
 }
 
+#groupChat {
+    margin: 20px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
+    width: 100%;
+}
+
+#chat-box {
+    margin: 10px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
+}
+
+
+#chat-input {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#chat-input-box {
+    width: 90%;
+    margin: 10px;
+}
+
+#chat-send-btn {
+    height: 48px;
+    width: 102px;
+    cursor: pointer;
+
+}
+
+
 .member, .friend, #workspace-information, #create-new-file, .file-entry {
     background-color: #F4F4F2;
 }
