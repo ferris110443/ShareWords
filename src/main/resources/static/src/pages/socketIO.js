@@ -1,8 +1,8 @@
 "use strict";
 
-const socket = io('https://sharewords.org/');
+// const socket = io('https://sharewords.org/');
 // const socket = io('https://34.230.138.53:9092');
-// const socket = io('http://localhost:9092');
+const socket = io('http://localhost:9092');
 let onlineUsers = {};
 
 socket.on('connect', () => {
@@ -16,7 +16,22 @@ socket.on('connect', () => {
         console.log('Online Users !!!', onlineUsers);
         updateOnlineStatus();
     });
+
+
 });
+
+socket.on("chatMessage", function (message) {
+    console.log('Received chat message:', message);
+    const chatMessages = document.getElementById('chat-messages');
+    const messageElement = document.createElement('div');
+    messageElement.className = 'chat-message';
+    messageElement.innerHTML = `
+            <div class="chat-message-user">${message.user}</div>
+            <div class="chat-message-text">${message.text}</div>
+        `;
+    chatMessages.appendChild(messageElement);
+});
+
 
 socket.io.on('reconnect', () => {
     console.log('reconnecting............');
