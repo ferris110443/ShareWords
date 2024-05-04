@@ -1,6 +1,7 @@
 package org.yplin.project.controller;
 
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import org.yplin.project.configuration.JwtTokenUtil;
 import org.yplin.project.data.dto.WorkspaceMemberDto;
 import org.yplin.project.data.form.CreateFileForm;
 import org.yplin.project.data.form.CreateWorkspaceForm;
+import org.yplin.project.data.form.UpdateWorkspaceForm;
 import org.yplin.project.data.form.UserAddRemoveMemberInWorkspaceForm;
 import org.yplin.project.error.NotWorkspaceOwnerException;
 import org.yplin.project.error.UserAlreadyMemberException;
@@ -178,6 +180,30 @@ public class WorkspaceRestController {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("An error occurred: " + e.getMessage());
+        }
+    }
+
+    @PatchMapping(path = "/file")
+    public ResponseEntity<?> updateFile(@RequestBody UpdateWorkspaceForm updateWorkspaceForm, @RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            String token = authorizationHeader.replace("Bearer ", "");
+            String userEmail = jwtTokenUtil.extractUserEmail(token);
+            workspaceService.updateWorkspaceInformation(updateWorkspaceForm);
+
+            return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "File updated successfully"));
+
+        } catch (EntityNotFoundException enfe) {
+
+            log.error("Entity not found: " + enfe.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND) // 404 Status Code
+                    .body(Map.of("error", "Entity not found: " + enfe.getMessage()));
+
+        } catch (Exception e) {
+            log.error("An error occurred: " + e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "An error occurred: " + e.getMessage()));
         }
     }
 

@@ -32,8 +32,7 @@ async function renderUserWorkspaceList() {
                             <div class="workspace-description">Workspace Description: ${workspace.workspace_description}</div>
                         </div>
                         <div class="workspace-name-description-btn-container">
-                            <!-- Removed the join button -->
-                            <button class="btn btn-danger" onclick="deleteWorkspaceFromUserWorkspace('${workspace.workspace_name}', event)">Delete</button>
+                            <button class="btn " onclick="deleteWorkspaceFromUserWorkspace('${workspace.workspace_name}', event)"><img src="../../logo/remove.png"  style="width: 36px; height: 36px;""></button>
                         </div>
                     </div>
                 `;
@@ -41,7 +40,6 @@ async function renderUserWorkspaceList() {
         $('#workspaceList').html(userWorkspaceHTML);
     } catch (error) {
         console.error('Error fetching user workspaces:', error);
-        // Handle errors appropriately in your application context
     }
 }
 

@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.yplin.project.data.form.CreateWorkspaceForm;
+import org.yplin.project.data.form.UpdateWorkspaceForm;
 import org.yplin.project.error.NotWorkspaceOwnerException;
 import org.yplin.project.model.WorkspaceModel;
 import org.yplin.project.repository.WorkspaceRepository;
@@ -56,5 +57,23 @@ public class WorkspaceServiceImp implements WorkspaceService {
         } catch (Exception e) {
             throw new ServiceException("Failed to retrieve workspace information for " + workspaceName, e);
         }
+    }
+
+    @Override
+    public void updateWorkspaceInformation(UpdateWorkspaceForm updateWorkspaceForm) {
+        if (updateWorkspaceForm.getOldWorkspaceName() == null || updateWorkspaceForm.getOldWorkspaceName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Old workspace name must not be empty");
+        }
+        if (updateWorkspaceForm.getNewWorkspaceName() == null || updateWorkspaceForm.getNewWorkspaceName().trim().isEmpty()) {
+            throw new IllegalArgumentException("New workspace name must not be empty");
+        }
+
+        WorkspaceModel workspaceModel = workspaceRepository.findByWorkspaceName(updateWorkspaceForm.getOldWorkspaceName());
+        if (workspaceModel == null) {
+            throw new IllegalArgumentException("Workspace does not exist");
+        }
+        workspaceModel.setWorkspaceName(updateWorkspaceForm.getNewWorkspaceName());
+        workspaceModel.setWorkspaceDescription(updateWorkspaceForm.getNewWorkspaceNameDescription());
+        workspaceRepository.save(workspaceModel);
     }
 }

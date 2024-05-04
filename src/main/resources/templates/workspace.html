@@ -45,14 +45,36 @@
 
             <div id="workspace-information">
                 <p><strong>Name:</strong> <span id="workspace-name"></span></p>
-                <p><strong>Description:</strong> <span id="workspace-description"></span></p>
+                <p><strong>Description:</strong><span id="workspace-description"></span></p>
                 <p><strong>Owner:</strong> <span id="workspace-owner"></span></p>
                 <p><strong>Creation Date:</strong> <span id="workspace-creation-date"></span></p>
+                <button class="edit-workspace-btn btn btn-primary" onclick="toggleEdit()" type="button">Edit Workspace
+                </button>
                 <button class="delete-workspace-btn btn btn-danger" id="delete-workspace-btn" type="button">Delete
                     Workspace
                 </button>
-
             </div>
+            <div id="edit-workspace-form" style="display:none;">
+                <p><strong>Name:</strong>
+                    <span id="workspace-name-edit">
+                        <input id="edit-name" placeholder="Enter new name" type="text">
+                    </span>
+                </p>
+                <p><strong>Description:</strong>
+                    <span id="workspace-description-edit">
+                        <input id="edit-description" placeholder="Enter new description" type="text">
+                    </span>
+                </p>
+                <!--                <p><strong>Owner:</strong>-->
+                <!--                    <span id="workspace-owner-edit">-->
+                <!--                        <input id="edit-owner" placeholder="Enter new owner" type="text">-->
+                <!--                    </span>-->
+                <!--                </p>-->
+
+                <button class="save-btn btn btn-success" id="edit-workspace-save-btn" type="button">Save Changes
+                </button>
+            </div>
+
         </div>
         <div id="create-new-file-container">
             <div id="create-new-file-container-head">

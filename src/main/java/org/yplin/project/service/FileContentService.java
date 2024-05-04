@@ -29,4 +29,5 @@ public interface FileContentService {
     void deleteFileInWorkspace(String fileId);
 
     String saveUserImage(MultipartFile file, long userId) throws IOException;
+
 }

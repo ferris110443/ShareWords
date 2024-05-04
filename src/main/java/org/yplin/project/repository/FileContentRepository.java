@@ -36,6 +36,8 @@ public interface FileContentRepository extends JpaRepository<FileContentModel, L
 
     @Transactional
     void deleteByFileId(String fileId);
+
+
 }
 
 

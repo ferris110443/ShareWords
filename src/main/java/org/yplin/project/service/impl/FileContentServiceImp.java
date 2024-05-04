@@ -213,7 +213,8 @@ public class FileContentServiceImp implements FileContentService {
         userRepository.updateUserImageURL(fileURL, userId);
         logger.info("Uploaded Image URL: " + fileURL);
 
-        return fileURL;  // Return the S3 URL or internal access URL as needed
+        return fileURL;
     }
+
 
 }

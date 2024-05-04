@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('delete-workspace-btn').addEventListener('click', deleteWorkspace);
     document.getElementById('file-creation-form').addEventListener('submit', handleFormSubmission);
+    document.getElementById('edit-workspace-save-btn').addEventListener('click', updateWorkspaceInformation);
+
     renderWorkspaceFileList()
     renderWorkspaceInformation()
     getWorkspaceMember()
@@ -52,7 +54,7 @@ async function handleFormSubmission(event) {
             alert('File created successfully!');
             window.location.href = `${coeditorURL}/coeditor.html?roomId=${roomId}&fileId=${fileId}`;
         }
-        
+
 
     } catch (error) {
         console.error('Error:', error);
@@ -440,11 +442,61 @@ async function checkAuthentication() {
     }
 }
 
+async function updateWorkspaceInformation() {
+    const newName = document.getElementById('edit-name').value;
+    const newDescription = document.getElementById('edit-description').value;
+    const editData = {
+        oldWorkspaceName: roomId,
+        newWorkspaceName: newName,
+        newWorkspaceNameDescription: newDescription,
+    };
+
+    try {
+        const response = await fetch("/api/1.0/workspace/file", {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + accessToken
+            },
+            body: JSON.stringify(editData)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json(); // Assuming the server responds with JSON-formatted data
+        console.log('Update successful:', data);
+
+        // Update UI with the new data
+        document.getElementById('workspace-name').textContent = newName;
+        document.getElementById('workspace-description').textContent = newDescription;
+
+        toggleEdit();
+
+        const baseUrl = window.location.href.split('?')[0];
+        const newUrl = `${baseUrl}?roomId=${encodeURIComponent(newName)}`;
+        window.history.pushState({path: newUrl}, '', newUrl);
+
+
+    } catch (error) {
+        console.error('Failed to update workspace:', error);
+    }
+}
 
 function redirectToLogin() {
     window.location.href = '/admin/home';
 }
 
-function redirectToPage() {
-    window.location.href = `/admin/workspace?roomId=${roomId}`;
+
+function toggleEdit() {
+    const infoDiv = document.getElementById('workspace-information');
+    const formDiv = document.getElementById('edit-workspace-form');
+    if (infoDiv.style.display === 'none') {
+        infoDiv.style.display = 'block';
+        formDiv.style.display = 'none';
+    } else {
+        infoDiv.style.display = 'none';
+        formDiv.style.display = 'block';
+    }
 }
