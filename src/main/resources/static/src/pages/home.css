@@ -44,6 +44,14 @@ body {
     box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
     display: flex;
     justify-content: space-between;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.workspace-entry:hover {
+    background-color: #c9c4c4;
+    transform: scale(1.03);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .workspace-name-description-container {

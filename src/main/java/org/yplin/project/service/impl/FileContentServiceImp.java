@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.yplin.project.data.form.CreateFileForm;
@@ -71,17 +72,22 @@ public class FileContentServiceImp implements FileContentService {
     @Override
     public void createFile(CreateFileForm createFileForm) {
         FileContentModel fileContentModel = new FileContentModel();
-
-        long workspaceId = queryWorkspaceIdFromWorkspaceName(createFileForm.getRoomId());
-//        System.out.println(workspaceId);
-        fileContentModel.setWorkspaceId(workspaceId);
-        fileContentModel.setFileTitle(createFileForm.getFileName());
-        fileContentModel.setContent("");
-        fileContentModel.setFileURL("http://localhost:8080/markdownfiles/" + createFileForm.getFileId());
-        fileContentModel.setFileId(createFileForm.getFileId());
-        fileContentModel.setFileDescription(createFileForm.getFileDescription());
-
-        fileContentRepository.save(fileContentModel);
+        try {
+            long workspaceId = queryWorkspaceIdFromWorkspaceName(createFileForm.getRoomId());
+            fileContentModel.setWorkspaceId(workspaceId);
+            fileContentModel.setFileTitle(createFileForm.getFileName());
+            fileContentModel.setContent("");
+            fileContentModel.setFileURL("http://localhost:8080/markdownfiles/" + createFileForm.getFileId());
+            fileContentModel.setFileId(createFileForm.getFileId());
+            fileContentModel.setFileDescription(createFileForm.getFileDescription());
+            fileContentRepository.save(fileContentModel);
+        } catch (DataIntegrityViolationException e) {
+            logger.error("Failed to create file due to data integrity issue: " + e.getMessage());
+            throw new DataIntegrityViolationException("Data integrity violation in createFile: " + e.getMessage(), e);
+        } catch (Exception e) {
+            logger.error("An error occurred while creating the file: " + e.getMessage());
+            throw new RuntimeException("Error in createFile: " + e.getMessage(), e);
+        }
     }
 
     public long queryWorkspaceIdFromWorkspaceName(String workspaceName) {

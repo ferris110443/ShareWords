@@ -3,59 +3,62 @@ const params = new URLSearchParams(window.location.search);
 const workspaceName = params.get('roomId');
 const queryParams = new URLSearchParams(window.location.search);
 const roomId = decodeURIComponent(queryParams.get('roomId'));
-const coeditorURL = 'https://sharewords.org/coeditor';
-// const coeditorURL = 'http://localhost:8888/coeditor';
+// const coeditorURL = 'https://sharewords.org/coeditor';
+const coeditorURL = 'http://localhost:8888/coeditor';
 
 
 document.addEventListener('DOMContentLoaded', function () {
     checkAuthentication()
 
     document.getElementById('delete-workspace-btn').addEventListener('click', deleteWorkspace);
-    document.getElementById('file-creation-form').addEventListener('submit', function (event) {
-        event.preventDefault();  // Prevent the default form submission
-        const fileName = document.getElementById('file-name-input').value;
-        const fileDescription = document.getElementById('file-description').value;
-        const fileId = uuidv4();
-        const data = {
-            fileName: fileName,
-            fileDescription: fileDescription,
-            fileId: fileId,
-            roomId: roomId
-        };
-        console.log(data)
-        // Fetch API to send data and handle response
-        fetch('/api/1.0/workspace/file', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
-            },
-            body: JSON.stringify(data)
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Success:', data);
-                alert('File created successfully!');
-
-                // Uncomment the following line to redirect after success
-                window.location.href = `${coeditorURL}/coeditor.html?roomId=${roomId}&fileId=${fileId}`;
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                alert('Failed to create file. Please try again.');
-            });
-    });
+    document.getElementById('file-creation-form').addEventListener('submit', handleFormSubmission);
     renderWorkspaceFileList()
     renderWorkspaceInformation()
     getWorkspaceMember()
     getUserFriendsForAddingMembers()
 });
 
+async function handleFormSubmission(event) {
+    event.preventDefault();  // Prevent the default form submission
+
+    const fileName = document.getElementById('file-name-input').value;
+    const fileDescription = document.getElementById('file-description').value;
+    const fileId = uuidv4();
+    const data = {
+        fileName: fileName,
+        fileDescription: fileDescription,
+        fileId: fileId,
+        roomId: roomId
+    };
+
+    try {
+        const response = await fetch('/api/1.0/workspace/file', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        console.log(response.status)
+        if (response.status === 400) {
+            alert(result.error)
+        } else if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        } else {
+            console.log('Success:', result);
+            alert('File created successfully!');
+            window.location.href = `${coeditorURL}/coeditor.html?roomId=${roomId}&fileId=${fileId}`;
+        }
+        
+
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to create file. Please try again.');
+    }
+}
 
 async function deleteWorkspace() {
 

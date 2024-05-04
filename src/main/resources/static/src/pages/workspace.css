@@ -33,6 +33,7 @@ body {
     background-color: white;
     max-height: 250px;
     overflow-y: auto;
+    word-break: break-all;
 }
 
 .file-name-description {
@@ -71,6 +72,7 @@ textarea {
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
+    word-break: break-all;
 }
 
 #create-new-file {
@@ -191,3 +193,4 @@ textarea {
     word-wrap: break-word;
     max-width: 60%;
 }
+

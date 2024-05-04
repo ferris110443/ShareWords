@@ -10,7 +10,6 @@ $(document).ready(async function () {
         fetchUserInformation();
 
     }
-
 });
 
 async function renderUserWorkspaceList() {
@@ -27,14 +26,13 @@ async function renderUserWorkspaceList() {
         const data = await response.json();
         data.data.forEach(workspace => {
             userWorkspaceHTML += `
-                    <div class="workspace-entry">
+                    <div class="workspace-entry" onclick="joinWorkspace('${workspace.workspace_name}')">
                         <div class="workspace-name-description-container">
-                            <div class="workspace-name">Workspace Name : ${workspace.workspace_name}</div>
-                            <div class="workspace-description">Workspace Description : ${workspace.workspace_description}</div>
-                            
+                            <div class="workspace-name">Workspace Name: ${workspace.workspace_name}</div>
+                            <div class="workspace-description">Workspace Description: ${workspace.workspace_description}</div>
                         </div>
                         <div class="workspace-name-description-btn-container">
-                            <button class="btn btn-primary" onclick="joinWorkspace('${workspace.workspace_name}')">Join</button>
+                            <!-- Removed the join button -->
                             <button class="btn btn-danger" onclick="deleteWorkspaceFromUserWorkspace('${workspace.workspace_name}', event)">Delete</button>
                         </div>
                     </div>
@@ -52,6 +50,7 @@ function joinWorkspace(workspaceName) {
 }
 
 async function deleteWorkspaceFromUserWorkspace(workspaceName, event) {
+    event.stopPropagation(); // avoid triggering the joinWorkspace event
     console.log("Attempting to delete workspace:", workspaceName);
     try {
         const response = await fetch('/api/1.0/workspace/workspaceUserSelfRemove', {

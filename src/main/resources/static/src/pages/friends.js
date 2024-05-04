@@ -6,6 +6,8 @@ const rejectButtons = document.querySelectorAll('.reject-friend-btn');
 
 
 document.addEventListener('DOMContentLoaded', function () {
+
+
     checkAuthentication()
     document.body.addEventListener('click', function (event) {
         if (event.target.matches('.accept-friend-btn')) {
