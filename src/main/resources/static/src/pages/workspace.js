@@ -500,3 +500,31 @@ function toggleEdit() {
         formDiv.style.display = 'block';
     }
 }
+
+
+function toggleMembers() {
+    const workspaceDiv = document.getElementById('workspace-information-container');
+    const createNewFileDiv = document.getElementById('create-new-file-container');
+    const groupChatDiv = document.getElementById('groupChat-container');
+    if (workspaceDiv.style.display === 'none' && createNewFileDiv.style.display === 'none') {
+        groupChatDiv.style.display = 'block';
+    } else {
+        workspaceDiv.style.display = 'none';
+        createNewFileDiv.style.display = 'none';
+        groupChatDiv.style.display = 'block';
+    }
+}
+
+function toggleFiles() {
+    const workspaceDiv = document.getElementById('workspace-information-container');
+    const createNewFileDiv = document.getElementById('create-new-file-container');
+    const groupChatDiv = document.getElementById('groupChat-container');
+    if (groupChatDiv.style.display === 'none') {
+        createNewFileDiv.style.display = 'block';
+        workspaceDiv.style.display = 'block';
+    } else {
+        groupChatDiv.style.display = 'none'
+        createNewFileDiv.style.display = 'block';
+        workspaceDiv.style.display = 'block';
+    }
+}

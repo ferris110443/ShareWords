@@ -2,6 +2,8 @@ package org.yplin.project.service;
 
 import com.corundumstudio.socketio.SocketIOServer;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -25,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 @Service
 public class SocketIOService {
-
+    public static final Logger logger = LoggerFactory.getLogger(SocketIOService.class);
     private final SocketIOServer server;
     private final Map<String, UserSession> clients = new ConcurrentHashMap<>();
 
@@ -186,6 +188,7 @@ public class SocketIOService {
 
     private void broadcastInvitationToUser(String userEmail, String userName, String friendEmail) {
         UserSession friendSession = clients.get(friendEmail); // only friend user receive the invitation pop-up
+        logger.info("Friend session: {}", friendSession);
         if (friendSession != null) {
             friendSession.getClient().sendEvent("friendRequest", userEmail, userName);
         }

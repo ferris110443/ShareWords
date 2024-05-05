@@ -54,18 +54,28 @@ function attachNavLinkListeners(container) {
     const navLinks = container.querySelectorAll('.workspace-partial');
     navLinks.forEach(link => {
         link.addEventListener('click', function (event) {
-            event.preventDefault(); // Prevent the default anchor behavior
-
-            const targetSection = this.getAttribute('data-target'); // Get the target section from the link
-
+            event.preventDefault();
+            const targetSection = this.getAttribute('data-target'); //Room-zone or file-zone
 
             document.querySelectorAll('.content-section').forEach(section => {
                 if (section.id === targetSection) {
-                    section.style.display = 'block'; // Show the targeted section
+                    section.style.display = 'block';
+
                 } else {
-                    section.style.display = 'none'; // Hide other sections
+                    section.style.display = 'none';
                 }
             });
+            if (this.getAttribute('data-target') === "room-zone") {
+                $("#groupChat-container").css("display", "block");
+                $("#workspace-information-container").css("display", "none");
+                $("#create-new-file-container").css("display", "none");
+            }
+            if (this.getAttribute('data-target') === "file-zone") {
+                $("#groupChat-container").css("display", "none");
+                $("#workspace-information-container").css("display", "block");
+                $("#create-new-file-container").css("display", "block");
+            }
+
 
         });
     });

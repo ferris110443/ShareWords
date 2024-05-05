@@ -27,13 +27,6 @@ aside {
     width: 50px;
 }
 
-.mid-workspace {
-    flex: 4;
-}
-
-.user-workspace-container {
-    flex: 6;
-}
 
 .create-workspace-zone {
     flex: 6;

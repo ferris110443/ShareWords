@@ -15,7 +15,6 @@
 
 <div class="container">
     <div id="sidebar-placeholder"></div>
-    <div style="background-color: rgba(225, 225, 255, 0.7); width: 5px; display: block;"></div>
     <div class="mid-workspace ">
         <div class="content-section" id="room-zone">
             <h2>Workspace members</h2>
@@ -36,9 +35,8 @@
             </div>
         </div>
     </div>
-    <div style="background-color: rgba(225, 225, 255, 0.7); width: 5px; display: block;"></div>
     <div class="right-workspace">
-        <div id="workspace-information-container">
+        <div class="content-section" id="workspace-information-container" style="display: none">
             <div id="workspace-information-head">
                 <h2>Workspace Information</h2>
             </div>
@@ -76,20 +74,20 @@
             </div>
 
         </div>
-        <div id="create-new-file-container">
+        <div class="content-section" id="create-new-file-container" style="display: none">
             <div id="create-new-file-container-head">
                 <h2>Creat New File</h2>
             </div>
             <div id="create-new-file">
                 <form id="file-creation-form">
                     <div>
-                        <label for="file-name-input">File Name</label>
+                        <label for="file-name-input"><strong>File Name</strong> </label>
                         <input aria-label="file-name-input" id="file-name-input" maxlength="128"
                                name="file" placeholder="Enter file name (maximum 128 characters)" required
                                type="text">
                     </div>
                     <div>
-                        <label for="file-description">File description</label>
+                        <label for="file-description"><strong>File description</strong></label>
                         <textarea aria-label="file-description" id="file-description" maxlength="255"
                                   name="file-description" placeholder="Enter file name (maximum 255 characters)"
                                   required></textarea>
@@ -99,8 +97,7 @@
             </div>
 
         </div>
-
-        <div id="groupChat-container">
+        <div class="content-section" id="groupChat-container">
             <div id="groupChat-container-head">
                 <h2>Group Chat</h2>
             </div>

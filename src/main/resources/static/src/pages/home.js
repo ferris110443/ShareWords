@@ -1,16 +1,48 @@
 const accessToken = localStorage.getItem('accessToken');
 
-function redirectToPage() {
-    window.location.href = "/admin/createworkspace";
-}
 
-$(document).ready(async function () {
+document.addEventListener('DOMContentLoaded', async function () {
+    const form = document.getElementById('create-new-workspace-form');
     if (await checkAuthentication()) {
         renderUserWorkspaceList();
         fetchUserInformation();
+    }
 
+    if (form) {
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const formData = new FormData(form);
+            const jsonData = {};
+            formData.forEach((value, key) => {
+                jsonData[key] = value;
+            });
+
+            try {
+                const response = await fetch("/api/1.0/workspace/workspace", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${accessToken}`
+                    },
+                    body: JSON.stringify(jsonData)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert('Workspace created successfully');
+                    await updateUserWorkspaceList(result.workspaceName);
+                    window.location.href = '/admin/workspace?roomId=' + encodeURIComponent(result.workspaceName);
+                } else {
+                    alert('Workspace creation failed');
+                }
+            } catch (e) {
+                console.error(e);
+                alert('Error creating workspace. Please try again.');
+            }
+        });
     }
 });
+
 
 async function renderUserWorkspaceList() {
     let userWorkspaceHTML = "";
@@ -89,6 +121,7 @@ async function fetchUserInformation() {
     if (!response.ok) throw new Error('Failed to fetch user information');
     const data = await response.json();
     console.log(data);
+    const date = data.AccountCreatedDate.substring(0, 10);
 
     let userInfoHTML = `
 
@@ -96,9 +129,9 @@ async function fetchUserInformation() {
                 <img src="${data.picture}" id="user-picture" alt="User Picture" >
                 <input type="file" id="fileInput" name="file" style="display: none;" onchange="uploadFile()">
             </div>
-            <div class="user-detail"><strong>Name:</strong> ${data.name}</div>
-            <div class="user-detail"><strong>Email:</strong> ${data.email}</div>
-            <div class="user-detail"><strong>Account Created:</strong> ${data.AccountCreatedDate}</div>
+            <div class="user-detail"><strong>Name : </strong> ${data.name}</div>
+            <div class="user-detail"><strong>Email : </strong> ${data.email}</div>
+            <div class="user-detail"><strong>Account Created : </strong> ${date} </div>
 
         `;
 
@@ -172,3 +205,31 @@ async function uploadFile() {
 function redirectToLogin() {
     window.location.href = '/index.html';
 }
+
+
+async function updateUserWorkspaceList(workspaceName) {
+    console.log(workspaceName);
+    const response = await fetch("/api/1.0/user/userWorkspace", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`
+        },
+        body: JSON.stringify({
+            "workspaceName": workspaceName,
+            "accessToken": accessToken
+        })
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+        console.log("User workspace list updated successfully");
+    } else {
+        console.error("Failed to update user workspace list:", data);
+    }
+}
+
+
+// function redirectToPage() {
+//     window.location.href = "/admin/createworkspace";
+// }

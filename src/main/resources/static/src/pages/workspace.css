@@ -5,32 +5,44 @@ body {
     line-height: 1.6;
 }
 
+.mid-workspace {
+    flex: 3;
+}
+
+.right-workspace {
+    flex: 7;
+}
+
 .member, .friend {
     display: flex;
     justify-content: space-between;
     padding: 15px;
     margin: 20px;
-    border-radius: 8px;
+    border-radius: 16px;
     box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
     background-color: white;
 }
 
 #fileList {
-    height: 80vh;
+    height: 90vh;
     overflow-y: auto;
 }
 
 #userList, #add-friend-member {
     height: 40vh;
     overflow-y: auto;
+    background-color: #343a40;
+    padding: 15px;
+    margin: 20px;
+    border-radius: 16px;
+    box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
 }
 
 .file-entry {
-    padding: 15px;
     margin: 20px;
-    border-radius: 8px;
+    padding: 15px;
+    border-radius: 16px;
     box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
-    background-color: white;
     max-height: 250px;
     overflow-y: auto;
     word-break: break-all;
@@ -58,7 +70,6 @@ textarea {
     margin-top: 5px;
     margin-bottom: 20px;
     border: 1px solid #ccc;
-    border-radius: 4px;
 }
 
 .create-btn {
@@ -66,36 +77,53 @@ textarea {
 }
 
 
-#workspace-information, #edit-workspace-form {
+#workspace-information, #edit-workspace-form, #fileList {
     margin: 20px;
     padding: 20px;
-    background-color: white;
-    border-radius: 8px;
+    background-color: #343a40;
+    border-radius: 16px;
     box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
     word-break: break-all;
 }
 
+#workspace-information > p {
+    color: white;
+
+}
+
+
 #create-new-file {
     margin: 20px;
     padding: 20px;
-    background-color: white;
-    border-radius: 8px;
+    background-color: #343a40;
+    border-radius: 16px;
     box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
 }
+
+#file-creation-form > div > label {
+    color: white;
+}
+
 
 #groupChat {
     margin: 20px;
     padding: 20px;
-    background-color: white;
-    border-radius: 8px;
+    background-color: #343a40;
+    border-radius: 16px;
     box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
 }
 
+
 #chat-box {
+    width: 100%;
+    height: 75vh;
     margin: 10px;
     padding: 20px;
-    background-color: white;
-    border-radius: 8px;
+    overflow-y: scroll;
+    background-color: #f8f8f8;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    border-radius: 16px;
     box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
 }
 
@@ -110,6 +138,11 @@ textarea {
 #chat-input-box {
     width: 90%;
     margin: 10px;
+    border-radius: 8px;
+}
+
+#file-name-input, #file-description {
+    border-radius: 8px;
 }
 
 #chat-send-btn {
@@ -125,8 +158,17 @@ textarea {
 }
 
 
-.member, .friend, #workspace-information, #create-new-file, .file-entry, #edit-workspace-form {
+.member, .friend, .file-entry {
     background-color: #F4F4F2;
+}
+
+#edit-workspace-form {
+    background-color: #343a40;
+}
+
+#edit-workspace-form > p {
+    color: white;
+
 }
 
 .workspace-member-email, .friend-email {
@@ -134,16 +176,6 @@ textarea {
     font-size: 0.8rem;
 }
 
-
-#chat-box {
-    width: 100%;
-    height: 300px;
-    overflow-y: scroll;
-    background-color: #f8f8f8;
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
-    padding: 10px;
-}
 
 #chat-messages {
     overflow-y: auto;
@@ -174,7 +206,7 @@ textarea {
     margin-bottom: 10px;
     padding: 8px 12px;
     background-color: #e9ecef;
-    border-radius: 18px;
+    border-radius: 16px;
 }
 
 .message {

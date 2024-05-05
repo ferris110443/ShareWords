@@ -16,30 +16,58 @@
 
 <div class="container">
     <div id="user-sidebar-placeholder"></div>
-    <div style="background-color: rgba(225, 225, 255, 0.7); width: 5px; display: block;"></div>
-    <div class="mid-workspace ">
-        <div class="user-workspaceList-head-container">
-            <h2>User Information</h2>
-        </div>
-        <div id="user-information-detail">
-
-        </div>
-    </div>
-    <div style="background-color: rgba(225, 225, 255, 0.7); width: 5px; display: block;"></div>
-    <div class="user-workspace-container">
-        <div class="user-workspaceList">
-            <div class="user-workspaceList-head-container">
-                <h2>My workspace</h2>
-                <button class="btn btn-success " id="create-new-workspace" onclick="redirectToPage()">Create New
-                    workspace
-                </button>
+    <div id="workspace-container">
+        <!--        <header>-->
+        <!--            <div> Welcome to ShareWords</div>-->
+        <!--        </header>-->
+        <div id="workspace-mid-user-container">
+            <div class="mid-workspace ">
+                <div class="user-workspaceList-head-container">
+                    <h2>User Information</h2>
+                </div>
+                <div id="user-information-detail">
+                </div>
             </div>
-            <div id="workspaceList">
+            <div class="user-workspace-container">
+                <div class=" create-workspace">
+                    <h2 class="create-workspace-title">Create New Workspace</h2>
+                    <div class="create-workspace-form">
+                        <form id="create-new-workspace-form">
+                            <div class="mb-3">
+                                <label class="form-label" for="workspaceName">Workspace Name</label>
+                                <input aria-describedby="workspaceNameHelp" class="form-control" id="workspaceName"
+                                       name="workspaceName" placeholder="Enter workspace name" required type="text">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="workspaceDescription">Workspace Description</label>
+                                <textarea aria-describedby="workspaceDescriptionHelp" class="form-control"
+                                          id="workspaceDescription"
+                                          name="workspaceDescription"
+                                          placeholder="Enter workspace description" required type="text"></textarea>
+                            </div>
+                            <button class="btn btn-success create-workspace-btn" id="create-new-workspace-btn"
+                                    type="submit">
+                                Create New Workspace
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <div class="user-workspaceList">
+                    <div class="user-workspaceList-head-container">
+                        <h2>My Workspace</h2>
+                        <!--                <button class="btn btn-success " id="create-new-workspace" onclick="redirectToPage()">Create New-->
+                        <!--                    workspace-->
+                        <!--                </button>-->
+                    </div>
+                    <div id="workspaceList">
+                    </div>
+                </div>
             </div>
-
         </div>
 
+
     </div>
+
 </div>
 
 <div class="modal" id="friendRequestModal" tabindex="-1">

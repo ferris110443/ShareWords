@@ -6,13 +6,44 @@ body {
     line-height: 1.6;
 }
 
-#user-information-detail {
-    background-color: #F4F4F2;
-    padding: 20px;
-    border-radius: 8px;
+.mid-workspace {
+    flex: 3;
     margin: 20px;
-    box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
+    width: 100%;
 }
+
+
+.user-workspace-container {
+    flex: 6;
+    margin: 20px;
+    width: 100%;
+}
+
+#workspace-container {
+    width: 100%;
+}
+
+#workspace-mid-user-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%; /* Ensure the container uses full width */
+    margin: 0; /* Remove any default margin if present */
+    padding: 0; /* Remove any default padding if present */
+}
+
+#user-information-detail {
+    background-color: #343a40;
+    padding: 20px;
+    border-radius: 24px;
+    margin: 10px 20px 10px 20px;
+    box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
+    height: 85vh;
+}
+
+#user-information-detail > .user-detail {
+    color: white;
+}
+
 
 .user-detail {
     margin-bottom: 10px;
@@ -21,15 +52,41 @@ body {
 
 #user-picture {
     cursor: pointer;
+
 }
 
-.user-workspaceList, .user-workspaceList-head-container {
+#user-picture:hover {
+    transform: scale(1.05);
+
+}
+
+.user-detail > img {
+    transition: all 0.3s ease;
+}
+
+.user-workspaceList, .user-workspaceList-head-container, .create-workspace {
     margin: 5px;
 }
 
+
 #workspaceList {
-    height: 80vh;
+    background-color: #343a40;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin: 20px;
+    padding: 15px;
+    height: 40vh;
+    overflow-y: auto;
+    box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
+    border-radius: 24px;
 }
+
+.workspace-entry {
+    width: 45%;
+    height: 20vh
+}
+
 
 .user-workspaceList-head-container {
     display: flex;
@@ -38,14 +95,27 @@ body {
 
 .workspace-entry {
     background-color: #F4F4F2;
-    padding: 15px;
-    border-radius: 8px;
+    padding: 20px;
+    border-radius: 24px;
     margin: 20px;
     box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
     display: flex;
     justify-content: space-between;
     transition: all 0.3s ease;
     cursor: pointer;
+}
+
+.form-label {
+    color: white;
+
+}
+
+.create-workspace-form {
+    background-color: #343a40;
+    padding: 35px;
+    border-radius: 24px;
+    margin: 20px;
+    box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
 }
 
 .workspace-entry:hover {
@@ -63,11 +133,12 @@ body {
     justify-content: center;
     align-items: center;
     padding: 20px;
+
 }
 
 #user-picture {
-    width: 400px;
-    height: 400px;
+    width: 300px;
+    height: 300px;
     border-radius: 20%;
     margin-right: 20px;
     border: 1px solid #ccc;
@@ -75,17 +146,14 @@ body {
 
 
 .workspace-name-description-btn-container {
-    align-content: center;
+    /*align-content: center;*/
     /*justify-content: center;*/
 }
 
 
-.mid-workspace, .user-workspace-container {
-    margin-top: 5px;
-}
-
 .workspace-description {
     font-size: 0.8rem;
+    word-break: break-all;
 }
 
 
@@ -112,4 +180,16 @@ body {
     .user-detail img {
         margin-bottom: 10px; /* Space between image and name when stacked */
     }
+
+
 }
+
+@media (max-width: 1440px) {
+
+    .workspace-entry {
+        width: 100%;
+        height: 20vh
+    }
+
+}
+
