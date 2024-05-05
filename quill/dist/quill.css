@@ -7,18 +7,23 @@ body {
 }
 
 #editor {
-    width: 100%;
     background-color: white;
     border: 5px solid #ccc;
     padding: 10px;
     margin: 10px;
     overflow-y: auto;
-    height: Calc(100vh - 200px);
+    height: Calc(100vh - 250px);
+    box-sizing: border-box;
 
 
-    .ql-editor {
-        max-height: 100%;
-    }
+}
+
+.ql-editor {
+    max-height: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #preview-text {

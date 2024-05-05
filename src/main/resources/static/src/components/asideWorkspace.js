@@ -7,21 +7,21 @@ function loadAsideWorkspace() {
     <img id= "shareWords-logo" src=/logo/sharewordslogo.png >   
   </a>
   <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
-    <li class="nav-item">
-      <a class="workspace-partial nav-link py-0 border-bottom rounded-0" aria-current="page" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Home" data-bs-original-title="user" data-target="room-zone">
-        <svg class="bi pe-none" width="36" height="36" role="img" aria-label="Home"><use xlink:href="#home"></use></svg>
-        <img src=/logo/user.png width="48" height="48">
-        <div style="font-size: 14px">Members</div>
-        <svg class="bi pe-none" width="36" height="36" role="img" aria-label="Home"><use xlink:href="#home"></use></svg>
-      </a>
-    </li>
+
     <li>
       <a class="workspace-partial nav-link py-0 border-bottom rounded-0" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Dashboard" data-bs-original-title="file" data-target="file-zone">
         <svg class="bi pe-none" width="36" height="36" role="img" aria-label="Dashboard"><use xlink:href="#speedometer2"></use></svg>
         <img src= /logo/file.png width="48" height="48">
         <div style="font-size: 14px ">Files</div>
         <svg class="bi pe-none" width="36" height="36" role="img" aria-label="Home"><use xlink:href="#home"></use></svg>
-
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="workspace-partial nav-link py-0 border-bottom rounded-0" aria-current="page" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Home" data-bs-original-title="user" data-target="room-zone">
+        <svg class="bi pe-none" width="36" height="36" role="img" aria-label="Home"><use xlink:href="#home"></use></svg>
+        <img src=/logo/user.png width="48" height="48">
+        <div style="font-size: 14px">Members</div>
+        <svg class="bi pe-none" width="36" height="36" role="img" aria-label="Home"><use xlink:href="#home"></use></svg>
       </a>
     </li>
 <!--    <li>-->
