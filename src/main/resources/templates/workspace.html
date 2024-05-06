@@ -154,7 +154,14 @@
     const formattedDateTime = now.toLocaleString('en-CN').replace(',', '');
 
     socket.on('connect', () => {
-        socket.emit('joinRoom', roomId);
+        const data = {
+            accessToken: accessToken,
+            roomId: roomId
+        };
+        console.log("Data sent:", data);
+        socket.emit('joinRoom', data, (ack) => {
+            console.log('ack:', ack.userEmail + "joined the room");
+        });
     });
 
 
@@ -177,6 +184,7 @@
             sendButton.click();
         }
     });
+
 
     socket.on("chatMessage", function (chatMessageDto) {
         console.log('Received chat message:', chatMessageDto);

@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.yplin.project.configuration.JwtTokenUtil;
 import org.yplin.project.data.dto.socketio.ChatMessageDto;
+import org.yplin.project.data.dto.socketio.JoinRoomMessageDto;
 import org.yplin.project.data.dto.socketio.MessageTokenData;
 import org.yplin.project.data.form.UserSession;
 import org.yplin.project.model.FriendsModel;
@@ -76,10 +77,11 @@ public class SocketIOService {
         });
 
 
-        server.addEventListener("joinRoom", String.class, (client, roomId, ackRequest) -> {
-            client.joinRoom(roomId);
-            log.info("Client {} joined room {}", client.getSessionId(), roomId);
-            ackRequest.sendAckData("Joined room: " + roomId);
+        server.addEventListener("joinRoom", JoinRoomMessageDto.class, (client, data, ackRequest) -> {
+            log.info("Received data: {}", data);
+            client.joinRoom(data.getRoomId());
+            String userEmail = getEmailFromToken(data);
+            ackRequest.sendAckData(Map.of("userEmail", userEmail, "roomId", data.getRoomId()));
         });
 
         server.addEventListener("chatMessage", ChatMessageDto.class, (client, data, ackRequest) -> {
@@ -204,6 +206,11 @@ public class SocketIOService {
     }
 
     private String getEmailFromToken(MessageTokenData data) {
+        String accessToken = data.getAccessToken();
+        return jwtTokenUtil.extractUserEmail(accessToken);
+    }
+
+    private String getEmailFromToken(JoinRoomMessageDto data) {
         String accessToken = data.getAccessToken();
         return jwtTokenUtil.extractUserEmail(accessToken);
     }

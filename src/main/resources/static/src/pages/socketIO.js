@@ -136,10 +136,7 @@ socket.on('friendRequest', function (requestUserEmail, requestUserName) {
 
 
 function updateOnlineStatus() {
-    console.log("Updating online status...");
-    console.log("testing...")
     console.log("onlineUsers: " + JSON.stringify(onlineUsers));
-
     document.querySelectorAll('.friend-item').forEach(item => {
         const email = item.querySelector('button').getAttribute('data-email');
         console.log("email from updateOnlineStatus: " + email)
