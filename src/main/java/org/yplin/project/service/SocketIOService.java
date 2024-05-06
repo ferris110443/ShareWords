@@ -58,13 +58,14 @@ public class SocketIOService {
                     .findFirst()
                     .orElse(null);
             if (userSession != null) {
-                log.info("Client disconnected: {} with token {}", client.getSessionId(), userSession.getAccessToken());
-                clients.remove(userSession.getEmail()); // Assuming you have a method to get email from userSession
+                log.info("client disconnected: {} with token {}", client.getSessionId(), userSession.getAccessToken());
+                clients.remove(userSession.getEmail());
                 userSession.setOnline(false);
-                broadcastOnlineUsers(); // Call a method to broadcast the updated list of online users
+                broadcastOnlineUsers();
             } else {
                 log.info("client disconnected: {}", client.getSessionId());
             }
+
         });
 
         server.addEventListener("message", MessageTokenData.class, (client, data, ackRequest) -> {
@@ -76,6 +77,16 @@ public class SocketIOService {
             }
         });
 
+
+        server.addEventListener("leftRoom", JoinRoomMessageDto.class, (client, data, ackRequest) -> {
+            log.info("Received data: {}", data);
+            client.leaveRoom(data.getRoomId());
+            String userEmail = getEmailFromToken(data);
+            data.setUserEmail(userEmail);
+            ackRequest.sendAckData(data);
+            broadcastUserLeftMessageToRoom(data);
+            logger.info("broadcastUserLeftMessageToRoom: {}", data);
+        });
 
         server.addEventListener("joinRoom", JoinRoomMessageDto.class, (client, data, ackRequest) -> {
             log.info("Received data: {}", data);
@@ -183,6 +194,11 @@ public class SocketIOService {
         });
 
 
+    }
+
+    private void broadcastUserLeftMessageToRoom(JoinRoomMessageDto data) {
+        System.out.println("Broadcasting broadcastUserLeftMessage to room: " + data);
+        server.getRoomOperations(data.getRoomId()).sendEvent("leftRoom", data);
     }
 
     private void broadcastUserJoinMessageToRoom(JoinRoomMessageDto data) {

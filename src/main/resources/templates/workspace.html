@@ -160,23 +160,55 @@
         };
         console.log("Data sent:", data);
         socket.emit('joinRoom', data, (ack) => {
-            console.log('ack:', ack.userEmail + " joined the room");
+            console.log('ack:', ack.userEmail + " has joined the room");
         });
     });
 
 
+    function leaveRoom() {
+        const data = {
+            accessToken: accessToken,
+            roomId: roomId
+        };
+        console.log("Data sent disconnected:", data);
+        socket.emit('leftRoom', data, (ack) => {
+            console.log('ack:', ack.userEmail + " has left the room");
+            socket.disconnect();
+        });
+    }
+
+    window.onbeforeunload = leaveRoom;
+
+    //=============== ChatRoom User leave =================
+    socket.on('leftRoom', (data) => {
+        console.log("data", data)
+        addUserLeftMessage(data.userEmail);
+    });
+
+    function addUserLeftMessage(userEmail) {
+        const chatMessages = document.getElementById('chat-messages');
+        const messageElement = document.createElement('div');
+        messageElement.innerHTML = `
+            <div class="join-room-message">
+                <div class="chat-message-join">${userEmail} has left the room</div>
+            </div>
+        `;
+        chatMessages.appendChild(messageElement);
+    }
+
+
+    //=============== ChatRoom User Join =================
     socket.on('joinRoom', (data) => {
         console.log("data", data)
         addUserJoinMessage(data.userEmail);
     });
-
 
     function addUserJoinMessage(userEmail) {
         const chatMessages = document.getElementById('chat-messages');
         const messageElement = document.createElement('div');
         messageElement.innerHTML = `
             <div class="join-room-message">
-                <div class="chat-message-text-friends">${userEmail} has joined the room</div>
+                <div class="chat-message-leave">${userEmail} has joined the room</div>
             </div>
         `;
         chatMessages.appendChild(messageElement);
