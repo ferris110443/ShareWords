@@ -13,6 +13,7 @@ import org.yplin.project.configuration.JwtTokenUtil;
 import org.yplin.project.service.UserService;
 import org.yplin.project.service.ValidationService;
 import org.yplin.project.service.WorkspaceService;
+import org.yplin.project.service.impl.MGServiceImp;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +32,8 @@ public class ValidationRestController {
     WorkspaceService workspaceService;
     @Autowired
     ValidationService validationService;
+    @Autowired
+    MGServiceImp mgServiceImp;
 
     @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8888", "http://34.230.138.53"})
     @GetMapping(path = "/workspace")

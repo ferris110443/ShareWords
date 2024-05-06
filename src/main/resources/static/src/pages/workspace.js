@@ -15,6 +15,38 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('edit-workspace-save-btn').addEventListener('click', updateWorkspaceInformation);
     document.getElementById('cancel-workspace-save-btn').addEventListener('click', toggleEdit);
 
+    // document.querySelectorAll('[id^=shareForm-]').forEach(form => {
+    //     form.addEventListener('submit', async (e) => {
+    //         e.preventDefault();
+    //         const formId = e.target.id;
+    //         const fileId = formId.split('-')[1];
+    //         const emailInput = document.querySelector(`#email-${fileId}`);
+    //
+    //         try {
+    //             const response = await fetch('/api/send-file', {
+    //                 method: 'POST',
+    //                 headers: {
+    //                     'Content-Type': 'application/json'
+    //                 },
+    //                 body: JSON.stringify({
+    //                     email: emailInput.value,
+    //                     fileId: fileId
+    //                 })
+    //             });
+    //
+    //             if (!response.ok) {
+    //                 throw new Error('Failed to send file');
+    //             }
+    //             const data = await response.json();
+    //             console.log('Success:', data);
+    //             $(`#shareFileModal-${fileId}`).modal('hide');
+    //         } catch (error) {
+    //             console.error('Error:', error);
+    //         }
+    //     });
+    // });
+
+
     renderWorkspaceFileList()
     renderWorkspaceInformation()
     getWorkspaceMember()
@@ -111,6 +143,30 @@ async function renderWorkspaceFileList() {
                         <p class="file-name-description">${file.fileDescription}</p>
                         <button aria-label="Edit File ${index}" class="edit-file-btn btn btn-primary " data-fileid="${file.fileId}">Edit</button>
                         <button aria-label="Delete File ${index}" class="delete-file-btn btn btn-danger" data-fileid="${file.fileId}">Delete</button>
+                        <button aria-label="Share File ${index}" class="share-file-btn btn " data-fileid="${file.fileId}" style="background: #6c757d">
+                            <img src="../../logo/send.png" alt="Share this file" width="24px" height="24px">
+                        </button>
+                        <div class="modal fade" id="shareFileModal-${file.fileId}" tabindex="-1" role="dialog" aria-labelledby="modalLabel-${file.fileId}" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalLabel-${file.fileId}">Share File</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="shareForm-${file.fileId}">
+                                            <div class="form-group">
+                                                <label for="email-${file.fileId}">Recipient's Email:</label>
+                                                <input type="email" class="form-control" id="email-${file.fileId}" required>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Send</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="file-entry-edit" id="edit-file${index}" data-fileid="${file.fileId}" style="display: none">
                         <div class="file-name-title"><strong>New file name</strong></div>
