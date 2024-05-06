@@ -160,9 +160,27 @@
         };
         console.log("Data sent:", data);
         socket.emit('joinRoom', data, (ack) => {
-            console.log('ack:', ack.userEmail + "joined the room");
+            console.log('ack:', ack.userEmail + " joined the room");
         });
     });
+
+
+    socket.on('joinRoom', (data) => {
+        console.log("data", data)
+        addUserJoinMessage(data.userEmail);
+    });
+
+
+    function addUserJoinMessage(userEmail) {
+        const chatMessages = document.getElementById('chat-messages');
+        const messageElement = document.createElement('div');
+        messageElement.innerHTML = `
+            <div class="join-room-message">
+                <div class="chat-message-text-friends">${userEmail} has joined the room</div>
+            </div>
+        `;
+        chatMessages.appendChild(messageElement);
+    }
 
 
     sendButton.addEventListener('click', function () {

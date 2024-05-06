@@ -63,7 +63,7 @@ public class SocketIOService {
                 userSession.setOnline(false);
                 broadcastOnlineUsers(); // Call a method to broadcast the updated list of online users
             } else {
-                log.info("Unknown client disconnected: {}", client.getSessionId());
+                log.info("client disconnected: {}", client.getSessionId());
             }
         });
 
@@ -81,7 +81,10 @@ public class SocketIOService {
             log.info("Received data: {}", data);
             client.joinRoom(data.getRoomId());
             String userEmail = getEmailFromToken(data);
-            ackRequest.sendAckData(Map.of("userEmail", userEmail, "roomId", data.getRoomId()));
+            data.setUserEmail(userEmail);
+            ackRequest.sendAckData(data);
+            broadcastUserJoinMessageToRoom(data);
+            logger.info("broadcastUserJoinMessageToRoom: {}", data);
         });
 
         server.addEventListener("chatMessage", ChatMessageDto.class, (client, data, ackRequest) -> {
@@ -90,10 +93,10 @@ public class SocketIOService {
             String roomId = data.getRoomId();
             String accessToken = data.getAccessToken();
             data.setUserEmail(userEmail);
-            System.out.println("Message received: " + message);
-            System.out.println("User email: " + userEmail);
-            System.out.println("Room ID: " + roomId);
-            System.out.println("Access token: " + accessToken);
+//            System.out.println("Message received: " + message);
+//            System.out.println("User email: " + userEmail);
+//            System.out.println("Room ID: " + roomId);
+//            System.out.println("Access token: " + accessToken);
             ackRequest.sendAckData("Message received from clients");
             broadcastMessageToRoom(data);
 
@@ -180,6 +183,11 @@ public class SocketIOService {
         });
 
 
+    }
+
+    private void broadcastUserJoinMessageToRoom(JoinRoomMessageDto data) {
+        System.out.println("Broadcasting broadcastUserJoinMessage to room: " + data);
+        server.getRoomOperations(data.getRoomId()).sendEvent("joinRoom", data);
     }
 
     private void broadcastMessageToRoom(ChatMessageDto data) {
