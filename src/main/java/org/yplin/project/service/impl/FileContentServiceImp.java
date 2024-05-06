@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.yplin.project.data.dto.FileNameAndDescriptionDto;
 import org.yplin.project.data.form.CreateFileForm;
 import org.yplin.project.data.form.ImageDataForm;
 import org.yplin.project.data.form.MarkdownForm;
@@ -214,6 +215,15 @@ public class FileContentServiceImp implements FileContentService {
         logger.info("Uploaded Image URL: " + fileURL);
 
         return fileURL;
+    }
+
+    @Override
+    public void updateFileNameAndDescription(FileNameAndDescriptionDto fileNameAndDescription) {
+        String fileId = fileNameAndDescription.getFileId();
+        String updatedFileName = fileNameAndDescription.getFileTitle();
+        String updatedFileDescription = fileNameAndDescription.getFileDescription();
+        fileContentRepository.updateFileNameAndDescription(fileId, updatedFileName, updatedFileDescription);
+
     }
 
 

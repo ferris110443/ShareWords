@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.yplin.project.configuration.JwtTokenUtil;
+import org.yplin.project.data.dto.FileNameAndDescriptionDto;
 import org.yplin.project.data.form.MarkdownForm;
 import org.yplin.project.model.FileContentModel;
 import org.yplin.project.service.FileContentService;
@@ -61,6 +62,15 @@ public class MarkdownRestController {
         Map<String, Object> response = new HashMap<>();
         response.put("data", fileContentService.getFileContent(fileId));
         response.put("userEmail", userEmail);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PatchMapping("/markdownInfo")
+    public ResponseEntity<?> updateFileNameAndDescription(@RequestBody FileNameAndDescriptionDto fileNameAndDescription) {
+        fileContentService.updateFileNameAndDescription(fileNameAndDescription);
+        log.info("File name and description updated successfully" + fileNameAndDescription.toString());
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "File name and description updated successfully");
         return ResponseEntity.ok().body(response);
     }
 

@@ -3,6 +3,7 @@ package org.yplin.project.repository;
 
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -37,7 +38,10 @@ public interface FileContentRepository extends JpaRepository<FileContentModel, L
     @Transactional
     void deleteByFileId(String fileId);
 
-
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE file_content SET file_title = :updatedFileName, file_description = :updatedFileDescription WHERE file_id = :fileId", nativeQuery = true)
+    void updateFileNameAndDescription(String fileId, String updatedFileName, String updatedFileDescription);
 }
 
 

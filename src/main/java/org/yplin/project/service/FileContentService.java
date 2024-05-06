@@ -1,6 +1,7 @@
 package org.yplin.project.service;
 
 import org.springframework.web.multipart.MultipartFile;
+import org.yplin.project.data.dto.FileNameAndDescriptionDto;
 import org.yplin.project.data.form.CreateFileForm;
 import org.yplin.project.data.form.ImageDataForm;
 import org.yplin.project.data.form.MarkdownForm;
@@ -30,4 +31,5 @@ public interface FileContentService {
 
     String saveUserImage(MultipartFile file, long userId) throws IOException;
 
+    void updateFileNameAndDescription(FileNameAndDescriptionDto fileNameAndDescription);
 }

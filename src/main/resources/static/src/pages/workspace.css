@@ -38,7 +38,7 @@ body {
     box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
 }
 
-.file-entry {
+.file-entry, .file-entry-edit {
     margin: 20px;
     padding: 15px;
     border-radius: 16px;
@@ -46,6 +46,19 @@ body {
     max-height: 250px;
     overflow-y: auto;
     word-break: break-all;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#delete-workspace-btn {
+    margin-left: 10px;
+}
+
+
+.file-entry:hover {
+    background-color: #c9c4c4;
+    transform: scale(1.03);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .file-name-description {
@@ -141,7 +154,7 @@ textarea {
     border-radius: 8px;
 }
 
-#file-name-input, #file-description {
+#file-name-input, #file-description, .file-name-title, .file-name-description {
     border-radius: 8px;
 }
 
@@ -158,7 +171,7 @@ textarea {
 }
 
 
-.member, .friend, .file-entry {
+.member, .friend, .file-entry, .file-entry-edit {
     background-color: #F4F4F2;
 }
 

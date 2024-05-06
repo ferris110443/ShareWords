@@ -3,8 +3,8 @@ const params = new URLSearchParams(window.location.search);
 const workspaceName = params.get('roomId');
 const queryParams = new URLSearchParams(window.location.search);
 const roomId = decodeURIComponent(queryParams.get('roomId'));
-// const coeditorURL = 'https://sharewords.org/coeditor';
-const coeditorURL = 'http://localhost:8888/coeditor';
+const coeditorURL = 'https://sharewords.org/coeditor';
+// const coeditorURL = 'http://localhost:8888/coeditor';
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('delete-workspace-btn').addEventListener('click', deleteWorkspace);
     document.getElementById('file-creation-form').addEventListener('submit', handleFormSubmission);
     document.getElementById('edit-workspace-save-btn').addEventListener('click', updateWorkspaceInformation);
+    document.getElementById('cancel-workspace-save-btn').addEventListener('click', toggleEdit);
 
     renderWorkspaceFileList()
     renderWorkspaceInformation()
@@ -105,38 +106,42 @@ async function renderWorkspaceFileList() {
         let html = '';
         data.data.forEach((file, index) => {
             html += `
-                    <div class="file-entry " id="file${index}">
+                    <div class="file-entry" id="file${index}" data-fileid="${file.fileId}">
                         <p class="file-name-title"><strong>${file.fileTitle}</strong></p>
                         <p class="file-name-description">${file.fileDescription}</p>
                         <button aria-label="Edit File ${index}" class="edit-file-btn btn btn-primary " data-fileid="${file.fileId}">Edit</button>
                         <button aria-label="Delete File ${index}" class="delete-file-btn btn btn-danger" data-fileid="${file.fileId}">Delete</button>
                     </div>
+                    <div class="file-entry-edit" id="edit-file${index}" data-fileid="${file.fileId}" style="display: none">
+                        <div class="file-name-title"><strong>New file name</strong></div>
+                        <input class="file-name-title" type="text">
+                        <div class="file-name-title"><strong>New file description</strong></div>
+                        <textarea class="file-name-description"></textarea>
+                        <button aria-label="save File ${index}" class="edit-file-save-btn btn btn-success " data-fileid="${file.fileId}">Save</button>
+                        <button aria-label="cancel File ${index}" class="delete-file-cancel-btn btn btn-danger" data-fileid="${file.fileId}">Cancel</button>
+                    </div>
+                    
                 `;
         });
         document.getElementById("fileList").innerHTML += html;
-        attachEditButtonListeners()
-        attachDeleteButtonListeners()
+
     } else {
         console.error('No files in workspace', data.data);
     }
 
 
-    function attachEditButtonListeners() {
-        const editButtons = document.querySelectorAll('.edit-file-btn');
-        editButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                const fileId = this.getAttribute('data-fileid');
-                const editUrl = `${coeditorURL}/coeditor.html?roomId=${workspaceName}&fileId=${fileId}`;
-                window.location.href = editUrl;
-            });
-        });
-    }
+    attachEnterWorkspaceBtn()
+    attachDeleteButtonListeners()
+    attachEditButtonListeners()
 
 
     function attachDeleteButtonListeners() {
+
         const deleteButtons = document.querySelectorAll('.delete-file-btn');
         deleteButtons.forEach(button => {
-            button.addEventListener('click', async function () {
+            button.addEventListener('click', async function (event) {
+                event.preventDefault();
+                event.stopPropagation(); // prevent the event from bubbling up or it will trigger the parent click event and direct to coeditor page
                 console.log('delete button clicked')
                 const fileId = this.getAttribute('data-fileid');
                 const response = await fetch(`/api/1.0/workspace/file?fileId=${fileId}`, {
@@ -158,7 +163,89 @@ async function renderWorkspaceFileList() {
         });
     }
 
+    function attachEnterWorkspaceBtn() {
+        const fileEntries = document.querySelectorAll('.file-entry');
+        fileEntries.forEach(entry => {
+            entry.addEventListener('click', function (event) {
+                event.stopPropagation();
+                const fileId = entry.getAttribute('data-fileid');
+                const editUrl = `${coeditorURL}/coeditor.html?roomId=${workspaceName}&fileId=${fileId}`;
+                window.location.href = editUrl;
 
+            });
+        });
+    }
+
+
+    function attachEditButtonListeners() {
+        const editButtons = document.querySelectorAll('.edit-file-btn');
+        editButtons.forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                const fileId = this.getAttribute('data-fileid');
+                console.log('edit button clicked', fileId);
+                // Show the edit div for the specific file.
+                const editDiv = document.querySelector(`div[id^='edit-file'][data-fileid="${fileId}"]`);
+                if (editDiv) {
+                    editDiv.style.display = 'block';
+                }
+
+                // Hide the file entry div for the specific file.
+                const fileEntryDiv = document.querySelector(`div[id^='file'][data-fileid="${fileId}"]`);
+                if (fileEntryDiv) {
+                    fileEntryDiv.style.display = 'none';
+                }
+            });
+        });
+        const saveButtons = document.querySelectorAll('.edit-file-save-btn');
+        saveButtons.forEach(button => {
+            button.addEventListener('click', async function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                const fileId = this.getAttribute('data-fileid');
+                const editDiv = document.querySelector(`div[id^='edit-file'][data-fileid="${fileId}"]`);
+                const newName = editDiv.querySelector('input.file-name-title').value;
+                const newDescription = editDiv.querySelector('textarea.file-name-description').value;
+
+                const response = await fetch(`/api/1.0/markdown/markdownInfo`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${accessToken}`
+                    },
+                    body: JSON.stringify({fileTitle: newName, fileDescription: newDescription, fileId: fileId})
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert('File updated successfully');
+                    const fileEntryDiv = document.querySelector(`div[id^='file'][data-fileid="${fileId}"]`);
+                    fileEntryDiv.querySelector('.file-name-title strong').textContent = newName;
+                    fileEntryDiv.querySelector('.file-name-description').textContent = newDescription;
+                    editDiv.style.display = 'none';
+                    fileEntryDiv.style.display = 'block';
+                } else {
+                    alert('Failed to update file: ' + data.error);
+                }
+            });
+        });
+
+        const cancelButtons = document.querySelectorAll('.delete-file-cancel-btn');
+        cancelButtons.forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                const fileId = this.getAttribute('data-fileid');
+                const editDiv = document.querySelector(`div[id^='edit-file'][data-fileid="${fileId}"]`);
+                editDiv.style.display = 'none';
+
+                const fileEntryDiv = document.querySelector(`div[id^='file'][data-fileid="${fileId}"]`);
+                fileEntryDiv.style.display = 'block';
+            });
+        });
+
+    }
 }
 
 async function renderWorkspaceInformation() {
@@ -257,9 +344,9 @@ async function getUserFriendsForAddingMembers() {
                 const addButton = friendDiv.querySelector('.add-member-btn');
 
                 addButton.addEventListener('click', function () {
-                    friendDiv.remove() // remove from UI
-                    addFriendsToWorkspace(friendId) // update in DB
-                    moveMemberToWorkspaceList({ // update in UI
+                    friendDiv.remove()
+                    addFriendsToWorkspace(friendId)
+                    moveMemberToWorkspaceList({
                         userId: friendId,
                         name: friendName,
                         email: friendEmail
@@ -333,7 +420,6 @@ function showWorkspaceMemberList(members) {
     const userListDiv = document.getElementById('userList');
     userListDiv.innerHTML = '';
 
-    // Add new members to the list
     members.forEach(member => {
 
         const memberDiv = document.createElement('div');
@@ -492,6 +578,10 @@ function redirectToLogin() {
 function toggleEdit() {
     const infoDiv = document.getElementById('workspace-information');
     const formDiv = document.getElementById('edit-workspace-form');
+    const editWorkspaceNameText = document.getElementById('edit-name');
+    const editWorkspaceDescriptionText = document.getElementById('edit-description');
+    editWorkspaceNameText.value = "";
+    editWorkspaceDescriptionText.value = "";
     if (infoDiv.style.display === 'none') {
         infoDiv.style.display = 'block';
         formDiv.style.display = 'none';
@@ -501,30 +591,3 @@ function toggleEdit() {
     }
 }
 
-
-function toggleMembers() {
-    const workspaceDiv = document.getElementById('workspace-information-container');
-    const createNewFileDiv = document.getElementById('create-new-file-container');
-    const groupChatDiv = document.getElementById('groupChat-container');
-    if (workspaceDiv.style.display === 'none' && createNewFileDiv.style.display === 'none') {
-        groupChatDiv.style.display = 'block';
-    } else {
-        workspaceDiv.style.display = 'none';
-        createNewFileDiv.style.display = 'none';
-        groupChatDiv.style.display = 'block';
-    }
-}
-
-function toggleFiles() {
-    const workspaceDiv = document.getElementById('workspace-information-container');
-    const createNewFileDiv = document.getElementById('create-new-file-container');
-    const groupChatDiv = document.getElementById('groupChat-container');
-    if (groupChatDiv.style.display === 'none') {
-        createNewFileDiv.style.display = 'block';
-        workspaceDiv.style.display = 'block';
-    } else {
-        groupChatDiv.style.display = 'none'
-        createNewFileDiv.style.display = 'block';
-        workspaceDiv.style.display = 'block';
-    }
-}
