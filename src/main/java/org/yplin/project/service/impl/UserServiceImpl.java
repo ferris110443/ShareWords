@@ -171,12 +171,15 @@ public class UserServiceImpl implements UserService {
         friendsModelList.forEach(friendsModel -> {
             UserEmailNameProjection friendEmailName = userRepository.findEmailById(friendsModel.getFriendId());
             UserEmailNameProjection userEmailName = userRepository.findEmailById(friendsModel.getUserId());
-
+            UserModel friendImageUrl = userRepository.findImageUrlById(friendsModel.getFriendId());
+            UserModel userImageUrl = userRepository.findImageUrlById(friendsModel.getUserId());
 
             friendsModel.setFriendEmail(friendEmailName.getEmail());
             friendsModel.setFriendName(friendEmailName.getName());
+            friendsModel.setFriendImageUrl(friendImageUrl.getUserImageUrl());
             friendsModel.setUserEmail(userEmailName.getEmail());
             friendsModel.setUserName(userEmailName.getName());
+            friendsModel.setUserImageUrl(userImageUrl.getUserImageUrl());
         });
 //        System.out.println(friendsModelList);
 

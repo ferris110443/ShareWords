@@ -34,4 +34,6 @@ public interface UserRepository extends JpaRepository<UserModel, Long> {
     @Transactional
     @Query("UPDATE UserModel u SET u.userImageUrl = :fileURL WHERE u.id = :userId")
     void updateUserImageURL(@Param("fileURL") String fileURL, @Param("userId") long userId);
+
+    UserModel findImageUrlById(Long friendId);
 }

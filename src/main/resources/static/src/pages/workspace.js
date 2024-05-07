@@ -396,10 +396,11 @@ async function getUserFriendsForAddingMembers() {
                 const friendName = userId === item.userId ? item.friendName : item.userName;
                 const friendEmail = userId === item.userId ? item.friendEmail : item.userEmail;
                 const friendId = userId === item.userId ? item.friendId : item.userId;
+                const friendImageUrl = userId === item.userId ? item.friendImageUrl : item.userImageUrl;
                 friendDiv.innerHTML = `
                     
                     <div class="workspace-member-info">
-                        <img class="workspace-member-img" src="" alt="User Image" width="50px" height="50px">
+                        <img class="workspace-member-img" src="${friendImageUrl}" alt="User Image" width="50px" height="50px">
                         <div class="member-info">
                             <div class ="friend-name">User Name : ${friendName}</div>
                             <div class ="friend-email">User Email : ${friendEmail}</div>
@@ -416,7 +417,8 @@ async function getUserFriendsForAddingMembers() {
                     moveMemberToWorkspaceList({
                         userId: friendId,
                         name: friendName,
-                        email: friendEmail
+                        email: friendEmail,
+                        friendImageUrl: friendImageUrl
                     });
                 });
                 document.getElementById('add-friend-member').appendChild(friendDiv);
@@ -509,6 +511,7 @@ function showWorkspaceMemberList(members) {
         removeBtn.addEventListener('click', function () {
             memberDiv.remove()
             removeMemberFromWorkspace(member);
+            console.log("removeMemberFromWorkspace " + member.friendImageUrl)
         });
 
 
@@ -519,10 +522,11 @@ function showWorkspaceMemberList(members) {
 function moveMemberToAddList(member) {
     const addListDiv = document.getElementById('add-friend-member');
     const memberDiv = document.createElement('div');
-    memberDiv.classList.add('member');
+    console.log("moveMemberToAddList" + member.friendImageUrl)
+    memberDiv.classList.add('friend');
     memberDiv.innerHTML = `
         <div class="workspace-member-info">
-            <img class="workspace-member-img" src=${member.userImageUrl} alt="User Image" width="50px" height="50px">
+            <img class="workspace-member-img" src=${member.friendImageUrl} alt="User Image" width="50px" height="50px">
             <div class="member-info">
                 <div class="workspace-member-name">User Name : ${member.name}</div>
                 <div class="workspace-member-email">User Email : ${member.email}</div>
@@ -538,6 +542,7 @@ function moveMemberToAddList(member) {
         memberDiv.remove();
         addFriendsToWorkspace(member.userId);
     });
+
     // Append the new div to the add list
     addListDiv.appendChild(memberDiv);
 }
@@ -545,12 +550,17 @@ function moveMemberToAddList(member) {
 function moveMemberToWorkspaceList(member) {
     const workspaceListDiv = document.getElementById('userList');
     const memberDiv = document.createElement('div');
+
     memberDiv.classList.add('member');
     memberDiv.innerHTML = `
-        <div class="member-info">
-            <div class="workspace-member-name">User Name : ${member.name}</div>
-            <div class="workspace-member-email">User Email : ${member.email}</div>
+        <div class="workspace-member-info">
+            <img class="workspace-member-img" src=${member.friendImageUrl} alt="User Image" width="50px" height="50px">
+            <div class="member-info">
+                <div class="workspace-member-name">User Name : ${member.name}</div>
+                <div class="workspace-member-email">User Email : ${member.email}</div>
+            </div>
         </div>
+
         <button class="remove-member-btn btn" data-memberid="${member.userId}">
             <img class="remove-member-btn-img" src="/logo/remove.png" alt="Remove Friend">
         </button>
@@ -561,6 +571,7 @@ function moveMemberToWorkspaceList(member) {
         memberDiv.remove(); // remove from UI
         removeMemberFromWorkspace(member); // update in DB
 
+        console.log("remove member from workspace member image " + member.friendImageUrl)
     });
     // Append the new div to the workspace members list
     workspaceListDiv.appendChild(memberDiv);

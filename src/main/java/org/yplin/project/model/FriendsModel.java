@@ -34,7 +34,12 @@ public class FriendsModel {
     @Transient
     private String friendName;
     @Transient
+    private String friendImageUrl;
+    @Transient
     private String userEmail;
     @Transient
     private String userName;
+    @Transient
+    private String userImageUrl;
+
 }
