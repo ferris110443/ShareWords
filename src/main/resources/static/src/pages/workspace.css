@@ -29,6 +29,12 @@ body {
     overflow-y: auto;
 }
 
+.workspace-member-info {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
 #userList, #add-friend-member {
     height: 40vh;
     overflow-y: auto;

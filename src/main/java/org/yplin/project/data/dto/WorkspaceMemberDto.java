@@ -30,4 +30,6 @@ public class WorkspaceMemberDto {
     @JsonProperty("workspaceOwner")
     private String workspaceOwner;
 
+    @JsonProperty("userImageUrl")
+    private String userImageUrl;
 }

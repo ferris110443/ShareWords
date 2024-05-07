@@ -19,7 +19,7 @@ public class WorkspaceMemberRepository {
     }
 
     public List<WorkspaceMemberDto> findWorkspaceMembersByWorkspaceName(String workspaceName) {
-        String sql = "SELECT ui.email, ui.name, w.workspace_name, uw.user_id, uw.workspace_id, w.workspace_owner " +
+        String sql = "SELECT ui.email, ui.name, ui.user_image_url, w.workspace_name, uw.user_id, uw.workspace_id, w.workspace_owner " +
                 "FROM user_workspace uw " +
                 "JOIN workspace w ON w.id = uw.workspace_id " +
                 "JOIN user_information ui ON ui.id = uw.user_id " +
@@ -35,6 +35,7 @@ public class WorkspaceMemberRepository {
                 dto.setUserId(rs.getLong("user_id"));
                 dto.setWorkspaceId(rs.getLong("workspace_id"));
                 dto.setWorkspaceOwner(rs.getString("workspace_owner"));
+                dto.setUserImageUrl(rs.getString("user_image_url"));
                 return dto;
             }
         });

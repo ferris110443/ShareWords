@@ -386,12 +386,8 @@ async function getUserFriendsForAddingMembers() {
 
         const friendsData = await friendsResponse.json();
         const userFriendsInformation = friendsData.data;
-        const userId = friendsData.userId;
-
-        // console.log(userFriendsInformation);
-        // console.log(userId);
-
-        // Display friends who are not already in the workspace
+        const userId = friendsData.userId; // current user id
+        // using current Id to get the friends of the user
         userFriendsInformation.forEach(item => {
             if ((userId === item.userId && item.status === 'accepted' && !currentMemberIds.has(item.friendId)) ||
                 (userId === item.friendId && item.status === 'accepted' && !currentMemberIds.has(item.userId))) {
@@ -401,9 +397,13 @@ async function getUserFriendsForAddingMembers() {
                 const friendEmail = userId === item.userId ? item.friendEmail : item.userEmail;
                 const friendId = userId === item.userId ? item.friendId : item.userId;
                 friendDiv.innerHTML = `
-                    <div class="member-info">
-                        <div class ="friend-name">User Name : ${friendName}</div>
-                        <div class ="friend-email">User Email : ${friendEmail}</div>
+                    
+                    <div class="workspace-member-info">
+                        <img class="workspace-member-img" src="" alt="User Image" width="50px" height="50px">
+                        <div class="member-info">
+                            <div class ="friend-name">User Name : ${friendName}</div>
+                            <div class ="friend-email">User Email : ${friendEmail}</div>
+                        </div>
                     </div>
                     <button class="add-member-btn btn ">
                         <img class="add-member-btn-img" src="/logo/plus.png" alt="plus Friend">
@@ -492,9 +492,12 @@ function showWorkspaceMemberList(members) {
         const memberDiv = document.createElement('div');
         memberDiv.classList.add('member');
         memberDiv.innerHTML = `
-            <div class="member-info">
-                <div class="workspace-member-name">User Name : ${member.name}</div>
-                <div class="workspace-member-email">User Email : ${member.email}</div>
+            <div class="workspace-member-info">
+                <img class="workspace-member-img" src=${member.userImageUrl} alt="User Image" width="50px" height="50px">
+                <div class="member-info">
+                    <div class="workspace-member-name">User Name : ${member.name}</div>
+                    <div class="workspace-member-email">User Email : ${member.email}</div>
+                </div>
             </div>
             <button class="remove-member-btn btn " data-memberid="${member.userId}">
                 <img class="remove-member-btn-img" src="/logo/remove.png" alt="Remove Friend">
@@ -518,9 +521,12 @@ function moveMemberToAddList(member) {
     const memberDiv = document.createElement('div');
     memberDiv.classList.add('member');
     memberDiv.innerHTML = `
-        <div class="member-info">
-            <div class="friend-name">User Name : ${member.name}</div>
-            <div class="friend-email">User Email : ${member.email}</div>
+        <div class="workspace-member-info">
+            <img class="workspace-member-img" src=${member.userImageUrl} alt="User Image" width="50px" height="50px">
+            <div class="member-info">
+                <div class="workspace-member-name">User Name : ${member.name}</div>
+                <div class="workspace-member-email">User Email : ${member.email}</div>
+            </div>
         </div>
         <button class="add-member-btn btn ">
             <img class="add-member-btn-img" src="/logo/plus.png" alt="plus Friend">
