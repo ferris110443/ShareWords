@@ -6,11 +6,12 @@ body {
 }
 
 .mid-workspace {
+    margin-left: 120px;
     flex: 3;
 }
 
 .right-workspace {
-    flex: 7;
+    flex: 5;
 }
 
 .member, .friend {

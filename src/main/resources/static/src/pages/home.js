@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 async function renderUserWorkspaceList() {
     let userWorkspaceHTML = "";
+    let userWorkspaceHTMLList = "";
     try {
         const response = await fetch('/api/1.0/workspace/userWorkspaceDetails', {
             method: 'GET',
@@ -60,8 +61,10 @@ async function renderUserWorkspaceList() {
             userWorkspaceHTML += `
                     <div class="workspace-entry" onclick="joinWorkspace('${workspace.workspace_name}')">
                         <div class="workspace-name-description-container">
-                            <div class="workspace-name">Workspace Name: ${workspace.workspace_name}</div>
-                            <div class="workspace-description">Workspace Description: ${workspace.workspace_description}</div>
+                            <div>
+                                <div class="workspace-name">${workspace.workspace_name}</div>
+                                <div class="workspace-description">${workspace.workspace_description}</div>
+                            </div>
                             <div class="workspace-owner">Workspace Owner : ${workspace.workspace_owner}</div>
                         </div>
                         <div class="workspace-name-description-btn-container">
@@ -69,8 +72,37 @@ async function renderUserWorkspaceList() {
                         </div>
                     </div>
                 `;
+            userWorkspaceHTMLList += `
+<!--                    <tr class="workspace-entry-list" onclick="joinWorkspace('${workspace.workspace_name}')">-->
+                    <tr class="workspace-entry-list" >
+                        <td class = "workspace-name-td">${workspace.workspace_name}</td>
+                        <td class = "workspace-description-td">${workspace.workspace_description}</td>
+                        <td class = "workspace-owner-td">${workspace.workspace_owner}</td>
+                        <td class="workspace-btn-td">
+                            <div class="dropdown">
+                                <div class="toggle-dropdown-btn" onclick="toggleDropdown(event)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                                    </svg>
+                                </div>
+                                <div class="dropdown-menu" style="display: none;">
+                                    <button class="btn enter-workspace-btn" onclick="joinWorkspace('${workspace.workspace_name}')">
+                                        Enter workspace
+                                    </button>
+                                    <button class="btn leave-workspace-btn" onclick="deleteWorkspaceFromUserWorkspace('${workspace.workspace_name}', event)">
+                                        Delete workspace
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+            `
+
         });
-        $('.workspaceList').html(userWorkspaceHTML);
+        $('.workspaceList-grid').html(userWorkspaceHTML);
+        $('#workspaceList-list-tbody').html(userWorkspaceHTMLList);
+
+
     } catch (error) {
         console.error('Error fetching user workspaces:', error);
     }
@@ -100,6 +132,13 @@ async function deleteWorkspaceFromUserWorkspace(workspaceName, event) {
         console.log(data);
         if (event) {
             const workspaceEntry = event.target.closest('.workspace-entry');
+            if (workspaceEntry) {
+                workspaceEntry.remove(); // Remove the workspace entry element
+            }
+        }
+
+        if (event) {
+            const workspaceEntry = event.target.closest('.workspace-entry-list');
             if (workspaceEntry) {
                 workspaceEntry.remove(); // Remove the workspace entry element
             }
@@ -135,7 +174,6 @@ async function fetchUserInformation() {
                 <div class="user-detail">Email : <span id="user-info-email">${data.email}</span></div>
                 <div class="user-detail">Account Created : ${date} </div>
             </div>
-
 
         `;
 
@@ -234,6 +272,20 @@ async function updateUserWorkspaceList(workspaceName) {
 }
 
 
-// function redirectToPage() {
-//     window.location.href = "/admin/createworkspace";
-// }
+function toggleDropdown(event) {
+    event.stopPropagation();
+    let dropdown = event.currentTarget.parentNode.querySelector('.dropdown-menu');
+    const isVisible = dropdown.style.display === 'block';
+    document.querySelectorAll('.dropdown-menu').forEach(function (m) {
+        m.style.display = 'none';
+    });
+    dropdown.style.display = isVisible ? 'none' : 'block';
+}
+
+window.onclick = function (event) {
+    if (!event.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown-menu').forEach(function (menu) {
+            menu.style.display = 'none';
+        });
+    }
+}

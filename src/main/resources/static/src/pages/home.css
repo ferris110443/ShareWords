@@ -12,6 +12,9 @@ body {
     margin: 20px;
 }
 
+.user-workspace-container {
+    margin: 20px;
+}
 
 #workspace-container {
     margin-left: 120px;
@@ -141,7 +144,35 @@ body {
 
 .workspace-name-description-container {
     margin-bottom: 10px;
+    word-break: break-all;
 }
+
+.workspace-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.workspace-entry-list td {
+    word-break: break-all;
+    margin: 20px 0;
+    padding: 20px;
+}
+
+.workspace-name-td, .workspace-owner-td {
+    width: 25%;
+
+}
+
+.workspace-description-td {
+    width: 40%;
+
+}
+
+.workspace-btn-td {
+    width: 10%;
+
+}
+
 
 .user-detail {
     display: flex;
@@ -180,6 +211,70 @@ body {
     margin: 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
+}
+
+.workspaceList-list {
+
+    background-color: #343a40;
+    margin: 20px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
+    border-radius: 24px;
+}
+
+table {
+    border-collapse: collapse;
+    color: white;
+    width: 100%;
+}
+
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 0; /* Align with the top of the button */
+    left: 100%; /* Position to the right of the button */
+    display: none; /* Start hidden and show on click */
+}
+
+.enter-workspace-btn, .leave-workspace-btn {
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.toggle-dropdown-btn:hover {
+    cursor: pointer;
+}
+
+.enter-workspace-btn:hover {
+    background-color: #6f7071;
+}
+
+.leave-workspace-btn:hover {
+    background-color: #6f7071;
+}
+
+.bi-grid, .bi-list-ul {
+    font-size: 1.5rem;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.workspace-name-description-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.workspace-owner {
+    font-size: 0.8rem;
+    color: #6c757d;
 }
 
 

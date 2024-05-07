@@ -10,7 +10,6 @@
     <link href="/src/pages/common.css" rel="stylesheet">
     <link href="/src/pages/home.css" rel="stylesheet">
     <link href="/src/components/asideWorkspace.css" rel="stylesheet">
-
 </head>
 <body>
 
@@ -57,6 +56,19 @@
                     <div class="workspace-workspaceList-head-container">
                         <h2>My Workspace</h2>
                         <div class="filter-container">
+                            <svg class="bi bi-grid" fill="white" height="42" onclick="toggleView('grid') "
+                                 style="display: none"
+                                 viewBox="0 0 16 16" width="42"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z"/>
+                            </svg>
+                            <svg class="bi bi-list-ul" fill="white" height="42" onclick="toggleView('list')"
+
+                                 viewBox="0 0 16 16" width="42"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2m0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2m0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2"
+                                      fill-rule="evenodd"/>
+                            </svg>
 
                             <select id="ownershipFilter" onchange="filterWorkspaces()">
                                 <option value="all">All Workspaces</option>
@@ -65,15 +77,28 @@
                             </select>
                             <input id="workspaceFilter" oninput="filterWorkspaces()" placeholder="Filter workspaces..."
                                    type="text">
-                            <!--                            <div>-->
-                            <!--                                <button onclick="toggleView('workspaceList-list')">List View</button>-->
-                            <!--                                <button onclick="toggleView('workspaceList-grid')">Grid View</button>-->
-                            <!--                            </div>-->
-                        </div>
 
+                        </div>
                     </div>
-                    <div class="workspaceList workspaceList-grid" id="workspaceList">
+                    <div class="workspaceList workspaceList-grid"></div>
+                    <div class="workspaceList-list" id="workspaceList-list" style="display: none">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>Workspace Name</th>
+                                <th>Description</th>
+                                <th>Owner</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody id="workspaceList-list-tbody">
+
+
+                            </tbody>
+
+                        </table>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -113,45 +138,62 @@
 <script src="/src/components/asideWorkspace.js"></script>
 <script src="/src/pages/socketIO.js"></script>
 <script src="/src/pages/home.js"></script>
-<script !src="">
+<script>
+
     function filterWorkspaces() {
+        // Get filter values
         let textFilter = document.getElementById('workspaceFilter').value.toLowerCase();
         let ownershipFilter = document.getElementById('ownershipFilter').value;
-        let currentUserEmail = document.getElementById('user-info-email').textContent.toLowerCase()
+        let currentUserEmail = document.getElementById('user-info-email').textContent.toLowerCase();
 
 
-        let workspaceEntries = document.querySelectorAll('.workspace-entry');
-        workspaceEntries.forEach(entry => {
-            let workspaceName = entry.querySelector('.workspace-name').textContent.toLowerCase();
-            let workspaceDescription = entry.querySelector('.workspace-description').textContent.toLowerCase();
-            let workspaceOwner = entry.querySelector('.workspace-owner').textContent.toLowerCase().substring(18);
-            console.log("currentUserEmail : " + currentUserEmail)
-            console.log("workspaceOwner : " + workspaceOwner)
+        let gridEntries = document.querySelectorAll('.workspace-entry');
+        let listEntries = document.querySelectorAll('.workspace-entry-list');
+
+
+        function isVisible(workspaceName, workspaceDescription, workspaceOwner) {
             let textMatch = workspaceName.includes(textFilter) || workspaceDescription.includes(textFilter) || workspaceOwner.includes(textFilter);
-
             let ownershipMatch = (ownershipFilter === "all") ||
                 (ownershipFilter === "mine" && workspaceOwner === currentUserEmail) ||
                 (ownershipFilter === "others" && workspaceOwner !== currentUserEmail);
+            return textMatch && ownershipMatch;
+        }
 
-            if (textMatch && ownershipMatch) {
-                entry.style.display = '';
-            } else {
-                entry.style.display = 'none';
-            }
+
+        gridEntries.forEach(entry => {
+            let workspaceName = entry.querySelector('.workspace-name').textContent.toLowerCase().replace('workspace name: ', '');
+            let workspaceDescription = entry.querySelector('.workspace-description').textContent.toLowerCase().replace('workspace description: ', '');
+            let workspaceOwner = entry.querySelector('.workspace-owner').textContent.toLowerCase().replace('workspace owner : ', '');
+
+            entry.style.display = isVisible(workspaceName, workspaceDescription, workspaceOwner) ? '' : 'none';
+        });
+
+
+        listEntries.forEach(entry => {
+            let workspaceName = entry.cells[0].textContent.toLowerCase();
+            let workspaceDescription = entry.cells[1].textContent.toLowerCase();
+            let workspaceOwner = entry.cells[2].textContent.toLowerCase();
+
+            entry.style.display = isVisible(workspaceName, workspaceDescription, workspaceOwner) ? '' : 'none';
         });
     }
 
 
-    // function toggleView(viewType) {
-    //     const workspaceList = document.getElementById('workspaceList');
-    //     if (viewType === 'workspaceList-list') {
-    //         workspaceList.classList.add('workspaceList-list');
-    //         workspaceList.classList.remove('workspaceList-grid');
-    //     } else {
-    //         workspaceList.classList.add('workspaceList-grid');
-    //         workspaceList.classList.remove('workspaceList-list');
-    //     }
-    // }
+    function toggleView(viewType) {
+        const container = document.querySelector('.workspace-container');
+        if (viewType === 'grid') {
+            document.querySelector('.workspaceList-grid').style.display = '';
+            document.querySelector('.workspaceList-list').style.display = 'none';
+            document.querySelector('.bi-grid').style.display = 'none';
+            document.querySelector('.bi-list-ul').style.display = '';
+        } else if (viewType === 'list') {
+            document.querySelector('.workspaceList-grid').style.display = 'none';
+            document.querySelector('.workspaceList-list').style.display = '';
+
+            document.querySelector('.bi-grid').style.display = '';
+            document.querySelector('.bi-list-ul').style.display = 'none';
+        }
+    }
 
 
 </script>

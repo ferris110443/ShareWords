@@ -351,7 +351,6 @@ async function getWorkspaceMember() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        // console.log(data.data)
         showWorkspaceMemberList(data.data);
 
     } catch (error) {
