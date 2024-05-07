@@ -15,37 +15,6 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('edit-workspace-save-btn').addEventListener('click', updateWorkspaceInformation);
     document.getElementById('cancel-workspace-save-btn').addEventListener('click', toggleEdit);
 
-    // document.querySelectorAll('[id^=shareForm-]').forEach(form => {
-    //     form.addEventListener('submit', async (e) => {
-    //         e.preventDefault();
-    //         const formId = e.target.id;
-    //         const fileId = formId.split('-')[1];
-    //         const emailInput = document.querySelector(`#email-${fileId}`);
-    //
-    //         try {
-    //             const response = await fetch('/api/send-file', {
-    //                 method: 'POST',
-    //                 headers: {
-    //                     'Content-Type': 'application/json'
-    //                 },
-    //                 body: JSON.stringify({
-    //                     email: emailInput.value,
-    //                     fileId: fileId
-    //                 })
-    //             });
-    //
-    //             if (!response.ok) {
-    //                 throw new Error('Failed to send file');
-    //             }
-    //             const data = await response.json();
-    //             console.log('Success:', data);
-    //             $(`#shareFileModal-${fileId}`).modal('hide');
-    //         } catch (error) {
-    //             console.error('Error:', error);
-    //         }
-    //     });
-    // });
-
 
     renderWorkspaceFileList()
     renderWorkspaceInformation()
@@ -143,30 +112,7 @@ async function renderWorkspaceFileList() {
                         <p class="file-name-description">${file.fileDescription}</p>
                         <button aria-label="Edit File ${index}" class="edit-file-btn btn btn-primary " data-fileid="${file.fileId}">Edit</button>
                         <button aria-label="Delete File ${index}" class="delete-file-btn btn btn-danger" data-fileid="${file.fileId}">Delete</button>
-                        <button aria-label="Share File ${index}" class="share-file-btn btn " data-fileid="${file.fileId}" style="background: #6c757d">
-                            <img src="../../logo/send.png" alt="Share this file" width="24px" height="24px">
-                        </button>
-                        <div class="modal fade" id="shareFileModal-${file.fileId}" tabindex="-1" role="dialog" aria-labelledby="modalLabel-${file.fileId}" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="modalLabel-${file.fileId}">Share File</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form id="shareForm-${file.fileId}">
-                                            <div class="form-group">
-                                                <label for="email-${file.fileId}">Recipient's Email:</label>
-                                                <input type="email" class="form-control" id="email-${file.fileId}" required>
-                                            </div>
-                                            <button type="submit" class="btn btn-primary">Send</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <button aria-label="Share File ${index}" class="share-file-btn btn btn-secondary" data-fileid="${file.fileId}" >Share </button>
                     </div>
                     <div class="file-entry-edit" id="edit-file${index}" data-fileid="${file.fileId}" style="display: none">
                         <div class="file-name-title"><strong>New file name</strong></div>
@@ -175,6 +121,26 @@ async function renderWorkspaceFileList() {
                         <textarea class="file-name-description"></textarea>
                         <button aria-label="save File ${index}" class="edit-file-save-btn btn btn-success " data-fileid="${file.fileId}">Save</button>
                         <button aria-label="cancel File ${index}" class="delete-file-cancel-btn btn btn-danger" data-fileid="${file.fileId}">Cancel</button>
+                    </div>
+                    
+                    <div class="modal" id="shareFileModal-${file.fileId}" tabindex="-1" role="dialog" aria-labelledby="modalLabel-${file.fileId}" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalLabel-${file.fileId}">Share File</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="shareForm-${file.fileId}" data-fileid="${file.fileId}">
+                                        <div class="form-group">
+                                            <label for="email-${file.fileId}">Recipient's Email:</label>
+                                            <input type="email" class="form-control" id="email-${file.fileId}" required>
+                                        </div>
+                                        <button type="submit" id="sendMarkdownToUser" class="btn btn-primary">Send</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
                 `;
@@ -191,117 +157,163 @@ async function renderWorkspaceFileList() {
     attachEditButtonListeners()
 
 
-    function attachDeleteButtonListeners() {
+    document.querySelectorAll('.share-file-btn').forEach(button => {
+        button.addEventListener('click', function (event) {
+            console.log("share button clicked")
+            event.preventDefault();
+            event.stopPropagation();
+            const fileId = this.getAttribute('data-fileid');
+            const modalElement = document.getElementById(`shareFileModal-${fileId}`);
+            const bootstrapModal = new bootstrap.Modal(modalElement);
+            bootstrapModal.show();
+        });
+    });
 
-        const deleteButtons = document.querySelectorAll('.delete-file-btn');
-        deleteButtons.forEach(button => {
-            button.addEventListener('click', async function (event) {
-                event.preventDefault();
-                event.stopPropagation(); // prevent the event from bubbling up or it will trigger the parent click event and direct to coeditor page
-                console.log('delete button clicked')
-                const fileId = this.getAttribute('data-fileid');
-                const response = await fetch(`/api/1.0/workspace/file?fileId=${fileId}`, {
-                    method: 'DELETE',
+
+    document.querySelectorAll('[id^=shareForm-]').forEach(form => {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const fileId = form.getAttribute('data-fileid');
+            const emailInput = document.querySelector(`#email-${fileId}`);
+            console.log('fileId:', fileId, 'email:', emailInput.value)
+            try {
+                const response = await fetch('/api/1.0/mailService/markdown', {
+                    method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${accessToken}`
-                    }
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    alert('File deleted successfully');
-                    const fileEntry = button.closest('.file-entry');
-                    fileEntry.remove();
-                } else {
-                    alert('Failed to delete file: ' + data.error);
-                }
-            });
-        });
-    }
-
-    function attachEnterWorkspaceBtn() {
-        const fileEntries = document.querySelectorAll('.file-entry');
-        fileEntries.forEach(entry => {
-            entry.addEventListener('click', function (event) {
-                event.stopPropagation();
-                const fileId = entry.getAttribute('data-fileid');
-                const editUrl = `${coeditorURL}/coeditor.html?roomId=${workspaceName}&fileId=${fileId}`;
-                window.location.href = editUrl;
-
-            });
-        });
-    }
-
-
-    function attachEditButtonListeners() {
-        const editButtons = document.querySelectorAll('.edit-file-btn');
-        editButtons.forEach(button => {
-            button.addEventListener('click', function (event) {
-                event.preventDefault();
-                event.stopPropagation();
-                const fileId = this.getAttribute('data-fileid');
-                console.log('edit button clicked', fileId);
-                // Show the edit div for the specific file.
-                const editDiv = document.querySelector(`div[id^='edit-file'][data-fileid="${fileId}"]`);
-                if (editDiv) {
-                    editDiv.style.display = 'block';
-                }
-
-                // Hide the file entry div for the specific file.
-                const fileEntryDiv = document.querySelector(`div[id^='file'][data-fileid="${fileId}"]`);
-                if (fileEntryDiv) {
-                    fileEntryDiv.style.display = 'none';
-                }
-            });
-        });
-        const saveButtons = document.querySelectorAll('.edit-file-save-btn');
-        saveButtons.forEach(button => {
-            button.addEventListener('click', async function (event) {
-                event.preventDefault();
-                event.stopPropagation();
-                const fileId = this.getAttribute('data-fileid');
-                const editDiv = document.querySelector(`div[id^='edit-file'][data-fileid="${fileId}"]`);
-                const newName = editDiv.querySelector('input.file-name-title').value;
-                const newDescription = editDiv.querySelector('textarea.file-name-description').value;
-
-                const response = await fetch(`/api/1.0/markdown/markdownInfo`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${accessToken}`
+                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({fileTitle: newName, fileDescription: newDescription, fileId: fileId})
+                    body: JSON.stringify({
+                        recipientEmail: emailInput.value,
+                        fileId: fileId
+                    })
                 });
 
+                if (!response.ok) {
+                    throw new Error('Failed to send file');
+                }
                 const data = await response.json();
-                if (response.ok) {
-                    alert('File updated successfully');
-                    const fileEntryDiv = document.querySelector(`div[id^='file'][data-fileid="${fileId}"]`);
-                    fileEntryDiv.querySelector('.file-name-title strong').textContent = newName;
-                    fileEntryDiv.querySelector('.file-name-description').textContent = newDescription;
-                    editDiv.style.display = 'none';
-                    fileEntryDiv.style.display = 'block';
-                } else {
-                    alert('Failed to update file: ' + data.error);
+                console.log('Success:', data);
+                $(`#shareFileModal-${fileId}`).modal('hide');
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    });
+
+}
+
+
+function attachDeleteButtonListeners() {
+
+    const deleteButtons = document.querySelectorAll('.delete-file-btn');
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', async function (event) {
+            event.preventDefault();
+            event.stopPropagation(); // prevent the event from bubbling up or it will trigger the parent click event and direct to coeditor page
+            console.log('delete button clicked')
+            const fileId = this.getAttribute('data-fileid');
+            const response = await fetch(`/api/1.0/workspace/file?fileId=${fileId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
                 }
             });
+            const data = await response.json();
+            if (response.ok) {
+                alert('File deleted successfully');
+                const fileEntry = button.closest('.file-entry');
+                fileEntry.remove();
+            } else {
+                alert('Failed to delete file: ' + data.error);
+            }
         });
+    });
+}
 
-        const cancelButtons = document.querySelectorAll('.delete-file-cancel-btn');
-        cancelButtons.forEach(button => {
-            button.addEventListener('click', function (event) {
-                event.preventDefault();
-                event.stopPropagation();
-                const fileId = this.getAttribute('data-fileid');
-                const editDiv = document.querySelector(`div[id^='edit-file'][data-fileid="${fileId}"]`);
-                editDiv.style.display = 'none';
+function attachEnterWorkspaceBtn() {
+    const fileEntries = document.querySelectorAll('.file-entry');
+    fileEntries.forEach(entry => {
+        entry.addEventListener('click', function (event) {
+            event.stopPropagation();
+            const fileId = entry.getAttribute('data-fileid');
+            const editUrl = `${coeditorURL}/coeditor.html?roomId=${workspaceName}&fileId=${fileId}`;
+            window.location.href = editUrl;
 
-                const fileEntryDiv = document.querySelector(`div[id^='file'][data-fileid="${fileId}"]`);
-                fileEntryDiv.style.display = 'block';
+        });
+    });
+}
+
+
+function attachEditButtonListeners() {
+    const editButtons = document.querySelectorAll('.edit-file-btn');
+    editButtons.forEach(button => {
+        button.addEventListener('click', function (event) {
+            // event.preventDefault();
+            event.stopPropagation();
+            const fileId = this.getAttribute('data-fileid');
+            console.log('edit button clicked', fileId);
+            // Show the edit div for the specific file.
+            const editDiv = document.querySelector(`div[id^='edit-file'][data-fileid="${fileId}"]`);
+            if (editDiv) {
+                editDiv.style.display = 'block';
+            }
+
+            // Hide the file entry div for the specific file.
+            const fileEntryDiv = document.querySelector(`div[id^='file'][data-fileid="${fileId}"]`);
+            if (fileEntryDiv) {
+                fileEntryDiv.style.display = 'none';
+            }
+        });
+    });
+    const saveButtons = document.querySelectorAll('.edit-file-save-btn');
+    saveButtons.forEach(button => {
+        button.addEventListener('click', async function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            const fileId = this.getAttribute('data-fileid');
+            const editDiv = document.querySelector(`div[id^='edit-file'][data-fileid="${fileId}"]`);
+            const newName = editDiv.querySelector('input.file-name-title').value;
+            const newDescription = editDiv.querySelector('textarea.file-name-description').value;
+
+            const response = await fetch(`/api/1.0/markdown/markdownInfo`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
+                },
+                body: JSON.stringify({fileTitle: newName, fileDescription: newDescription, fileId: fileId})
             });
-        });
 
-    }
+            const data = await response.json();
+            if (response.ok) {
+                alert('File updated successfully');
+                const fileEntryDiv = document.querySelector(`div[id^='file'][data-fileid="${fileId}"]`);
+                fileEntryDiv.querySelector('.file-name-title strong').textContent = newName;
+                fileEntryDiv.querySelector('.file-name-description').textContent = newDescription;
+                editDiv.style.display = 'none';
+                fileEntryDiv.style.display = 'block';
+            } else {
+                alert('Failed to update file: ' + data.error);
+            }
+        });
+    });
+
+    const cancelButtons = document.querySelectorAll('.delete-file-cancel-btn');
+    cancelButtons.forEach(button => {
+        button.addEventListener('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            const fileId = this.getAttribute('data-fileid');
+            const editDiv = document.querySelector(`div[id^='edit-file'][data-fileid="${fileId}"]`);
+            editDiv.style.display = 'none';
+
+            const fileEntryDiv = document.querySelector(`div[id^='file'][data-fileid="${fileId}"]`);
+            fileEntryDiv.style.display = 'block';
+        });
+    });
+
 }
 
 async function renderWorkspaceInformation() {

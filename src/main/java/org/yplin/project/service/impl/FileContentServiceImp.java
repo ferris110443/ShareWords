@@ -151,45 +151,6 @@ public class FileContentServiceImp implements FileContentService {
         fileContentRepository.deleteByFileId(fileId);
     }
 
-//    @Override
-//    public String saveUserImage(MultipartFile file, long userId) throws IOException {
-//
-//        String prefix = String.valueOf(userId);
-//        System.out.println("staticFolderPath : " + staticFolderPath);
-////        final String userPictureDirectory = staticFolderPath + "userPicture/";
-//        final String userPictureDirectory = staticFolderPath + "userPicture\\";
-//
-//        if (file.isEmpty()) {
-//            throw new IllegalStateException("Cannot save empty file.");
-//        }
-//        Path directoryPath = Paths.get(userPictureDirectory);
-//        logger.info(String.valueOf(directoryPath));
-//        if (!Files.exists(directoryPath)) {
-//            Files.createDirectories(directoryPath);
-//            logger.error("can't not find the directory");
-//        }
-//
-//        String originalFileName = file.getOriginalFilename();
-//        String baseName = originalFileName.substring(0, originalFileName.lastIndexOf('.'));
-//        String extension = originalFileName.substring(originalFileName.lastIndexOf('.'));
-//
-//        String fileName = prefix + "_" + baseName + extension;
-//        String fileURL = scheme + "://" + domain + "/userPicture/" + fileName;
-//        userRepository.updateUserImageURL(fileURL, userId);
-//        logger.info("fileURL : " + fileURL);
-//
-//
-//        Path targetLocation = directoryPath.resolve(fileName);
-//        logger.info("Target location: " + targetLocation);
-//
-//        // Save the file
-//        file.transferTo(targetLocation.toFile());
-//
-//
-//        // Return the path or URL to access the file
-//        return targetLocation.toString();
-//    }
-//
 
     @Override
     public String saveUserImage(MultipartFile file, long userId) throws IOException {

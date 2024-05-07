@@ -120,6 +120,11 @@
             <artifactId>unirest-java</artifactId>
             <version>3.14.5</version>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>3.1.6</version>
+        </dependency>
 
 
     </dependencies>
