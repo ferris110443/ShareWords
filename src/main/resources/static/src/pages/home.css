@@ -6,41 +6,38 @@ body {
     line-height: 1.6;
 }
 
-.mid-workspace {
-    flex: 3;
+.user-information {
+    display: flex;
+    flex-direction: row;
     margin: 20px;
-    width: 100%;
 }
 
-
-.user-workspace-container {
-    flex: 6;
-    margin: 20px;
-    width: 100%;
-}
 
 #workspace-container {
+    margin-left: 120px;
     width: 100%;
 }
 
 #workspace-mid-user-container {
     display: flex;
-    flex-direction: row;
-    width: 100%; /* Ensure the container uses full width */
-    margin: 0; /* Remove any default margin if present */
-    padding: 0; /* Remove any default padding if present */
+    flex-direction: column;
+    width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 #user-information-detail {
+    display: flex;
+    flex-direction: column;
     background-color: #343a40;
     padding: 20px;
     border-radius: 24px;
     margin: 10px 20px 10px 20px;
     box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
-    height: 85vh;
+
 }
 
-#user-information-detail > .user-detail {
+.user-detail {
     color: white;
 }
 
@@ -68,30 +65,48 @@ body {
     margin: 5px;
 }
 
+.user-workspaceList-head-container {
+    width: 600px;
+}
 
-#workspaceList {
+.workspace-workspaceList-head-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.create-workspace {
+    margin: 0 auto 0 0;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+
+}
+
+
+.workspaceList {
     background-color: #343a40;
+
+    margin: 20px;
+    padding: 15px;
+
+}
+
+.workspaceList-grid {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
-    margin: 20px;
-    padding: 15px;
-    height: 40vh;
     overflow-y: auto;
     box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
     border-radius: 24px;
 }
 
+
 .workspace-entry {
-    width: 45%;
-    height: 20vh
+    width: 25%;
+    height: 30vh
 }
 
-
-.user-workspaceList-head-container {
-    display: flex;
-    justify-content: space-between;
-}
 
 .workspace-entry {
     background-color: #F4F4F2;
@@ -132,13 +147,13 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 10px;
 
 }
 
 #user-picture {
-    width: 300px;
-    height: 300px;
+    width: 150px;
+    height: 150px;
     border-radius: 20%;
     margin-right: 20px;
     border: 1px solid #ccc;
@@ -154,6 +169,17 @@ body {
 .workspace-description {
     font-size: 0.8rem;
     word-break: break-all;
+}
+
+.filter-container {
+    margin: 20px;
+}
+
+#workspaceFilter, #ownershipFilter {
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 

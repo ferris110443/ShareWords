@@ -8,6 +8,7 @@ body {
 .user-friends-zone, .user-search-zone {
     padding: 20px;
     width: 100%;
+    margin-left: 120px;
 }
 
 #userList {

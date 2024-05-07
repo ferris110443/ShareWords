@@ -17,18 +17,12 @@
 <div class="container">
     <div id="user-sidebar-placeholder"></div>
     <div id="workspace-container">
-        <!--        <header>-->
-        <!--            <div> Welcome to ShareWords</div>-->
-        <!--        </header>-->
         <div id="workspace-mid-user-container">
-            <div class="mid-workspace ">
+            <div class="user-information "> <!--mid-workspace-->
                 <div class="user-workspaceList-head-container">
                     <h2>User Information</h2>
+                    <div id="user-information-detail"></div>
                 </div>
-                <div id="user-information-detail">
-                </div>
-            </div>
-            <div class="user-workspace-container">
                 <div class=" create-workspace">
                     <h2 class="create-workspace-title">Create New Workspace</h2>
                     <div class="create-workspace-form">
@@ -56,14 +50,29 @@
                         </form>
                     </div>
                 </div>
+            </div>
+            <div class="user-workspace-container">
+
                 <div class="user-workspaceList">
-                    <div class="user-workspaceList-head-container">
+                    <div class="workspace-workspaceList-head-container">
                         <h2>My Workspace</h2>
-                        <!--                <button class="btn btn-success " id="create-new-workspace" onclick="redirectToPage()">Create New-->
-                        <!--                    workspace-->
-                        <!--                </button>-->
+                        <div class="filter-container">
+
+                            <select id="ownershipFilter" onchange="filterWorkspaces()">
+                                <option value="all">All Workspaces</option>
+                                <option value="mine">My Workspaces</option>
+                                <option value="others">Other Workspaces</option>
+                            </select>
+                            <input id="workspaceFilter" oninput="filterWorkspaces()" placeholder="Filter workspaces..."
+                                   type="text">
+                            <!--                            <div>-->
+                            <!--                                <button onclick="toggleView('workspaceList-list')">List View</button>-->
+                            <!--                                <button onclick="toggleView('workspaceList-grid')">Grid View</button>-->
+                            <!--                            </div>-->
+                        </div>
+
                     </div>
-                    <div id="workspaceList">
+                    <div class="workspaceList workspaceList-grid" id="workspaceList">
                     </div>
                 </div>
             </div>
@@ -71,9 +80,8 @@
 
 
     </div>
-
 </div>
-
+<!--modal for invitation-->
 <div class="modal" id="friendRequestModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -105,6 +113,48 @@
 <script src="/src/components/asideWorkspace.js"></script>
 <script src="/src/pages/socketIO.js"></script>
 <script src="/src/pages/home.js"></script>
+<script !src="">
+    function filterWorkspaces() {
+        let textFilter = document.getElementById('workspaceFilter').value.toLowerCase();
+        let ownershipFilter = document.getElementById('ownershipFilter').value;
+        let currentUserEmail = document.getElementById('user-info-email').textContent.toLowerCase()
+
+
+        let workspaceEntries = document.querySelectorAll('.workspace-entry');
+        workspaceEntries.forEach(entry => {
+            let workspaceName = entry.querySelector('.workspace-name').textContent.toLowerCase();
+            let workspaceDescription = entry.querySelector('.workspace-description').textContent.toLowerCase();
+            let workspaceOwner = entry.querySelector('.workspace-owner').textContent.toLowerCase().substring(18);
+            console.log("currentUserEmail : " + currentUserEmail)
+            console.log("workspaceOwner : " + workspaceOwner)
+            let textMatch = workspaceName.includes(textFilter) || workspaceDescription.includes(textFilter) || workspaceOwner.includes(textFilter);
+
+            let ownershipMatch = (ownershipFilter === "all") ||
+                (ownershipFilter === "mine" && workspaceOwner === currentUserEmail) ||
+                (ownershipFilter === "others" && workspaceOwner !== currentUserEmail);
+
+            if (textMatch && ownershipMatch) {
+                entry.style.display = '';
+            } else {
+                entry.style.display = 'none';
+            }
+        });
+    }
+
+
+    // function toggleView(viewType) {
+    //     const workspaceList = document.getElementById('workspaceList');
+    //     if (viewType === 'workspaceList-list') {
+    //         workspaceList.classList.add('workspaceList-list');
+    //         workspaceList.classList.remove('workspaceList-grid');
+    //     } else {
+    //         workspaceList.classList.add('workspaceList-grid');
+    //         workspaceList.classList.remove('workspaceList-list');
+    //     }
+    // }
+
+
+</script>
 
 </body>
 </html>

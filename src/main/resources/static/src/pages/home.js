@@ -62,6 +62,7 @@ async function renderUserWorkspaceList() {
                         <div class="workspace-name-description-container">
                             <div class="workspace-name">Workspace Name: ${workspace.workspace_name}</div>
                             <div class="workspace-description">Workspace Description: ${workspace.workspace_description}</div>
+                            <div class="workspace-owner">Workspace Owner : ${workspace.workspace_owner}</div>
                         </div>
                         <div class="workspace-name-description-btn-container">
                             <button class="btn " onclick="deleteWorkspaceFromUserWorkspace('${workspace.workspace_name}', event)"><img src="../../logo/remove.png"  style="width: 36px; height: 36px;""></button>
@@ -69,7 +70,7 @@ async function renderUserWorkspaceList() {
                     </div>
                 `;
         });
-        $('#workspaceList').html(userWorkspaceHTML);
+        $('.workspaceList').html(userWorkspaceHTML);
     } catch (error) {
         console.error('Error fetching user workspaces:', error);
     }
@@ -129,9 +130,12 @@ async function fetchUserInformation() {
                 <img src="${data.picture}" id="user-picture" alt="User Picture" >
                 <input type="file" id="fileInput" name="file" style="display: none;" onchange="uploadFile()">
             </div>
-            <div class="user-detail"><strong>Name : </strong> ${data.name}</div>
-            <div class="user-detail"><strong>Email : </strong> ${data.email}</div>
-            <div class="user-detail"><strong>Account Created : </strong> ${date} </div>
+            <div id="user-detail-container">
+                <div class="user-detail">Name : <span id="user-info-name">${data.name}</span></div>
+                <div class="user-detail">Email : <span id="user-info-email">${data.email}</span></div>
+                <div class="user-detail">Account Created : ${date} </div>
+            </div>
+
 
         `;
 

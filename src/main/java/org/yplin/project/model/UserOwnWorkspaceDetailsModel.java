@@ -22,7 +22,7 @@ public class UserOwnWorkspaceDetailsModel {
     @Column(name = "workspace_id")
     @JsonProperty("workspace_id")
     private Long workspaceId;
-    
+
     @Column(name = "user_id")
     @JsonProperty("user_id")
     private Long userId;
@@ -39,4 +39,9 @@ public class UserOwnWorkspaceDetailsModel {
     @Column(name = "email")
     @JsonProperty("email")
     private String email;
+
+
+    @Column(name = "workspace_owner")
+    @JsonProperty("workspace_owner")
+    private String workspaceOwner;
 }
