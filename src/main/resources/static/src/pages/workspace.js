@@ -108,11 +108,24 @@ async function renderWorkspaceFileList() {
         data.data.forEach((file, index) => {
             html += `
                     <div class="file-entry" id="file${index}" data-fileid="${file.fileId}">
-                        <p class="file-name-title"><strong>${file.fileTitle}</strong></p>
+                        <div class="file-name-title">
+                            <strong>${file.fileTitle}</strong>
+                            <div class="dropdown">
+                                <div class="toggle-dropdown-btn" onclick="toggleDropdown(event)">
+                                    <svg class="bi bi-three-dots-vertical" fill="black" height="32" viewBox="0 0 16 16"
+                                         width="32" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                                    </svg>
+                                </div>
+                                <div class="dropdown-menu" style="display: none;">
+                                    <button aria-label="Edit File ${index}" class="edit-file-btn btn  " data-fileid="${file.fileId}">Edit</button>
+                                    <button aria-label="Delete File ${index}" class="delete-file-btn btn " data-fileid="${file.fileId}">Delete</button>
+                                    <button aria-label="Share File ${index}" class="share-file-btn btn " data-fileid="${file.fileId}" >Share </button>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
                         <p class="file-name-description">${file.fileDescription}</p>
-                        <button aria-label="Edit File ${index}" class="edit-file-btn btn btn-primary " data-fileid="${file.fileId}">Edit</button>
-                        <button aria-label="Delete File ${index}" class="delete-file-btn btn btn-danger" data-fileid="${file.fileId}">Delete</button>
-                        <button aria-label="Share File ${index}" class="share-file-btn btn btn-secondary" data-fileid="${file.fileId}" >Share </button>
                     </div>
                     <div class="file-entry-edit" id="edit-file${index}" data-fileid="${file.fileId}" style="display: none">
                         <div class="file-name-title"><strong>New file name</strong></div>
@@ -257,7 +270,7 @@ function attachEditButtonListeners() {
             // Show the edit div for the specific file.
             const editDiv = document.querySelector(`div[id^='edit-file'][data-fileid="${fileId}"]`);
             if (editDiv) {
-                editDiv.style.display = 'block';
+                editDiv.style.display = '';
             }
 
             // Hide the file entry div for the specific file.
@@ -293,7 +306,7 @@ function attachEditButtonListeners() {
                 fileEntryDiv.querySelector('.file-name-title strong').textContent = newName;
                 fileEntryDiv.querySelector('.file-name-description').textContent = newDescription;
                 editDiv.style.display = 'none';
-                fileEntryDiv.style.display = 'block';
+                fileEntryDiv.style.display = '';
             } else {
                 alert('Failed to update file: ' + data.error);
             }
@@ -310,7 +323,7 @@ function attachEditButtonListeners() {
             editDiv.style.display = 'none';
 
             const fileEntryDiv = document.querySelector(`div[id^='file'][data-fileid="${fileId}"]`);
-            fileEntryDiv.style.display = 'block';
+            fileEntryDiv.style.display = '';
         });
     });
 
@@ -428,11 +441,11 @@ function toggleEdit() {
     editWorkspaceNameText.value = "";
     editWorkspaceDescriptionText.value = "";
     if (infoDiv.style.display === 'none') {
-        infoDiv.style.display = 'block';
+        infoDiv.style.display = '';
         formDiv.style.display = 'none';
     } else {
         infoDiv.style.display = 'none';
-        formDiv.style.display = 'block';
+        formDiv.style.display = '';
     }
 }
 

@@ -63,6 +63,7 @@ async function renderUserWorkspaceList() {
                         <div class="workspace-name-description-container">
                             <div>
                                 <div class="workspace-name">${workspace.workspace_name}</div>
+                                <hr>
                                 <div class="workspace-description">${workspace.workspace_description}</div>
                             </div>
                             <div class="workspace-owner">Workspace Owner : ${workspace.workspace_owner}</div>
