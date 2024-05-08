@@ -337,245 +337,6 @@ async function renderWorkspaceInformation() {
     document.getElementById('workspace-creation-date').textContent = workspaceInformation.workspaceCreatedAt.substring(0, 10);
 }
 
-async function getWorkspaceMember() {
-    try {
-        const response = await fetch(`/api/1.0/workspace/workspaceMembers?workspaceName=${roomId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        showWorkspaceMemberList(data.data);
-
-    } catch (error) {
-        console.error('Failed to update user:', error);
-    }
-}
-
-async function getUserFriendsForAddingMembers() {
-    try {
-        // Fetch the current members of the workspace
-        const membersResponse = await fetch(`/api/1.0/workspace/workspaceMembers?workspaceName=${roomId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
-            },
-        });
-        const membersData = await membersResponse.json();
-        const currentMemberIds = new Set(membersData.data.map(member => member.userId));
-
-        // Fetch user friends
-        const friendsResponse = await fetch(`/api/1.0/user/friendsRelationShip`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
-            },
-        });
-
-        if (!friendsResponse.ok) {
-            throw new Error(`HTTP error! status: ${friendsResponse.status}`);
-        }
-
-        const friendsData = await friendsResponse.json();
-        const userFriendsInformation = friendsData.data;
-        const userId = friendsData.userId; // current user id
-        // using current Id to get the friends of the user
-        userFriendsInformation.forEach(item => {
-            if ((userId === item.userId && item.status === 'accepted' && !currentMemberIds.has(item.friendId)) ||
-                (userId === item.friendId && item.status === 'accepted' && !currentMemberIds.has(item.userId))) {
-                const friendDiv = document.createElement('div');
-                friendDiv.classList.add('friend');
-                const friendName = userId === item.userId ? item.friendName : item.userName;
-                const friendEmail = userId === item.userId ? item.friendEmail : item.userEmail;
-                const friendId = userId === item.userId ? item.friendId : item.userId;
-                const friendImageUrl = userId === item.userId ? item.friendImageUrl : item.userImageUrl;
-                friendDiv.innerHTML = `
-                    
-                    <div class="workspace-member-info">
-                        <img class="workspace-member-img" src="${friendImageUrl}" alt="User Image" width="50px" height="50px">
-                        <div class="member-info">
-                            <div class ="friend-name">User Name : ${friendName}</div>
-                            <div class ="friend-email">User Email : ${friendEmail}</div>
-                        </div>
-                    </div>
-                    <button class="add-member-btn btn ">
-                        <img class="add-member-btn-img" src="/logo/plus.png" alt="plus Friend">
-                    </button>`;
-                const addButton = friendDiv.querySelector('.add-member-btn');
-
-                addButton.addEventListener('click', function () {
-                    friendDiv.remove()
-                    addFriendsToWorkspace(friendId)
-                    moveMemberToWorkspaceList({
-                        userId: friendId,
-                        name: friendName,
-                        email: friendEmail,
-                        friendImageUrl: friendImageUrl
-                    });
-                });
-                document.getElementById('add-friend-member').appendChild(friendDiv);
-            }
-        });
-
-    } catch (error) {
-        console.error('Failed to fetch data:', error);
-    }
-}
-
-async function addFriendsToWorkspace(userId) {
-    try {
-        const response = await fetch('/api/1.0/workspace/workspaceMembers', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
-            },
-            body: JSON.stringify({
-                userId: userId,
-                workspaceName: roomId
-            })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            alert('Failed to add user to workspace: ' + data.error);
-        } else {
-            alert('User added to workspace successfully.');
-            // window.location.reload();
-        }
-
-
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Failed to add user to workspace.');
-    }
-}
-
-async function removeMemberFromWorkspace(member) {
-    try {
-        const response = await fetch(`/api/1.0/workspace/workspaceMembers`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
-            },
-            body: JSON.stringify({
-                userId: member.userId,
-                workspaceName: roomId
-            })
-        });
-        const data = await response.json();
-        if (!response.ok) {
-            throw new Error(data.error);
-        }
-        // If the remove was successful, update the UI
-        moveMemberToAddList(member);
-    } catch (error) {
-        console.error('Error:', error);
-    }
-}
-
-
-function showWorkspaceMemberList(members) {
-    const userListDiv = document.getElementById('userList');
-    userListDiv.innerHTML = '';
-
-    members.forEach(member => {
-
-        const memberDiv = document.createElement('div');
-        memberDiv.classList.add('member');
-        memberDiv.innerHTML = `
-            <div class="workspace-member-info">
-                <img class="workspace-member-img" src=${member.userImageUrl} alt="User Image" width="50px" height="50px">
-                <div class="member-info">
-                    <div class="workspace-member-name">User Name : ${member.name}</div>
-                    <div class="workspace-member-email">User Email : ${member.email}</div>
-                </div>
-            </div>
-            <button class="remove-member-btn btn " data-memberid="${member.userId}">
-                <img class="remove-member-btn-img" src="/logo/remove.png" alt="Remove Friend">
-            </button>
-            `;
-        userListDiv.appendChild(memberDiv);
-
-        const removeBtn = memberDiv.querySelector('.remove-member-btn');
-        removeBtn.addEventListener('click', function () {
-            memberDiv.remove()
-            removeMemberFromWorkspace(member);
-            console.log("removeMemberFromWorkspace " + member.friendImageUrl)
-        });
-
-
-    });
-}
-
-
-function moveMemberToAddList(member) {
-    const addListDiv = document.getElementById('add-friend-member');
-    const memberDiv = document.createElement('div');
-    console.log("moveMemberToAddList" + member.friendImageUrl)
-    memberDiv.classList.add('friend');
-    memberDiv.innerHTML = `
-        <div class="workspace-member-info">
-            <img class="workspace-member-img" src=${member.friendImageUrl} alt="User Image" width="50px" height="50px">
-            <div class="member-info">
-                <div class="workspace-member-name">User Name : ${member.name}</div>
-                <div class="workspace-member-email">User Email : ${member.email}</div>
-            </div>
-        </div>
-        <button class="add-member-btn btn ">
-            <img class="add-member-btn-img" src="/logo/plus.png" alt="plus Friend">
-        </button>
-    `;
-    // Add the event listener to the new button
-    const addButton = memberDiv.querySelector('.add-member-btn');
-    addButton.addEventListener('click', function () {
-        memberDiv.remove();
-        addFriendsToWorkspace(member.userId);
-    });
-
-    // Append the new div to the add list
-    addListDiv.appendChild(memberDiv);
-}
-
-function moveMemberToWorkspaceList(member) {
-    const workspaceListDiv = document.getElementById('userList');
-    const memberDiv = document.createElement('div');
-
-    memberDiv.classList.add('member');
-    memberDiv.innerHTML = `
-        <div class="workspace-member-info">
-            <img class="workspace-member-img" src=${member.friendImageUrl} alt="User Image" width="50px" height="50px">
-            <div class="member-info">
-                <div class="workspace-member-name">User Name : ${member.name}</div>
-                <div class="workspace-member-email">User Email : ${member.email}</div>
-            </div>
-        </div>
-
-        <button class="remove-member-btn btn" data-memberid="${member.userId}">
-            <img class="remove-member-btn-img" src="/logo/remove.png" alt="Remove Friend">
-        </button>
-    `;
-    // Add the event listener to the new remove button
-    const removeButton = memberDiv.querySelector('.remove-member-btn');
-    removeButton.addEventListener('click', function () {
-        memberDiv.remove(); // remove from UI
-        removeMemberFromWorkspace(member); // update in DB
-
-        console.log("remove member from workspace member image " + member.friendImageUrl)
-    });
-    // Append the new div to the workspace members list
-    workspaceListDiv.appendChild(memberDiv);
-}
 
 function uuidv4() {
     return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
@@ -675,3 +436,296 @@ function toggleEdit() {
     }
 }
 
+
+// ================= friend list =================
+
+async function getWorkspaceMember() {
+    try {
+        const response = await fetch(`/api/1.0/workspace/workspaceMembers?workspaceName=${roomId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        const members = data.data;
+        showWorkspaceMemberList(members);
+
+    } catch (error) {
+        console.error('Failed to update user:', error);
+    }
+}
+
+function showWorkspaceMemberList(members) {
+    const userListDiv = document.getElementById('userList');
+    userListDiv.innerHTML = '';
+    members.forEach(member => {
+        const memberDiv = createMemberDiv(member, true);
+        userListDiv.appendChild(memberDiv);
+
+        const removeBtn = memberDiv.querySelector('.remove-member-btn');
+        addRemoveMemberListener(removeBtn, memberDiv, 'remove');
+        // removeBtn.addEventListener('click', function () {
+        //     memberDiv.remove()
+        //     const userId = this.closest('.member').querySelector('.workspace-member-img').getAttribute('data-user-id');
+        //     console.log("userId:" + userId)
+        //     removeMemberFromWorkspace(userId, memberDiv);
+        //
+        //
+        // });
+    });
+}
+
+function createMemberDiv(member, isWorkspaceMember = true) {
+    const memberDiv = document.createElement('div');
+    memberDiv.classList.add(isWorkspaceMember ? 'member' : 'member');
+    memberDiv.innerHTML = `
+        <div class="workspace-member-info">
+            <img class="workspace-member-img" data-user-id = ${member.userId} src=${member.userImageUrl} alt="User Image" width="50px" height="50px">
+            <div class="member-info">
+                <div class="workspace-member-name">User Name : ${member.name}</div>
+                <div class="workspace-member-email">User Email : ${member.email}</div>
+            </div>
+        </div>
+        <button class="${isWorkspaceMember ? 'remove-member-btn' : 'add-member-btn'} btn">
+            <img class="${isWorkspaceMember ? 'remove-member-btn-img' : 'add-member-btn-img'}" src="/logo/${isWorkspaceMember ? 'remove.png' : 'plus.png'}" alt="${isWorkspaceMember ? 'Remove Friend' : 'Add Friend'}">
+        </button>
+    `;
+    return memberDiv;
+}
+
+
+function createMemberDivForAddFriend(friendName, friendEmail, friendId, friendImageUrl, isWorkspaceMember = false) {
+    const memberDiv = document.createElement('div');
+    memberDiv.classList.add(isWorkspaceMember ? 'member' : 'member');
+    memberDiv.innerHTML = `
+        <div class="workspace-member-info">
+            <img class="workspace-member-img" data-user-id = ${friendId} src=${friendImageUrl} alt="User Image" width="50px" height="50px">
+            <div class="member-info">
+                <div class="workspace-member-name">User Name : ${friendName}</div>
+                <div class="workspace-member-email">User Email : ${friendEmail}</div>
+            </div>
+        </div>
+        <button class="${isWorkspaceMember ? 'remove-member-btn' : 'add-member-btn'} btn">
+            <img class="${isWorkspaceMember ? 'remove-member-btn-img' : 'add-member-btn-img'}" src="/logo/${isWorkspaceMember ? 'remove.png' : 'plus.png'}" alt="${isWorkspaceMember ? 'Remove Friend' : 'Add Friend'}">
+        </button>
+    `;
+    return memberDiv;
+}
+
+
+async function getUserFriendsForAddingMembers() {
+    try {
+        // Fetch current workspace members
+        const membersResponse = await fetch(`/api/1.0/workspace/workspaceMembers?workspaceName=${roomId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            },
+        });
+
+        if (!membersResponse.ok) {
+            throw new Error(`HTTP error! status: ${membersResponse.status}`);
+        }
+        const membersData = await membersResponse.json();
+        const currentMemberIds = new Set(membersData.data.map(member => member.userId));
+
+        // Fetch user friends
+        const friendsResponse = await fetch(`/api/1.0/user/friendsRelationShip`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            },
+        });
+
+        if (!friendsResponse.ok) {
+            throw new Error(`HTTP error! status: ${friendsResponse.status}`);
+        }
+
+        const friendsData = await friendsResponse.json();
+        const userFriendsInformation = friendsData.data;
+        const userId = friendsData.userId; // current user id
+        const memberDivContainer = document.getElementById('add-friend-member');
+        memberDivContainer.innerHTML = ''; // Clear the container once
+
+        // Filter and display friends not in the current workspace
+        userFriendsInformation.forEach(item => {
+            const friendStatusAccepted = item.status === 'accepted';
+            const isCurrentUser = userId === item.userId;
+            const friendId = isCurrentUser ? item.friendId : item.userId;
+
+            if (friendStatusAccepted && !currentMemberIds.has(friendId)) {
+                const friendName = isCurrentUser ? item.friendName : item.userName;
+                const friendEmail = isCurrentUser ? item.friendEmail : item.userEmail;
+                const friendImageUrl = isCurrentUser ? item.friendImageUrl : item.userImageUrl;
+
+                const memberDiv = createMemberDivForAddFriend(friendName, friendEmail, friendId, friendImageUrl, false);
+                memberDivContainer.appendChild(memberDiv);
+
+                const addBtn = memberDiv.querySelector('.add-member-btn');
+                addRemoveMemberListener(addBtn, memberDiv, 'add');
+                // addBtn.addEventListener('click', function () {
+                //     const userId = this.closest('.member').querySelector('.workspace-member-img').getAttribute('data-user-id');
+                //     console.log("userId:" + userId, memberDiv)
+                //     addFriendsToWorkspace(userId, memberDiv);
+                //     memberDiv.remove();
+                //
+                // });
+            }
+        });
+
+    } catch (error) {
+        console.error('Failed to fetch data:', error);
+    }
+}
+
+
+async function addFriendsToWorkspace(userId, memberDiv) {
+    try {
+        console.log(userId, memberDiv)
+        const response = await fetch('/api/1.0/workspace/workspaceMembers', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            },
+            body: JSON.stringify({
+                userId: userId,
+                workspaceName: roomId
+            })
+        });
+
+        const data = await response.json();
+        console.log(response.status, data)
+        if (!response.ok) {
+            alert.log('Failed to add user to workspace: ' + data.error);
+        } else {
+            alert('User added to workspace successfully.');
+            // window.location.reload();
+        }
+        moveMemberToWorkspaceList(memberDiv);
+
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to add user to workspace.');
+    }
+}
+
+async function removeMemberFromWorkspace(userId, memberDiv) {
+    try {
+        const response = await fetch(`/api/1.0/workspace/workspaceMembers`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            },
+            body: JSON.stringify({
+                userId: userId,
+                workspaceName: roomId
+            })
+        });
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.error);
+        }
+
+        moveMemberToAddList(memberDiv);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+
+function moveMemberToAddList(memberDiv) {
+    const addListDiv = document.getElementById('add-friend-member');
+    const addButton = memberDiv.querySelector('.remove-member-btn');
+
+    // Update classes and attributes
+    memberDiv.classList.add('member');
+    addButton.classList.add('add-member-btn');
+    addButton.classList.remove('remove-member-btn');
+    const addButtonImage = addButton.querySelector('img');
+    addButtonImage.src = '/logo/plus.png';
+    addButtonImage.alt = 'Add Friend';
+    addButtonImage.classList.add('add-member-btn-img');
+    addButtonImage.classList.remove('remove-member-btn-img');
+    const userId = memberDiv.querySelector('.workspace-member-img').getAttribute('data-user-id');
+
+    const addBtn = memberDiv.querySelector('.add-member-btn');
+    addRemoveMemberListener(addBtn, memberDiv, 'add');
+
+    console.log("userId:" + userId, memberDiv)
+    addListDiv.appendChild(memberDiv);
+}
+
+function moveMemberToWorkspaceList(memberDiv) {
+    const workspaceListDiv = document.getElementById('userList');
+    memberDiv.classList.add('member');
+
+    // Find the button within the memberDiv and update its classes
+    const addButton = memberDiv.querySelector('.add-member-btn');
+    if (addButton) {
+        addButton.classList.add('remove-member-btn');
+        addButton.classList.remove('add-member-btn');
+    }
+
+    // Find the image within the button and update its attributes
+    const addButtonImg = memberDiv.querySelector('.add-member-btn-img');
+    if (addButtonImg) {
+        addButtonImg.src = '/logo/remove.png';
+        addButtonImg.alt = 'Remove Friend';
+        addButtonImg.classList.add('remove-member-btn-img');
+        addButtonImg.classList.remove('add-member-btn-img');
+    }
+
+    // Append the modified memberDiv to the workspace list
+    workspaceListDiv.appendChild(memberDiv);
+
+    // Attach event listener directly to the remove button in the modified memberDiv
+    const removeButton = memberDiv.querySelector('.remove-member-btn');
+    if (removeButton) {
+        // removeButton.addEventListener('click', function () {
+        //     const userId = this.closest('.member').querySelector('.workspace-member-img').getAttribute('data-user-id');
+        //     removeMemberFromWorkspace(userId, memberDiv);
+        //     memberDiv.remove();
+        // });
+        addRemoveMemberListener(removeButton, memberDiv, 'remove');
+    }
+}
+
+
+function addRemoveMemberListener(button, memberDiv, action) {
+    const userId = memberDiv.querySelector('.workspace-member-img').getAttribute('data-user-id');
+
+    // Removing any existing event listeners
+    button.removeEventListener('click', handleRemoveMemberClick);
+    button.removeEventListener('click', handleAddMemberClick);
+
+    // Adding the appropriate event listener
+    if (action === 'add') {
+        button.addEventListener('click', handleAddMemberClick);
+    } else if (action === 'remove') {
+        button.addEventListener('click', handleRemoveMemberClick);
+    }
+}
+
+function handleAddMemberClick() {
+    const memberDiv = this.closest('.member');
+    const userId = memberDiv.querySelector('.workspace-member-img').getAttribute('data-user-id');
+    addFriendsToWorkspace(userId, memberDiv);
+    memberDiv.remove();
+}
+
+function handleRemoveMemberClick() {
+    const memberDiv = this.closest('.member');
+    const userId = memberDiv.querySelector('.workspace-member-img').getAttribute('data-user-id');
+    removeMemberFromWorkspace(userId, memberDiv);
+    memberDiv.remove();
+}
