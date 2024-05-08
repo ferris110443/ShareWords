@@ -23,9 +23,10 @@ public class MGSendingEmailConfig {
         System.out.println("filePath: " + filePath);
         HttpResponse<JsonNode> request = Unirest.post("https://api.mailgun.net/v3/" + YOUR_DOMAIN_NAME + "/messages")
                 .basicAuth("api", API_KEY)
-                .queryString("from", "ShareWords <ferris110443@" + YOUR_DOMAIN_NAME + ">")
+                .queryString("from", "ferris110443@gmail.com")
+//                .queryString("from", "ferris110443@gmail.com<ferris110443@" + YOUR_DOMAIN_NAME + ">")
+//                .queryString("from", email + "<ferris110443@hotmail.com.tw>")
                 .queryString("to", email)
-                .queryString("subject", "[ShareWords] : New Files Shared With You " + fileName)
                 .queryString("text", "testing")
                 .field("subject", "[ShareWords] : New Files Shared With You " + fileName)
                 .field("template", "sharewords")
