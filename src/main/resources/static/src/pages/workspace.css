@@ -386,3 +386,25 @@ textarea {
     font-weight: bolder;
 }
 
+#mid-right-workspace-container {
+    display: flex;
+    flex-direction: row;
+}
+
+@media (max-width: 992px) {
+
+    #mid-right-workspace-container {
+        display: flex;
+        flex-direction: column;
+        width: 90%;
+    }
+
+    .mid-workspace {
+        width: 90%;
+    }
+
+    .right-workspace {
+        margin-left: 120px;
+        width: 90%;
+    }
+}

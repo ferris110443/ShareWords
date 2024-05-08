@@ -81,6 +81,11 @@ body {
     align-content: center;
 }
 
+#user-friends-search-zone-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
 
 .friend-item div div:nth-child(2) {
     font-style: italic;
@@ -118,6 +123,12 @@ body {
     .user-item .btn {
         margin-bottom: 5px;
         font-size: 0.8rem;
+    }
+
+    #user-friends-search-zone-container {
+        display: flex;
+        flex-direction: column;
+        width: 80%;
     }
 
 }
