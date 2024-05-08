@@ -79,14 +79,14 @@
                 <form id="file-creation-form">
                     <div>
                         <label for="file-name-input"><strong>File Name</strong> </label>
-                        <input aria-label="file-name-input" id="file-name-input" maxlength="128"
-                               name="file" placeholder="Enter file name (maximum 128 characters)" required
+                        <input aria-label="file-name-input" id="file-name-input" maxlength="255"
+                               name="file" placeholder="Enter file name" required
                                type="text">
                     </div>
                     <div>
                         <label for="file-description"><strong>File description</strong></label>
-                        <textarea aria-label="file-description" id="file-description" maxlength="255"
-                                  name="file-description" placeholder="Enter file name (maximum 255 characters)"
+                        <textarea aria-label="file-description" id="file-description"
+                                  name="file-description" placeholder="Enter file name"
                                   required></textarea>
                     </div>
                     <button class="create-btn btn btn-success" type="submit">Create File</button>
