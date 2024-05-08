@@ -389,6 +389,7 @@ textarea {
 #mid-right-workspace-container {
     display: flex;
     flex-direction: row;
+    width: 100%;
 }
 
 @media (max-width: 992px) {
