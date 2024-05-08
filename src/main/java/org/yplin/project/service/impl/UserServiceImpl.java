@@ -55,14 +55,12 @@ public class UserServiceImpl implements UserService {
     private String scheme;
 
 
-    private final String userImageUrl = scheme + "://" + domain + "/logo/man.png";
-
     @Override
     public SignInDto signup(SignupForm signupForm) throws UserExistException {
         if (userRepository.findUserByEmail(signupForm.getEmail()) != null) {
             throw new UserExistException(signupForm.getEmail() + " is already exist");
         }
-
+        final String userImageUrl = scheme + "://" + domain + "/logo/man.png";
         String token = jwtTokenUtil.generateToken(signupForm.getEmail());
         UserModel user = new UserModel();
         user.setName(signupForm.getName());
