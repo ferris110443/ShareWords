@@ -252,12 +252,28 @@ table {
     cursor: pointer;
 }
 
+.enter-workspace-btn {
+    font-weight: bolder;
+    width: 120px;
+}
+
 .enter-workspace-btn:hover {
-    background-color: #6f7071;
+    background-color: #9a9b9c;
+    font-weight: bolder;
+    width: 120px;
+}
+
+.leave-workspace-btn {
+    color: rgb(201, 48, 44);
+    font-weight: bolder;
+    width: 120px;
 }
 
 .leave-workspace-btn:hover {
-    background-color: #6f7071;
+    background-color: rgb(201, 48, 44);
+    color: white;
+    font-weight: bolder;
+    width: 120px;
 }
 
 .bi-grid, .bi-list-ul {
