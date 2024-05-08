@@ -206,13 +206,6 @@ body {
 }
 
 
-.workspace-description {
-    font-size: 0.8rem;
-    word-break: break-all;
-    overflow: auto;
-    max-height: 150px;
-}
-
 /*.workspace-description {*/
 /*    font-size: 0.8rem;*/
 /*    line-height: 1.2rem;*/
@@ -266,7 +259,6 @@ table {
     right: 100%;
     z-index: 1000;
     background-color: #ffffff;
-    width: 200px;
 }
 
 .enter-workspace-btn, .leave-workspace-btn {
@@ -282,26 +274,26 @@ table {
 
 .enter-workspace-btn {
     font-weight: bolder;
-    width: 120px;
+    width: 180px;
 }
 
 .enter-workspace-btn:hover {
     background-color: #9a9b9c;
     font-weight: bolder;
-    width: 120px;
+    width: 180px;
 }
 
 .leave-workspace-btn {
     color: rgb(201, 48, 44);
     font-weight: bolder;
-    width: 120px;
+    width: 180px;
 }
 
 .leave-workspace-btn:hover {
     background-color: rgb(201, 48, 44);
     color: white;
     font-weight: bolder;
-    width: 120px;
+    width: 180px;
 }
 
 .bi-grid, .bi-list-ul {
@@ -319,6 +311,32 @@ table {
 .workspace-owner {
     font-size: 0.8rem;
     color: #6c757d;
+}
+
+.workspace-description-div {
+    overflow-y: auto;
+    max-height: 300px;
+}
+
+.workspace-description {
+    overflow-y: auto;
+    max-height: 120px;
+    font-size: 0.8rem;
+}
+
+th {
+    text-align: center;
+}
+
+
+.workspace-name-td, .workspace-description-td, .workspace-owner-td, .workspace-btn-td {
+    border: white 1px solid;
+
+}
+
+.workspace-name-td, .workspace-owner-td, .workspace-btn-td {
+    text-align: center;
+
 }
 
 

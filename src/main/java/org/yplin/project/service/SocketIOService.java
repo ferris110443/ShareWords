@@ -197,17 +197,17 @@ public class SocketIOService {
     }
 
     private void broadcastUserLeftMessageToRoom(JoinRoomMessageDto data) {
-        System.out.println("Broadcasting broadcastUserLeftMessage to room: " + data);
+        log.info("Broadcasting broadcastUserLeftMessage to room: " + data);
         server.getRoomOperations(data.getRoomId()).sendEvent("leftRoom", data);
     }
 
     private void broadcastUserJoinMessageToRoom(JoinRoomMessageDto data) {
-        System.out.println("Broadcasting broadcastUserJoinMessage to room: " + data);
+        log.info("Broadcasting broadcastUserJoinMessage to room: " + data);
         server.getRoomOperations(data.getRoomId()).sendEvent("joinRoom", data);
     }
 
     private void broadcastMessageToRoom(ChatMessageDto data) {
-        System.out.println("Broadcasting message to room: " + data);
+        log.info("Broadcasting message to room: " + data);
         server.getRoomOperations(data.getRoomId()).sendEvent("chatMessage", data);
     }
 

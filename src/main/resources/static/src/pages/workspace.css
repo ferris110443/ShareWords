@@ -89,7 +89,7 @@ textarea {
     width: 100%;
     padding: 8px;
     margin-top: 5px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     border: 1px solid #ccc;
 }
 
@@ -272,13 +272,14 @@ textarea {
     margin-top: 20px;
 }
 
-#workspace-information p:nth-child(2) {
+#workspace-description {
     font-size: 1rem;
-    max-height: 180px;
+    height: 180px;
     overflow-y: auto;
     padding-bottom: 15px;
-
+    color: white;
 }
+
 
 #workspace-information-title {
     color: white;
@@ -288,19 +289,6 @@ textarea {
     justify-content: space-between;
 }
 
-.dropdown-menu {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    top: 0;
-    right: 100%;
-    z-index: 1000;
-    background-color: #ffffff;
-    width: 180px;
-
-}
 
 .edit-workspace-btn, .delete-workspace-btn {
     border: none;
@@ -339,3 +327,62 @@ textarea {
     flex-direction: row;
     justify-content: space-between;
 }
+
+
+.dropdown-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    right: 100%;
+    z-index: 1000;
+    background-color: #ffffff;
+    width: 180px;
+
+}
+
+
+.edit-file-btn, .delete-file-btn, .share-file-btn {
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    margin: 5px;
+    width: 160px;
+}
+
+
+.edit-file-btn {
+    font-weight: bolder;
+}
+
+.edit-file-btn:hover {
+    background-color: #9a9b9c;
+    font-weight: bolder;
+}
+
+
+.share-file-btn {
+    color: rgb(92, 183, 92);
+    font-weight: bolder;
+}
+
+.share-file-btn:hover {
+    background-color: rgb(92, 183, 92);
+    color: white;
+    font-weight: bolder;
+}
+
+
+.delete-file-btn {
+    color: rgb(201, 48, 44);
+    font-weight: bolder;
+}
+
+.delete-file-btn:hover {
+    background-color: rgb(201, 48, 44);
+    color: white;
+    font-weight: bolder;
+}
+

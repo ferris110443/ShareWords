@@ -94,7 +94,10 @@ async function renderUserWorkspaceList() {
 <!--                    <tr class="workspace-entry-list" onclick="joinWorkspace('${workspace.workspace_name}')">-->
                     <tr class="workspace-entry-list" >
                         <td class = "workspace-name-td">${workspace.workspace_name}</td>
-                        <td class = "workspace-description-td">${workspace.workspace_description}</td>
+                        <td class = "workspace-description-td">
+                            <div class = "workspace-description-div">
+                                ${workspace.workspace_description}</td>
+                            </div>
                         <td class = "workspace-owner-td">${workspace.workspace_owner}</td>
                         <td class="workspace-btn-td">
                             <div class="dropdown">

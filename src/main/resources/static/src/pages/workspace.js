@@ -118,9 +118,9 @@ async function renderWorkspaceFileList() {
                                     </svg>
                                 </div>
                                 <div class="dropdown-menu" style="display: none;">
-                                    <button aria-label="Edit File ${index}" class="edit-file-btn btn  " data-fileid="${file.fileId}">Edit</button>
-                                    <button aria-label="Delete File ${index}" class="delete-file-btn btn " data-fileid="${file.fileId}">Delete</button>
-                                    <button aria-label="Share File ${index}" class="share-file-btn btn " data-fileid="${file.fileId}" >Share </button>
+                                    <button aria-label="Edit File ${index}" class="edit-file-btn btn  " data-fileid="${file.fileId}">Edit File</button>
+                                    <button aria-label="Delete File ${index}" class="delete-file-btn btn " data-fileid="${file.fileId}">Delete File</button>
+                                    <button aria-label="Share File ${index}" class="share-file-btn btn " data-fileid="${file.fileId}" >Share File</button>
                                 </div>
                             </div>
                         </div>
