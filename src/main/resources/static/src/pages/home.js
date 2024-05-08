@@ -292,11 +292,11 @@ async function updateUserWorkspaceList(workspaceName) {
 function toggleDropdown(event) {
     event.stopPropagation();
     let dropdown = event.currentTarget.parentNode.querySelector('.dropdown-menu');
-    const isVisible = dropdown.style.display === 'block';
+    const isVisible = dropdown.style.display === '';
     document.querySelectorAll('.dropdown-menu').forEach(function (m) {
         m.style.display = 'none';
     });
-    dropdown.style.display = isVisible ? 'none' : 'block';
+    dropdown.style.display = isVisible ? 'none' : '';
 }
 
 window.onclick = function (event) {
