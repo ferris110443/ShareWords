@@ -2,7 +2,8 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-    <title>Yjs Quill Example</title>
+    <title>ShareWords Collaborative Editor</title>
+    <link rel="icon" href="/logo/favicon-32x32.png" type="image/x-icon">
     <script async src="quill.bundle.js" type="text/javascript"></script>
     <!--    <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>-->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -20,7 +21,7 @@
           href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/monokai-sublime.min.css"
           rel=stylesheet>
 </head>
-<body class="hidden">
+<body class>
 <div id="markdown-info-container">
     <div>
         <h1 style="text-align: center">
@@ -87,6 +88,7 @@
     const workspaceName = decodeURIComponent(roomId)
     const fileId = queryParams.get('fileId');
     const accessToken = localStorage.getItem('accessToken');
+    const roomNumber = queryParams.get('roomNumber');
 
     document.addEventListener('DOMContentLoaded', () => {
         checkAuthentication();
@@ -157,7 +159,7 @@
         }
 
         try {
-            const response = await fetch(`/api/1.0/validation/workspace?workspaceName=${roomId}`, {
+            const response = await fetch(`/api/1.0/validation/workspace?workspaceName=${roomId}&roomNumber=${roomNumber}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
@@ -184,7 +186,8 @@
     }
 
     function redirectToPage() {
-        window.location.href = `/admin/workspace?roomId=${roomId}`;
+        console.log('redirecting to workspace : '+`/admin/workspace?roomId=${roomId}&roomNumber=${roomNumber}`);
+        window.location.href = `/admin/workspace?roomId=${roomId}&roomNumber=${roomNumber}`;
     }
 
 

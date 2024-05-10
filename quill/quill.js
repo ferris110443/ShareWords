@@ -11,6 +11,7 @@ const ydoc = new Y.Doc()
 const params = new URLSearchParams(window.location.search)
 const roomId = params.get('roomId') || 'general'
 const fileId = params.get('fileId') || 'general'
+const roomNumber = params.get('roomNumber') || 'general'
 const accessToken = localStorage.getItem('accessToken');
 
 window.addEventListener('load', async () => {
@@ -40,11 +41,11 @@ window.addEventListener('load', async () => {
     })
 
     // retrieve the markdown content from the server and render it in the editor for the first time
-    fetchFileContentAndRenderMarkdown(roomId, fileId);
+    fetchFileContentAndRenderMarkdown(roomId, fileId, roomNumber);
 
     async function fetchFileContentAndRenderMarkdown(roomId, fileId) {
         try {
-            const response = await fetch(`/api/1.0/markdown/markdown?roomId=${encodeURIComponent(roomId)}&fileId=${encodeURIComponent(fileId)}`, {
+            const response = await fetch(`/api/1.0/markdown/markdown?roomId=${encodeURIComponent(roomId)}&fileId=${encodeURIComponent(fileId)}&roomNumber=${roomNumber}`, {
                 method: 'GET',
             });
             if (!response.ok) {
@@ -231,6 +232,8 @@ async function uploadImage(data) {
         return null;
     }
 }
+
+
 
 
 
