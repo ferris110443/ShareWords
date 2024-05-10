@@ -4,11 +4,8 @@ const friendsRequestList = document.getElementById("friends-request-list");
 const acceptButtons = document.querySelectorAll('.accept-friend-btn');
 const rejectButtons = document.querySelectorAll('.reject-friend-btn');
 
-
+checkAuthentication()
 document.addEventListener('DOMContentLoaded', function () {
-
-
-    checkAuthentication()
     document.body.addEventListener('click', function (event) {
         if (event.target.matches('.accept-friend-btn')) {
             const userId = event.target.getAttribute('data-user-id');
@@ -115,7 +112,7 @@ async function getUserInformation(searchQuery) {
             }
 
             userElement.innerHTML = relationHTML;
-            userList.appendChild(userElement);
+            userList.insertBefore(userElement, userList.firstChild);
         });
 
         // Add event listeners to newly created buttons
@@ -204,7 +201,7 @@ async function checkFriendshipStatus(event) {
                 `;
             }
 
-            friendsList.appendChild(friendElement);
+            friendsList.insertBefore(friendElement, friendsList.firstChild);
         }
 
         if (item.status === 'pending' && item.userId !== userId) {
@@ -216,8 +213,8 @@ async function checkFriendshipStatus(event) {
                 <div class="rq-email-${item.userEmail}"><strong>Email:</strong> ${item.userEmail}</div>
             </div>
             <div class="btn-accept-reject-container">
-                <button id="btn-userId-${item.userId}" class="btn btn-success accept-friend-btn" data-friend-name="${item.userName}" data-friend-email="${item.userEmail}"  "data-user-id="${item.friendId}" data-friend-id="${item.userId}">Accept Friend</button>
-                <button id="btn-userId-${item.userId}" class="btn btn-danger reject-friend-btn" data-friend-name="${item.userName}" data-friend-email="${item.userEmail}"  "data-user-id="${item.friendId}" data-friend-id="${item.userId}">Reject Friend</button>
+                <button id="btn-userId-${item.userId}" class="btn btn-success accept-friend-btn" data-friend-name="${item.userName}" data-friend-email="${item.userEmail}"  "data-user-id="${item.friendId}" data-friend-id="${item.userId}"> Confirm </button>
+                <button id="btn-userId-${item.userId}" class="btn btn-danger reject-friend-btn" data-friend-name="${item.userName}" data-friend-email="${item.userEmail}"  "data-user-id="${item.friendId}" data-friend-id="${item.userId}"> Delete </button>
             </div>
         `;
             friendsRequestList.appendChild(friendRequestElement);
@@ -255,7 +252,8 @@ async function acceptFriend(userId, friendId, friendName, friendEmail) {
                     </button>
                 `;
 
-        document.getElementById('friends-list').appendChild(friendElement);
+        // document.getElementById('friends-list').appendChild(friendElement);
+        document.getElementById('friends-list').insertBefore(friendElement, friendsList.firstChild);
         updateOnlineStatus();
 
 
