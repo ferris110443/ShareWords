@@ -7,11 +7,11 @@ import org.yplin.project.model.WorkspaceModel;
 
 public interface WorkspaceService {
 
-    void createWorkspace(CreateWorkspaceForm createWorkspaceForm, String creatorEmail);
+    long createWorkspace(CreateWorkspaceForm createWorkspaceForm, String creatorEmail);
 
-    void deleteWorkspace(String workspaceName, String userEmail) throws IllegalArgumentException, NotWorkspaceOwnerException;
+    void deleteWorkspace(long roomNumber, String userEmail) throws IllegalArgumentException, NotWorkspaceOwnerException;
 
-    WorkspaceModel getWorkspaceInformation(String workspaceName);
+    WorkspaceModel getWorkspaceInformation(long roomNumber);
 
     void updateWorkspaceInformation(UpdateWorkspaceForm updateWorkspaceForm);
 }

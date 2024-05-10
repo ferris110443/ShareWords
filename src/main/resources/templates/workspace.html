@@ -12,7 +12,7 @@
     <link href="/src/components/asideWorkspace.css" rel="stylesheet">
     <link href="/src/pages/workspace.css" rel="stylesheet">
 </head>
-<body class="hidden">
+<body class>
 
 <div class="container">
     <div id="sidebar-placeholder"></div>
@@ -178,7 +178,8 @@
     socket.on('connect', () => {
         const data = {
             accessToken: accessToken,
-            roomId: roomId
+            roomId: roomId,
+            roomNumber:roomNumber
         };
         console.log("Data sent:", data);
         socket.emit('joinRoom', data, (ack) => {
@@ -190,7 +191,8 @@
     function leaveRoom() {
         const data = {
             accessToken: accessToken,
-            roomId: roomId
+            roomId: roomId,
+            roomNumber:roomNumber
         };
         console.log("Data sent disconnected:", data);
         socket.emit('leftRoom', data, (ack) => {
@@ -246,7 +248,7 @@
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
             inputBox.value = '';
         }
-        socket.emit('chatMessage', {message: messageText, accessToken: accessToken, roomId: roomId}); // Send message to server
+        socket.emit('chatMessage', {message: messageText, accessToken: accessToken, roomId: roomId , roomNumber:roomNumber}); // Send message to server
 
     });
 

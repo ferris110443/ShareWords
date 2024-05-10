@@ -56,25 +56,26 @@ public class WorkspaceRestController {
         try {
             String token = authorizationHeader.replace("Bearer ", "");
             String creatorEmail = jwtTokenUtil.extractUserEmail(token);
-            workspaceService.createWorkspace(createWorkspaceForm, creatorEmail);
+            long roomNumber = workspaceService.createWorkspace(createWorkspaceForm, creatorEmail);
             Map<String, Object> response = new HashMap<>();
             response.put("workspaceName", createWorkspaceForm.getWorkspaceName());
+            response.put("roomNumber", roomNumber);
+
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
             logger.error("Error creating workspace", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating workspace: " + e.getMessage());
         }
-
     }
 
     // delete Workspace delete a new workspace (only owner allows to delete workspace)
     @DeleteMapping(path = "/workspace")
-    public ResponseEntity<?> deleteWorkspaceByOwner(@RequestParam(value = "workspaceName") String workspaceName,
+    public ResponseEntity<?> deleteWorkspaceByOwner(@RequestParam(value = "workspaceName") String workspaceName, @RequestParam(value = "roomNumber") long roomNumber,
                                                     @RequestHeader("Authorization") String authorizationHeader) {
         try {
             String token = authorizationHeader.replace("Bearer ", "");
             String userEmail = jwtTokenUtil.extractUserEmail(token);
-            workspaceService.deleteWorkspace(workspaceName, userEmail);
+            workspaceService.deleteWorkspace(roomNumber, userEmail);
 
             return ResponseEntity.ok().body(Map.of("message", "Workspace deleted successfully"));
         } catch (NotWorkspaceOwnerException e) {
@@ -91,10 +92,10 @@ public class WorkspaceRestController {
 
 
     @GetMapping(path = "/workspaceInformation")
-    public ResponseEntity<?> getWorkspaceInformation(@RequestParam(value = "workspaceName") String workspaceName, @RequestHeader("Authorization") String authorizationHeader) {
+    public ResponseEntity<?> getWorkspaceInformation(@RequestParam(value = "workspaceName") String workspaceName, @RequestParam(value = "roomNumber") long roomNumber, @RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
         String userEmail = jwtTokenUtil.extractUserEmail(token);
-        WorkspaceModel workspaceInformation = workspaceService.getWorkspaceInformation(workspaceName);
+        WorkspaceModel workspaceInformation = workspaceService.getWorkspaceInformation(roomNumber);
         Map<String, WorkspaceModel> response = new HashMap<>();
         response.put("data", workspaceInformation);
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -104,10 +105,10 @@ public class WorkspaceRestController {
     // getWorkspaceInformation including containing files in the workspace
 
     @GetMapping(path = "/workspace")
-    public ResponseEntity<?> getWorkspaceFileInformation(@RequestParam(value = "workspaceName") String workspaceName, @RequestHeader("Authorization") String authorizationHeader) {
+    public ResponseEntity<?> getWorkspaceFileInformation(@RequestParam(value = "workspaceName") String workspaceName, @RequestParam(value = "roomNumber") long roomNumber, @RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
         String creatorEmail = jwtTokenUtil.extractUserEmail(token);
-        List<FileContentModel> fileList = fileContentService.getFileContentsByWorkspaceName(workspaceName);
+        List<FileContentModel> fileList = fileContentService.getFileContentsByWorkspaceName(roomNumber);
 
         Map<String, List<FileContentModel>> response = new HashMap<>();
         response.put("data", fileList);
@@ -210,11 +211,11 @@ public class WorkspaceRestController {
 
     // getWorkspaceMembers return all members in the workspace
     @GetMapping(path = "/workspaceMembers")
-    public ResponseEntity<?> getWorkspaceMembers(@RequestParam(value = "workspaceName") String workspaceName, @RequestHeader("Authorization") String authorizationHeader) {
+    public ResponseEntity<?> getWorkspaceMembers(@RequestParam(value = "workspaceName") String workspaceName, @RequestParam(value = "roomNumber") long roomNumber, @RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
         String userEmail = jwtTokenUtil.extractUserEmail(token);
 
-        List<WorkspaceMemberDto> workspaceMembersList = userservice.fetchUserOwnWorkspaceMembers(workspaceName);
+        List<WorkspaceMemberDto> workspaceMembersList = userservice.fetchUserOwnWorkspaceMembers(roomNumber);
 
         Map<String, Object> response = new HashMap<>();
         response.put("data", workspaceMembersList);
@@ -250,7 +251,6 @@ public class WorkspaceRestController {
     public ResponseEntity<?> removeFriendFromWorkspaceMembers(@RequestBody UserAddRemoveMemberInWorkspaceForm userAddMemberInWorkspaceForm, @RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
         String userEmail = jwtTokenUtil.extractUserEmail(token);
-//        System.out.println("userAddMemberInWorkspaceForm" + userAddMemberInWorkspaceForm);
 
         try {
             Map<String, List<UserOwnWorkspaceDetailsModel>> response = new HashMap<>();
@@ -271,6 +271,7 @@ public class WorkspaceRestController {
     // delete own workspace in homepage
     @DeleteMapping(path = "/workspaceUserSelfRemove")
     public ResponseEntity<?> removeSelfFromWorkspaceMembers(@RequestBody UserAddRemoveMemberInWorkspaceForm userAddMemberInWorkspaceForm, @RequestHeader("Authorization") String authorizationHeader) {
+        System.out.println("userAddMemberInWorkspaceForm" + userAddMemberInWorkspaceForm);
         String token = authorizationHeader.replace("Bearer ", "");
         String userEmail = jwtTokenUtil.extractUserEmail(token);
         userAddMemberInWorkspaceForm.setUserId(userservice.getUserIdByEmail(userEmail));

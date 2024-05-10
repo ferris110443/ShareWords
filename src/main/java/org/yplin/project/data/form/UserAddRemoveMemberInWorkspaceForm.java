@@ -14,4 +14,7 @@ public class UserAddRemoveMemberInWorkspaceForm {
     @Nullable
     private String workspaceName;
 
+    @Nullable
+    private long roomNumber;
+
 }

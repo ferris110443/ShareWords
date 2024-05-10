@@ -30,8 +30,8 @@ document.addEventListener('DOMContentLoaded', async function () {
                 const result = await response.json();
                 if (response.ok) {
                     alert('Workspace created successfully');
-                    await updateUserWorkspaceList(result.workspaceName);
-                    window.location.href = '/admin/workspace?roomId=' + encodeURIComponent(result.workspaceName);
+                    await updateUserWorkspaceList(result.workspaceName, result.roomNumber);
+                    window.location.href = '/admin/workspace?roomId=' + encodeURIComponent(result.workspaceName) + '&roomNumber=' + result.roomNumber;
                 } else {
                     alert('Workspace creation failed');
                 }
@@ -59,10 +59,10 @@ async function renderUserWorkspaceList() {
         const data = await response.json();
         data.data.forEach(workspace => {
             userWorkspaceHTML += `
-                    <div class="workspace-entry" onclick="joinWorkspace('${workspace.workspace_name}')">
+                    <div class="workspace-entry" onclick="joinWorkspace('${workspace.workspace_name}','${workspace.workspace_id}')">
                         <div class="workspace-name-description-container">
                             <div>
-                                <div class="workspace-name">${workspace.workspace_name}</div>
+                                <div class="workspace-name" data-workspace-id="${workspace.workspace_id}" >${workspace.workspace_name}</div>
                                 <hr>
                                 <div class="workspace-description">${workspace.workspace_description}</div>
                             </div>
@@ -82,7 +82,7 @@ async function renderUserWorkspaceList() {
                                     <button class="btn enter-workspace-btn" onclick="joinWorkspace('${workspace.workspace_name}')">
                                         Enter workspace
                                     </button>
-                                    <button class="btn leave-workspace-btn" onclick="deleteWorkspaceFromUserWorkspace('${workspace.workspace_name}', event)">
+                                    <button class="btn leave-workspace-btn" onclick="deleteWorkspaceFromUserWorkspace('${workspace.workspace_name}', '${workspace.workspace_id}',event)">
                                         Delete workspace
                                     </button>
                                 </div>
@@ -107,17 +107,7 @@ async function renderUserWorkspaceList() {
                                     </svg>
                                 </div>
                                 <div class="dropdown-menu" style="display: none;">
-                                    <button class="btn enter-workspace-btn" onclick="joinWorkspace('${workspace.workspace_name}')">
-                                        Enter workspace
-                                    </button>
-                                    <button class="btn leave-workspace-btn" onclick="deleteWorkspaceFromUserWorkspace('${workspace.workspace_name}', event)">
-                                        Delete workspace
-                                    </button>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-            `
+                                    <button class="btn enter-workspace-btn" onclick="joinWorkspace('${workspace.workspace_name}','${workspace.workspace_id}',event)">`
 
         });
         $('.workspaceList-grid').html(userWorkspaceHTML);
@@ -129,13 +119,14 @@ async function renderUserWorkspaceList() {
     }
 }
 
-function joinWorkspace(workspaceName) {
-    window.location.href = `/admin/workspace?roomId=${workspaceName}`
+function joinWorkspace(workspaceName, roomNumber) {
+    window.location.href = `/admin/workspace?roomId=${workspaceName}+&roomNumber=${roomNumber}`;
 }
 
-async function deleteWorkspaceFromUserWorkspace(workspaceName, event) {
+async function deleteWorkspaceFromUserWorkspace(workspaceName, roomNumber, event) {
     event.stopPropagation(); // avoid triggering the joinWorkspace event
     console.log("Attempting to delete workspace:", workspaceName);
+    console.log("Attempting to delete roomNumber:", roomNumber);
     try {
         const response = await fetch('/api/1.0/workspace/workspaceUserSelfRemove', {
             method: 'DELETE',
@@ -143,7 +134,10 @@ async function deleteWorkspaceFromUserWorkspace(workspaceName, event) {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${accessToken}`
             },
-            body: JSON.stringify({workspaceName})
+            body: JSON.stringify({
+                "workspaceName": workspaceName,
+                "roomNumber": roomNumber
+            })
         });
 
         if (!response.ok) throw new Error('Failed to delete workspace');
@@ -270,7 +264,7 @@ function redirectToLogin() {
 }
 
 
-async function updateUserWorkspaceList(workspaceName) {
+async function updateUserWorkspaceList(workspaceName, roomNumber) {
     console.log(workspaceName);
     const response = await fetch("/api/1.0/user/userWorkspace", {
         method: "POST",
@@ -280,7 +274,8 @@ async function updateUserWorkspaceList(workspaceName) {
         },
         body: JSON.stringify({
             "workspaceName": workspaceName,
-            "accessToken": accessToken
+            "accessToken": accessToken,
+            "roomNumber": roomNumber
         })
     });
 

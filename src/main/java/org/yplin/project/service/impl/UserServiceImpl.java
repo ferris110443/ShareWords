@@ -106,11 +106,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public String updateUserWorkspace(UserWorkspaceDto userWorkspaceDto) {
         String userToken = userWorkspaceDto.getAccessToken();
-        String workspaceName = userWorkspaceDto.getWorkspaceName();
         String userEmailFromToken = jwtTokenUtil.extractUserEmail(userToken);
 
         long userId = userRepository.findIdByEmail(userEmailFromToken).getId();
-        long workspaceId = workspaceRepository.findIdByWorkspaceName(workspaceName);
+        long workspaceId = userWorkspaceDto.getRoomNumber();
 
 
         UserWorkspaceModel userWorkspaceModel = new UserWorkspaceModel();
@@ -186,15 +185,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<WorkspaceMemberDto> fetchUserOwnWorkspaceMembers(String workspaceName) {
-        return workspaceMemberRepository.findWorkspaceMembersByWorkspaceName(workspaceName);
+    public List<WorkspaceMemberDto> fetchUserOwnWorkspaceMembers(long roomNumber) {
+        return workspaceMemberRepository.findWorkspaceMembersByWorkspaceId(roomNumber);
     }
 
     @Override
     public void addMemberToWorkspace(UserAddRemoveMemberInWorkspaceForm userAddMemberInWorkspaceForm) throws UserAlreadyMemberException {
         long userId = userAddMemberInWorkspaceForm.getUserId();
         String workspaceName = userAddMemberInWorkspaceForm.getWorkspaceName();
-        long workspaceId = workspaceRepository.findIdByWorkspaceName(workspaceName);
+        long workspaceId = userAddMemberInWorkspaceForm.getRoomNumber();
 
         Optional<UserWorkspaceModel> existingEntry = userWorkspaceRepository.findByUserIdAndWorkspaceId(userId, workspaceId);
         if (existingEntry.isPresent()) {
@@ -212,7 +211,7 @@ public class UserServiceImpl implements UserService {
     public void removeMemberFromWorkspace(UserAddRemoveMemberInWorkspaceForm userAddMemberInWorkspaceForm) throws UserAlreadyMemberException {
         long userId = userAddMemberInWorkspaceForm.getUserId();
         String workspaceName = userAddMemberInWorkspaceForm.getWorkspaceName();
-        long workspaceId = workspaceRepository.findIdByWorkspaceName(workspaceName);
+        long workspaceId = userAddMemberInWorkspaceForm.getRoomNumber();
         Optional<UserWorkspaceModel> existingEntry = userWorkspaceRepository.findByUserIdAndWorkspaceId(userId, workspaceId);
         if (existingEntry.isEmpty()) {
             throw new UserAlreadyMemberException("User is not a member of the workspace.");

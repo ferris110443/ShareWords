@@ -3,8 +3,9 @@ const params = new URLSearchParams(window.location.search);
 const workspaceName = params.get('roomId');
 const queryParams = new URLSearchParams(window.location.search);
 const roomId = decodeURIComponent(queryParams.get('roomId'));
-const coeditorURL = 'https://sharewords.org/coeditor';
-// const coeditorURL = 'http://localhost:8888/coeditor';
+const roomNumber = params.get('roomNumber');
+// const coeditorURL = 'https://sharewords.org/coeditor';
+const coeditorURL = 'http://localhost:8888/coeditor';
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -32,7 +33,9 @@ async function handleFormSubmission(event) {
         fileName: fileName,
         fileDescription: fileDescription,
         fileId: fileId,
-        roomId: roomId
+        roomId: roomId,
+        roomNumber: roomNumber
+
     };
 
     try {
@@ -54,7 +57,7 @@ async function handleFormSubmission(event) {
         } else {
             console.log('Success:', result);
             alert('File created successfully!');
-            window.location.href = `${coeditorURL}/coeditor.html?roomId=${roomId}&fileId=${fileId}`;
+            window.location.href = `${coeditorURL}/coeditor.html?roomId=${roomId}&fileId=${fileId}&roomNumber=${roomNumber}`;
         }
 
 
@@ -67,7 +70,7 @@ async function handleFormSubmission(event) {
 async function deleteWorkspace() {
 
     try {
-        const response = await fetch(`/api/1.0/workspace/workspace?workspaceName=${roomId}`, {
+        const response = await fetch(`/api/1.0/workspace/workspace?workspaceName=${roomId}&roomNumber=${roomNumber}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -94,7 +97,7 @@ async function deleteWorkspace() {
 
 
 async function renderWorkspaceFileList() {
-    const response = await fetch(`/api/1.0/workspace/workspace?workspaceName=${workspaceName}`, {
+    const response = await fetch(`/api/1.0/workspace/workspace?workspaceName=${workspaceName}&roomNumber=${roomNumber}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -251,7 +254,7 @@ function attachEnterWorkspaceBtn() {
         entry.addEventListener('click', function (event) {
             event.stopPropagation();
             const fileId = entry.getAttribute('data-fileid');
-            const editUrl = `${coeditorURL}/coeditor.html?roomId=${workspaceName}&fileId=${fileId}`;
+            const editUrl = `${coeditorURL}/coeditor.html?roomId=${workspaceName}&fileId=${fileId}&roomNumber=${roomNumber}`;
             window.location.href = editUrl;
 
         });
@@ -330,7 +333,7 @@ function attachEditButtonListeners() {
 }
 
 async function renderWorkspaceInformation() {
-    const response = await fetch(`/api/1.0/workspace/workspaceInformation?workspaceName=${workspaceName}`, {
+    const response = await fetch(`/api/1.0/workspace/workspaceInformation?workspaceName=${workspaceName}&roomNumber=${roomNumber}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -365,7 +368,7 @@ async function checkAuthentication() {
     }
 
     try {
-        const response = await fetch(`/api/1.0/validation/workspace?workspaceName=${roomId}`, {
+        const response = await fetch(`/api/1.0/validation/workspace?workspaceName=${roomId}&roomNumber=${roomNumber}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -387,9 +390,11 @@ async function checkAuthentication() {
 }
 
 async function updateWorkspaceInformation() {
+    // console.log("updateWorkspaceInformation : + is clicked")
     const newName = document.getElementById('edit-name').value;
     const newDescription = document.getElementById('edit-description').value;
     const editData = {
+        oldWorkspaceId: roomNumber,
         oldWorkspaceName: roomId,
         newWorkspaceName: newName,
         newWorkspaceNameDescription: newDescription,
@@ -419,7 +424,7 @@ async function updateWorkspaceInformation() {
         toggleEdit();
 
         const baseUrl = window.location.href.split('?')[0];
-        const newUrl = `${baseUrl}?roomId=${encodeURIComponent(newName)}`;
+        const newUrl = `${baseUrl}?roomId=${encodeURIComponent(newName)}&roomNumber=${roomNumber}`;
         window.history.pushState({path: newUrl}, '', newUrl);
 
 
@@ -454,7 +459,7 @@ function toggleEdit() {
 
 async function getWorkspaceMember() {
     try {
-        const response = await fetch(`/api/1.0/workspace/workspaceMembers?workspaceName=${roomId}`, {
+        const response = await fetch(`/api/1.0/workspace/workspaceMembers?workspaceName=${roomId}&roomNumber=${roomNumber}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -535,7 +540,7 @@ function createMemberDivForAddFriend(friendName, friendEmail, friendId, friendIm
 async function getUserFriendsForAddingMembers() {
     try {
         // Fetch current workspace members
-        const membersResponse = await fetch(`/api/1.0/workspace/workspaceMembers?workspaceName=${roomId}`, {
+        const membersResponse = await fetch(`/api/1.0/workspace/workspaceMembers?workspaceName=${roomId}&roomNumber=${roomNumber}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -611,7 +616,8 @@ async function addFriendsToWorkspace(userId, memberDiv) {
             },
             body: JSON.stringify({
                 userId: userId,
-                workspaceName: roomId
+                workspaceName: roomId,
+                roomNumber: roomNumber
             })
         });
 
@@ -641,7 +647,8 @@ async function removeMemberFromWorkspace(userId, memberDiv) {
             },
             body: JSON.stringify({
                 userId: userId,
-                workspaceName: roomId
+                workspaceName: roomId,
+                roomNumber: roomNumber
             })
         });
         const data = await response.json();

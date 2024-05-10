@@ -80,7 +80,7 @@ public class SocketIOService {
 
         server.addEventListener("leftRoom", JoinRoomMessageDto.class, (client, data, ackRequest) -> {
             log.info("Received data: {}", data);
-            client.leaveRoom(data.getRoomId());
+            client.leaveRoom(data.getRoomNumber());
             String userEmail = getEmailFromToken(data);
             data.setUserEmail(userEmail);
             ackRequest.sendAckData(data);
@@ -90,7 +90,7 @@ public class SocketIOService {
 
         server.addEventListener("joinRoom", JoinRoomMessageDto.class, (client, data, ackRequest) -> {
             log.info("Received data: {}", data);
-            client.joinRoom(data.getRoomId());
+            client.joinRoom(data.getRoomNumber());
             String userEmail = getEmailFromToken(data);
             data.setUserEmail(userEmail);
             ackRequest.sendAckData(data);
@@ -100,9 +100,6 @@ public class SocketIOService {
 
         server.addEventListener("chatMessage", ChatMessageDto.class, (client, data, ackRequest) -> {
             String userEmail = getEmailFromToken(data);
-            String message = data.getMessage();
-            String roomId = data.getRoomId();
-            String accessToken = data.getAccessToken();
             data.setUserEmail(userEmail);
 //            System.out.println("Message received: " + message);
 //            System.out.println("User email: " + userEmail);
@@ -198,17 +195,17 @@ public class SocketIOService {
 
     private void broadcastUserLeftMessageToRoom(JoinRoomMessageDto data) {
         log.info("Broadcasting broadcastUserLeftMessage to room: " + data);
-        server.getRoomOperations(data.getRoomId()).sendEvent("leftRoom", data);
+        server.getRoomOperations(data.getRoomNumber()).sendEvent("leftRoom", data);
     }
 
     private void broadcastUserJoinMessageToRoom(JoinRoomMessageDto data) {
         log.info("Broadcasting broadcastUserJoinMessage to room: " + data);
-        server.getRoomOperations(data.getRoomId()).sendEvent("joinRoom", data);
+        server.getRoomOperations(data.getRoomNumber()).sendEvent("joinRoom", data);
     }
 
     private void broadcastMessageToRoom(ChatMessageDto data) {
         log.info("Broadcasting message to room: " + data);
-        server.getRoomOperations(data.getRoomId()).sendEvent("chatMessage", data);
+        server.getRoomOperations(data.getRoomNumber()).sendEvent("chatMessage", data);
     }
 
 

@@ -12,6 +12,10 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserWorkspaceDto {
 
+
+    @JsonProperty("roomNumber")
+    private long roomNumber;
+
     @JsonProperty("workspaceName")
     private String workspaceName;
 

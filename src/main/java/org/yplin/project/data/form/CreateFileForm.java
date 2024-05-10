@@ -8,4 +8,5 @@ public class CreateFileForm {
     private String fileId;
     private String fileDescription;
     private String roomId;
+    private long roomNumber;
 }

@@ -37,13 +37,13 @@ public class ValidationRestController {
 
     @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8888", "http://34.230.138.53"})
     @GetMapping(path = "/workspace")
-    public ResponseEntity<?> checkWorkspaceValidation(@RequestParam("workspaceName") String workspaceName,
+    public ResponseEntity<?> checkWorkspaceValidation(@RequestParam("workspaceName") String workspaceName, @RequestParam("roomNumber") long roomNumber,
                                                       @RequestHeader("Authorization") String authorizationHeader) {
         Map<String, Object> response = new HashMap<>();
         try {
             String token = authorizationHeader.replace("Bearer ", "");
             String userEmail = jwtTokenUtil.extractUserEmail(token);
-            boolean isUserMember = validationService.checkWorkspaceValidation(workspaceName, userEmail);
+            boolean isUserMember = validationService.checkWorkspaceValidation(roomNumber, userEmail);
 
             if (!isUserMember) {
                 response.put("error", "You are not a member of this workspace");

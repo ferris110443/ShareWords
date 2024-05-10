@@ -18,14 +18,14 @@ public class WorkspaceMemberRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<WorkspaceMemberDto> findWorkspaceMembersByWorkspaceName(String workspaceName) {
+    public List<WorkspaceMemberDto> findWorkspaceMembersByWorkspaceId(long roomNumber) {
         String sql = "SELECT ui.email, ui.name, ui.user_image_url, w.workspace_name, uw.user_id, uw.workspace_id, w.workspace_owner " +
                 "FROM user_workspace uw " +
                 "JOIN workspace w ON w.id = uw.workspace_id " +
                 "JOIN user_information ui ON ui.id = uw.user_id " +
-                "WHERE w.workspace_name = ?";
+                "WHERE w.id = ?";
 
-        return jdbcTemplate.query(sql, new Object[]{workspaceName}, new RowMapper<WorkspaceMemberDto>() {
+        return jdbcTemplate.query(sql, new Object[]{roomNumber}, new RowMapper<WorkspaceMemberDto>() {
             @Override
             public WorkspaceMemberDto mapRow(java.sql.ResultSet rs, int rowNum) throws java.sql.SQLException {
                 WorkspaceMemberDto dto = new WorkspaceMemberDto();

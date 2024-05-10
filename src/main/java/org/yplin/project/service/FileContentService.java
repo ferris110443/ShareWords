@@ -25,7 +25,7 @@ public interface FileContentService {
 
     FileContentModel getFileContent(String fileId);
 
-    List<FileContentModel> getFileContentsByWorkspaceName(String workspaceName);
+    List<FileContentModel> getFileContentsByWorkspaceName(long roomNumber);
 
     void deleteFileInWorkspace(String fileId);
 

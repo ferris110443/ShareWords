@@ -74,7 +74,7 @@ public class FileContentServiceImp implements FileContentService {
     public void createFile(CreateFileForm createFileForm) {
         FileContentModel fileContentModel = new FileContentModel();
         try {
-            long workspaceId = queryWorkspaceIdFromWorkspaceName(createFileForm.getRoomId());
+            long workspaceId = createFileForm.getRoomNumber();
             fileContentModel.setWorkspaceId(workspaceId);
             fileContentModel.setFileTitle(createFileForm.getFileName());
             fileContentModel.setContent("");
@@ -141,8 +141,8 @@ public class FileContentServiceImp implements FileContentService {
     }
 
     @Override
-    public List<FileContentModel> getFileContentsByWorkspaceName(String workspaceName) {
-        return fileContentRepository.findByWorkspaceId(workspaceRepository.findIdByWorkspaceName(workspaceName));
+    public List<FileContentModel> getFileContentsByWorkspaceName(long roomNumber) {
+        return fileContentRepository.findByWorkspaceId(roomNumber);
     }
 
     @Override

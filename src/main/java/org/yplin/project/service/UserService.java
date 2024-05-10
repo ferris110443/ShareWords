@@ -31,7 +31,7 @@ public interface UserService {
 
     List<FriendsModel> getFriendsRelationStatus(long userEmail);
 
-    List<WorkspaceMemberDto> fetchUserOwnWorkspaceMembers(String workspaceName);
+    List<WorkspaceMemberDto> fetchUserOwnWorkspaceMembers(long roomNumber);
 
     void addMemberToWorkspace(UserAddRemoveMemberInWorkspaceForm userAddMemberInWorkspaceForm) throws UserNotExistException, UserAlreadyMemberException;
 

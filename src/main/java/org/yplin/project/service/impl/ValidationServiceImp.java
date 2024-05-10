@@ -23,9 +23,9 @@ public class ValidationServiceImp implements org.yplin.project.service.Validatio
     UserRepository userRepository;
 
     @Override
-    public boolean checkWorkspaceValidation(String workspaceName, String userEmail) {
+    public boolean checkWorkspaceValidation(long roomNumber, String userEmail) {
         long userId = userService.getUserIdByEmail(userEmail);
-        long workspaceId = workspaceService.getWorkspaceInformation(workspaceName).getId();
+        long workspaceId = workspaceService.getWorkspaceInformation(roomNumber).getId();
         return userWorkspaceRepository.checkWorkspaceValidation(workspaceId, userId);
     }
 

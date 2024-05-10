@@ -127,7 +127,10 @@ function loadAsideUserHomePage() {
     }
 }
 
-window.addEventListener('DOMContentLoaded', function () {
-    loadAsideWorkspace();
-    loadAsideUserHomePage();
-});
+// window.addEventListener('DOMContentLoaded', function () {
+//     loadAsideWorkspace();
+//     loadAsideUserHomePage();
+// });
+
+loadAsideWorkspace();
+loadAsideUserHomePage();

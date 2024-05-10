@@ -10,4 +10,5 @@ public class JoinRoomMessageDto {
     private String accessToken;
     private String roomId;
     private String userEmail;
+    private String roomNumber;
 }

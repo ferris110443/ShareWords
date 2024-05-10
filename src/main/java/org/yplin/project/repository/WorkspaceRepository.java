@@ -15,13 +15,13 @@ public interface WorkspaceRepository extends JpaRepository<WorkspaceModel, Long>
     @Query("SELECT w.id FROM WorkspaceModel w WHERE w.workspaceName = :workspaceName")
     Long findIdByWorkspaceName(String workspaceName);
 
-    @Query("SELECT COUNT(w) > 0 FROM WorkspaceModel w WHERE w.workspaceName = :workspaceName AND w.workspaceOwner = :workspaceOwner")
-    boolean isUserOwnerOfWorkspace(@Param("workspaceName") String workspaceName, @Param("workspaceOwner") String workspaceOwner);
+    @Query("SELECT COUNT(w) > 0 FROM WorkspaceModel w WHERE w.id = :roomNumber AND w.workspaceOwner = :workspaceOwner")
+    boolean isUserOwnerOfWorkspace(@Param("workspaceName") long roomNumber, @Param("workspaceOwner") String workspaceOwner);
 
     @Modifying
     @Transactional
-    @Query("DELETE FROM WorkspaceModel w WHERE w.workspaceName = :workspaceName AND w.workspaceOwner = :workspaceOwner")
-    void deleteByWorkspaceNameAndWorkspaceOwner(@Param("workspaceName") String workspaceName, @Param("workspaceOwner") String workspaceOwner);
+    @Query("DELETE FROM WorkspaceModel w WHERE w.id = :roomNumber AND w.workspaceOwner = :workspaceOwner")
+    void deleteByWorkspaceNameAndWorkspaceOwner(@Param("workspaceName") long roomNumber, @Param("workspaceOwner") String workspaceOwner);
 
     WorkspaceModel findByWorkspaceName(String workspaceName);
 

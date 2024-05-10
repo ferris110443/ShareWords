@@ -28,5 +28,6 @@ public class WorkspaceModel {
 
     @Column(name = "workspace_created_at", nullable = false)
     private Timestamp workspaceCreatedAt;
+    
 
 }

@@ -23,39 +23,32 @@ public class WorkspaceServiceImp implements WorkspaceService {
     WorkspaceRepository workspaceRepository;
 
     @Override
-    public void createWorkspace(CreateWorkspaceForm createWorkspaceForm, String creatorEmail) {
+    public long createWorkspace(CreateWorkspaceForm createWorkspaceForm, String creatorEmail) {
         WorkspaceModel workspaceModel = new WorkspaceModel();
         workspaceModel.setWorkspaceName(createWorkspaceForm.getWorkspaceName());
         workspaceModel.setWorkspaceDescription(createWorkspaceForm.getWorkspaceDescription());
         workspaceModel.setWorkspaceOwner(creatorEmail);
         workspaceModel.setWorkspaceCreatedAt(new Timestamp(System.currentTimeMillis()));
         workspaceRepository.save(workspaceModel);
+        return workspaceModel.getId();
     }
 
     @Override
-    public void deleteWorkspace(String workspaceName, String userEmail) throws IllegalArgumentException, NotWorkspaceOwnerException {
-        if (workspaceName == null || workspaceName.trim().isEmpty()) {
-            throw new IllegalArgumentException("Workspace name must not be empty");
-        }
-        boolean isOwner = workspaceRepository.isUserOwnerOfWorkspace(workspaceName, userEmail);
+    public void deleteWorkspace(long roomNumber, String userEmail) throws IllegalArgumentException, NotWorkspaceOwnerException {
+        boolean isOwner = workspaceRepository.isUserOwnerOfWorkspace(roomNumber, userEmail);
         if (isOwner) {
-            workspaceRepository.deleteByWorkspaceNameAndWorkspaceOwner(workspaceName, userEmail);
+            workspaceRepository.deleteByWorkspaceNameAndWorkspaceOwner(roomNumber, userEmail);
         } else {
             throw new NotWorkspaceOwnerException("You are not the owner of this workspace");
         }
     }
 
     @Override
-    public WorkspaceModel getWorkspaceInformation(String workspaceName) {
-        if (workspaceName == null || workspaceName.trim().isEmpty()) {
-            throw new IllegalArgumentException("Workspace name must not be empty");
-        }
+    public WorkspaceModel getWorkspaceInformation(long roomNumber) {
         try {
-//            System.out.println(workspaceName);
-//            System.out.println(workspaceRepository.findByWorkspaceName(workspaceName));
-            return workspaceRepository.findByWorkspaceName(workspaceName);
+            return workspaceRepository.findById(roomNumber).orElseThrow(() -> new ServiceException("Workspace not found"));
         } catch (Exception e) {
-            throw new ServiceException("Failed to retrieve workspace information for " + workspaceName, e);
+            throw new ServiceException("Failed to retrieve workspace information for " + roomNumber, e);
         }
     }
 
@@ -68,7 +61,7 @@ public class WorkspaceServiceImp implements WorkspaceService {
             throw new IllegalArgumentException("New workspace name must not be empty");
         }
 
-        WorkspaceModel workspaceModel = workspaceRepository.findByWorkspaceName(updateWorkspaceForm.getOldWorkspaceName());
+        WorkspaceModel workspaceModel = workspaceRepository.findById(updateWorkspaceForm.getOldWorkspaceId()).orElse(null);
         if (workspaceModel == null) {
             throw new IllegalArgumentException("Workspace does not exist");
         }
