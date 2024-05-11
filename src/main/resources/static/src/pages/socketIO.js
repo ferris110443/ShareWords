@@ -1,8 +1,8 @@
 "use strict";
 
-// const socket = io('https://sharewords.org/');
+const socket = io('https://sharewords.org/');
 // const socket = io('https://34.230.138.53:9092');
-const socket = io('http://localhost:9092');
+// const socket = io('http://localhost:9092');
 let onlineUsers = {};
 
 socket.on('connect', () => {
@@ -135,11 +135,16 @@ socket.on('friendRequest', function (requestUserEmail, requestUserName) {
 });
 
 
+socket.on('addMemberRequest', function (memberEmail, memberId, roomNumber) {
+    console.log(memberEmail, memberId, roomNumber);
+    renderUserWorkspaceList();
+});
+
+
 function updateOnlineStatus() {
-    console.log("onlineUsers: " + JSON.stringify(onlineUsers));
+
     document.querySelectorAll('.friend-item').forEach(item => {
         const email = item.querySelector('button').getAttribute('data-email');
-        console.log("email from updateOnlineStatus: " + email)
         const isOnline = onlineUsers[email];
         console.log(onlineUsers);
         const statusDiv = item.querySelector('.status-online, .status-offline');

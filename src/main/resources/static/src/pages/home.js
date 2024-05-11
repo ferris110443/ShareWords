@@ -72,13 +72,13 @@ async function renderUserWorkspaceList() {
 <!--                            <button class="btn " onclick="deleteWorkspaceFromUserWorkspace('${workspace.workspace_name}', event)">-->
 <!--                                <img src="../../logo/remove.png"  style="width: 36px; height: 36px;"">-->
 <!--                            </button>-->
-                            <div class="dropdown">
+                            <div class="dropdown-edit">
                                 <div class="toggle-dropdown-btn" onclick="toggleDropdown(event)">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
                                         <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
                                     </svg>
                                 </div>
-                                <div class="dropdown-menu" style="display: none;">
+                                <div class="dropdown-menu-edit" style="display: none;">
                                     <button class="btn enter-workspace-btn" onclick="joinWorkspace('${workspace.workspace_name}')">
                                         Enter workspace
                                     </button>
@@ -100,13 +100,13 @@ async function renderUserWorkspaceList() {
                             </div>
                         <td class = "workspace-owner-td">${workspace.workspace_owner}</td>
                         <td class="workspace-btn-td">
-                            <div class="dropdown">
-                                <div class="toggle-dropdown-btn" onclick="toggleDropdown(event)">
+                            <div class="dropdown-edit">
+                                <div class="toggle-dropdown-btn-edit" onclick="toggleDropdown(event)">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
                                         <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
                                     </svg>
                                 </div>
-                                <div class="dropdown-menu" style="display: none;">
+                                <div class="dropdown-menu-edit" style="display: none;">
                                     <button class="btn enter-workspace-btn" onclick="joinWorkspace('${workspace.workspace_name}','${workspace.workspace_id}')">
                                         Enter workspace
                                     </button>
@@ -298,37 +298,25 @@ async function updateUserWorkspaceList(workspaceName, roomNumber) {
 }
 
 
-// function toggleDropdown(event) {
-//     event.stopPropagation();
-//     let dropdown = event.currentTarget.parentNode.querySelector('.dropdown-menu');
-//     const isVisible = dropdown.style.display === '';
-//     document.querySelectorAll('.dropdown-menu').forEach(function (m) {
-//         m.style.display = 'none';
-//     });
-//     dropdown.style.display = isVisible ? 'none' : '';
-// }
-//
-// window.onclick = function (event) {
-//     if (!event.target.closest('.dropdown')) {
-//         document.querySelectorAll('.dropdown-menu').forEach(function (menu) {
-//             menu.style.display = 'none';
-//         });
-//     }
-// }
 function toggleDropdown(event) {
     event.stopPropagation();
-    let dropdown = event.currentTarget.parentNode.querySelector('.dropdown-menu');
+    let dropdown = event.currentTarget.parentNode.querySelector('.dropdown-menu-edit');
     const isVisible = dropdown.style.display === 'block';
-    document.querySelectorAll('.dropdown-menu').forEach(function (m) {
+
+    // Hide all dropdowns
+    document.querySelectorAll('.dropdown-menu-edit').forEach(function (m) {
         m.style.display = 'none';
     });
+
+    // Toggle current dropdown
     dropdown.style.display = isVisible ? 'none' : 'block';
 }
 
 window.onclick = function (event) {
-    if (!event.target.closest('.dropdown')) {
-        document.querySelectorAll('.dropdown-menu').forEach(function (menu) {
+    // Check if the click is outside of any dropdown
+    if (!event.target.closest('.dropdown-edit')) {
+        document.querySelectorAll('.dropdown-menu-edit').forEach(function (menu) {
             menu.style.display = 'none';
         });
     }
-}
+};

@@ -4,8 +4,8 @@ const workspaceName = params.get('roomId');
 const queryParams = new URLSearchParams(window.location.search);
 const roomId = decodeURIComponent(queryParams.get('roomId'));
 const roomNumber = params.get('roomNumber');
-// const coeditorURL = 'https://sharewords.org/coeditor';
-const coeditorURL = 'http://localhost:8888/coeditor';
+const coeditorURL = 'https://sharewords.org/coeditor';
+// const coeditorURL = 'http://localhost:8888/coeditor';
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -589,13 +589,7 @@ async function getUserFriendsForAddingMembers() {
 
                 const addBtn = memberDiv.querySelector('.add-member-btn');
                 addRemoveMemberListener(addBtn, memberDiv, 'add');
-                // addBtn.addEventListener('click', function () {
-                //     const userId = this.closest('.member').querySelector('.workspace-member-img').getAttribute('data-user-id');
-                //     console.log("userId:" + userId, memberDiv)
-                //     addFriendsToWorkspace(userId, memberDiv);
-                //     memberDiv.remove();
-                //
-                // });
+
             }
         });
 
@@ -630,6 +624,8 @@ async function addFriendsToWorkspace(userId, memberDiv) {
             // window.location.reload();
         }
         moveMemberToWorkspaceList(memberDiv);
+        socket.emit('addMemberRequest', {userId: userId, roomNumber: roomNumber, accessToken: accessToken});
+
 
     } catch (error) {
         console.error('Error:', error);

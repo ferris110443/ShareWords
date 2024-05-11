@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.yplin.project.configuration.JwtTokenUtil;
 import org.yplin.project.data.dto.socketio.ChatMessageDto;
 import org.yplin.project.data.dto.socketio.JoinRoomMessageDto;
+import org.yplin.project.data.dto.socketio.MemberWorkspaceDto;
 import org.yplin.project.data.dto.socketio.MessageTokenData;
 import org.yplin.project.data.form.UserSession;
 import org.yplin.project.model.FriendsModel;
@@ -17,6 +18,7 @@ import org.yplin.project.model.StatusEnum;
 import org.yplin.project.model.UserModel;
 import org.yplin.project.repository.FriendsRepository;
 import org.yplin.project.repository.user.UserRepository;
+import org.yplin.project.service.impl.WorkspaceServiceImp;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -40,6 +42,9 @@ public class SocketIOService {
 
     @Autowired
     private FriendsRepository friendsRepository;
+
+    @Autowired
+    private WorkspaceServiceImp workspaceServiceImp;
 
     @Autowired
     public SocketIOService(SocketIOServer server) {
@@ -190,8 +195,17 @@ public class SocketIOService {
 
         });
 
+        server.addEventListener("addMemberRequest", MemberWorkspaceDto.class, (client, data, ackRequest) -> {
+            System.out.println("Received data: " + data);
+            String userEmail = getEmailFromToken(data);
+            long memberId = data.getUserId();
+            String memberEmail = userRepository.findEmailById(memberId).getEmail();
+            long roomNumber = data.getRoomNumber();
+            broadcastAddMemberToUser(memberEmail, memberId, roomNumber);
 
+        });
     }
+
 
     private void broadcastUserLeftMessageToRoom(JoinRoomMessageDto data) {
         log.info("Broadcasting broadcastUserLeftMessage to room: " + data);
@@ -214,6 +228,14 @@ public class SocketIOService {
         logger.info("Friend session: {}", friendSession);
         if (friendSession != null) {
             friendSession.getClient().sendEvent("friendRequest", userEmail, userName);
+        }
+    }
+
+    private void broadcastAddMemberToUser(String memberEmail, long memberId, long roomNumber) {
+        UserSession friendSession = clients.get(memberEmail); // only friend user receive the invitation pop-up
+        logger.info("Friend session: {}", friendSession);
+        if (friendSession != null) {
+            friendSession.getClient().sendEvent("addMemberRequest", memberEmail, memberId, roomNumber);
         }
     }
 
@@ -240,6 +262,12 @@ public class SocketIOService {
         String accessToken = data.getAccessToken();
         return jwtTokenUtil.extractUserEmail(accessToken);
     }
+
+    private String getEmailFromToken(MemberWorkspaceDto data) {
+        String accessToken = data.getAccessToken();
+        return jwtTokenUtil.extractUserEmail(accessToken);
+    }
+
 
     private String getNameFromToken(MessageTokenData data) {
         String accessToken = data.getAccessToken();
