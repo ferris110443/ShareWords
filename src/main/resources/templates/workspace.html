@@ -360,17 +360,17 @@
 
     function toggleDropdown(event) {
         event.stopPropagation();
-        let dropdown = event.currentTarget.parentNode.querySelector('.dropdown-menu');
+        let dropdown = event.currentTarget.parentNode.querySelector('.dropdown-menu-edit');
         const isVisible = dropdown.style.display === 'block';
-        document.querySelectorAll('.dropdown-menu').forEach(function (m) {
+        document.querySelectorAll('.dropdown-menu-edit').forEach(function (m) {
             m.style.display = 'none';
         });
         dropdown.style.display = isVisible ? 'none' : 'block';
     }
 
     window.onclick = function (event) {
-        if (!event.target.closest('.dropdown')) {
-            document.querySelectorAll('.dropdown-menu').forEach(function (menu) {
+        if (!event.target.closest('.dropdown-edit')) {
+            document.querySelectorAll('.dropdown-menu-edit').forEach(function (menu) {
                 menu.style.display = 'none';
             });
         }

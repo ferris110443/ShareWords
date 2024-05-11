@@ -334,7 +334,7 @@ textarea {
 }
 
 
-.dropdown-menu {
+.dropdown-menu-edit {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -425,14 +425,20 @@ textarea {
     display: none;
 }
 
-.dropdown-menu {
+.dropdown-menu-edit {
     display: none; /* Hide the dropdown menu by default */
     position: absolute;
     will-change: transform;
 }
 
-.dropdown-menu.show {
+.dropdown-menu-edit.show {
     display: block; /* Display the dropdown menu when the dropdown is active */
+}
+
+.dropdown-menu-edit {
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
 }
 
 .p-3 {

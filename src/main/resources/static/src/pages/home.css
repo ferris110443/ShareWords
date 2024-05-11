@@ -244,6 +244,7 @@ body {
     box-shadow: 0 2px 5px rgba(0.2, 0.2, 0.2, 0.2);
     border-radius: 24px;
     height: 80vh;
+    overflow-y: auto;
 }
 
 table {
@@ -315,6 +316,7 @@ table {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    overflow-y: auto;
 }
 
 .workspace-owner {

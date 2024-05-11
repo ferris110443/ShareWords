@@ -113,14 +113,14 @@ async function renderWorkspaceFileList() {
                     <div class="file-entry" id="file${index}" data-fileid="${file.fileId}">
                         <div class="file-name-title">
                             <strong>${file.fileTitle}</strong>
-                            <div class="dropdown">
+                            <div class="dropdown-edit">
                                 <div class="toggle-dropdown-btn" onclick="toggleDropdown(event)">
                                     <svg class="bi bi-three-dots-vertical" fill="black" height="32" viewBox="0 0 16 16"
                                          width="32" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
                                     </svg>
                                 </div>
-                                <div class="dropdown-menu" style="display: none;">
+                                <div class="dropdown-menu-edit" style="display: none;">
                                     <button aria-label="Edit File ${index}" class="edit-file-btn btn  " data-fileid="${file.fileId}">Edit File</button>
                                     <button aria-label="Delete File ${index}" class="delete-file-btn btn " data-fileid="${file.fileId}">Delete File</button>
                                     <button aria-label="Share File ${index}" class="share-file-btn btn " data-fileid="${file.fileId}" >Share File</button>
