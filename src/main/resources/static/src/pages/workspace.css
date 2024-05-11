@@ -6,8 +6,13 @@ body {
 }
 
 .mid-workspace {
-    margin-left: 120px;
+    margin-left: 300px;
     flex: 3;
+}
+
+.nav-link, .nav-link:hover {
+    color: black;
+    margin: 5px 0;
 }
 
 .right-workspace {
@@ -386,18 +391,65 @@ textarea {
     font-weight: bolder;
 }
 
+
+#workspace-container {
+    margin-left: 300px;
+}
+
+#file-container {
+    display: flex;
+    flex-direction: row;
+}
+
+#file-zone, #workspace-information-create-file-zone {
+    flex: 1;
+}
+
+
 #mid-right-workspace-container {
     display: flex;
     flex-direction: row;
     width: 100%;
 }
 
+.member-workspace {
+    display: flex;
+    flex-direction: row;
+}
+
+#room-zone, #groupChat-container {
+    flex: 1;
+}
+
+#file-aside-list, #chat-aside-list {
+    display: none;
+}
+
+.dropdown-menu {
+    display: none; /* Hide the dropdown menu by default */
+    position: absolute;
+    will-change: transform;
+}
+
+.dropdown-menu.show {
+    display: block; /* Display the dropdown menu when the dropdown is active */
+}
+
+.p-3 {
+    padding: 0 !important;
+}
+
+.user-setting {
+    margin-left: 24px;
+    padding: 8px 16px;
+}
+
 @media (max-width: 992px) {
 
-    #mid-right-workspace-container {
+    #file-container {
         display: flex;
         flex-direction: column;
-        width: 90%;
+        width: 100%;
     }
 
     .mid-workspace {
@@ -407,5 +459,14 @@ textarea {
     .right-workspace {
         margin-left: 120px;
         width: 90%;
+    }
+
+    .member-workspace {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #file-aside-list, #chat-aside-list {
+        display: block;
     }
 }

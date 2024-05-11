@@ -1,4 +1,4 @@
-const accessToken = localStorage.getItem('accessToken');
+// const accessToken = localStorage.getItem('accessToken');
 
 
 document.addEventListener('DOMContentLoaded', async function () {
@@ -107,8 +107,17 @@ async function renderUserWorkspaceList() {
                                     </svg>
                                 </div>
                                 <div class="dropdown-menu" style="display: none;">
-                                    <button class="btn enter-workspace-btn" onclick="joinWorkspace('${workspace.workspace_name}','${workspace.workspace_id}',event)">`
-
+                                    <button class="btn enter-workspace-btn" onclick="joinWorkspace('${workspace.workspace_name}','${workspace.workspace_id}')">
+                                        Enter workspace
+                                    </button>
+                                    <button class="btn leave-workspace-btn" onclick="deleteWorkspaceFromUserWorkspace('${workspace.workspace_name}', '${workspace.workspace_id}',event)">
+                                        Delete workspace
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
         });
         $('.workspaceList-grid').html(userWorkspaceHTML);
         $('#workspaceList-list-tbody').html(userWorkspaceHTMLList);
@@ -191,6 +200,7 @@ async function fetchUserInformation() {
             </div>
 
         `;
+    $('#rounded-circle').attr('src', data.picture);
 
     $('#user-information-detail').html(userInfoHTML);
 
@@ -288,14 +298,31 @@ async function updateUserWorkspaceList(workspaceName, roomNumber) {
 }
 
 
+// function toggleDropdown(event) {
+//     event.stopPropagation();
+//     let dropdown = event.currentTarget.parentNode.querySelector('.dropdown-menu');
+//     const isVisible = dropdown.style.display === '';
+//     document.querySelectorAll('.dropdown-menu').forEach(function (m) {
+//         m.style.display = 'none';
+//     });
+//     dropdown.style.display = isVisible ? 'none' : '';
+// }
+//
+// window.onclick = function (event) {
+//     if (!event.target.closest('.dropdown')) {
+//         document.querySelectorAll('.dropdown-menu').forEach(function (menu) {
+//             menu.style.display = 'none';
+//         });
+//     }
+// }
 function toggleDropdown(event) {
     event.stopPropagation();
     let dropdown = event.currentTarget.parentNode.querySelector('.dropdown-menu');
-    const isVisible = dropdown.style.display === '';
+    const isVisible = dropdown.style.display === 'block';
     document.querySelectorAll('.dropdown-menu').forEach(function (m) {
         m.style.display = 'none';
     });
-    dropdown.style.display = isVisible ? 'none' : '';
+    dropdown.style.display = isVisible ? 'none' : 'block';
 }
 
 window.onclick = function (event) {

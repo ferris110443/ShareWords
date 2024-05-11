@@ -8,7 +8,7 @@ body {
 .user-friends-zone, .user-search-zone {
     padding: 20px;
     width: 100%;
-    margin-left: 120px;
+    /*margin-left: 120px;*/
 }
 
 #userList {
@@ -49,11 +49,13 @@ body {
     outline: none;
 }
 
+.user-workspaceList {
+    padding: 20px 0 20px 0;
+}
 
 #friends-list, #friends-request-list {
     height: 40vh;
     overflow-y: auto;
-    width: 100%;
     background-color: #343a40;
     padding: 20px;
     border-radius: 24px;
@@ -102,8 +104,9 @@ body {
     font-size: 0.8rem;
 }
 
-.accept-friend-btn {
+.accept-friend-btn, .accept-friend-btn-ws {
     margin: 0 15px 0 0
+
 }
 
 
@@ -132,7 +135,7 @@ body {
     #user-friends-search-zone-container {
         display: flex;
         flex-direction: column;
-        width: 80%;
+        width: 100%;
     }
 
 

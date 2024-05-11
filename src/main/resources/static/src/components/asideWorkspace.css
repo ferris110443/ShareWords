@@ -19,7 +19,6 @@ a:hover {
     padding: 10px;
     height: 100vh;
     position: fixed;
-    width: 120px;
     overflow-y: auto;
 }
 

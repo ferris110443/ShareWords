@@ -183,9 +183,11 @@ async function checkFriendshipStatus(event) {
                         <div><strong>Email:</strong> ${item.friendEmail}</div>
                         <div class="${friendStatusClass}">${friendStatus}</div>
                     </div>
-                    <button id="btn-userId-${item.friendId}" class="btn remove-friend-btn" data-user-id="${item.userId}" data-friend-id="${item.friendId}" data-email="${item.friendEmail}" >
-                        <img class="remove-friend-btn-img" src="/logo/remove-user.png" alt="Remove Friend">
-                    </button>
+                   <div>
+                        <button id="btn-userId-${item.friendId}" class="btn remove-friend-btn" data-user-id="${item.userId}" data-friend-id="${item.friendId}" data-email="${item.friendEmail}" >
+                            <img class="remove-friend-btn-img" src="/logo/remove-user.png" alt="Remove Friend">
+                        </button>
+                   </div>
                 `;
 
             } else if (item.friendId === userId) {
@@ -195,9 +197,11 @@ async function checkFriendshipStatus(event) {
                         <div><strong>Email:</strong> ${item.userEmail}</div>
                         <div class="${friendStatusClass}">${friendStatus}</div>
                     </div>
-                    <button id="btn-userId-${item.userId}" class="btn remove-friend-btn" data-user-id="${item.friendId}" data-friend-id="${item.userId}" data-email="${item.userEmail}" >
-                        <img class="remove-friend-btn-img" src="/logo/remove-user.png" alt="Remove Friend">
-                    </button>
+                    <div>
+                        <button id="btn-userId-${item.userId}" class="btn remove-friend-btn" data-user-id="${item.friendId}" data-friend-id="${item.userId}" data-email="${item.userEmail}" >
+                            <img class="remove-friend-btn-img" src="/logo/remove-user.png" alt="Remove Friend">
+                        </button>
+                    </div>
                 `;
             }
 
@@ -247,9 +251,12 @@ async function acceptFriend(userId, friendId, friendName, friendEmail) {
                         <div><strong>Email:</strong> ${friendEmail}</div>
                         <div class="status-offline">Offline</div>
                     </div>
-                    <button id=btn-userId-${friendId} class="btn remove-friend-btn" data-user-id="${userId}" data-friend-id="${friendId}" data-email="${friendEmail}">
-                        <img class="remove-friend-btn-img" src="/logo/remove-user.png" alt="Remove Friend">
-                    </button>
+                    <div>
+                        <button id=btn-userId-${friendId} class="btn remove-friend-btn" data-user-id="${userId}" data-friend-id="${friendId}" data-email="${friendEmail}">
+                            <img class="remove-friend-btn-img" src="/logo/remove-user.png" alt="Remove Friend">
+                        </button>
+                    </div>
+
                 `;
 
         // document.getElementById('friends-list').appendChild(friendElement);

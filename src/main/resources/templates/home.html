@@ -10,15 +10,84 @@
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" rel="stylesheet">
     <link href="/src/pages/common.css" rel="stylesheet">
     <link href="/src/pages/home.css" rel="stylesheet">
+    <link href="/src/pages/friends.css" rel="stylesheet">
     <link href="/src/components/asideWorkspace.css" rel="stylesheet">
 </head>
 <body>
 
 <div class="container">
-    <div id="user-sidebar-placeholder"></div>
+    <!--    ===============sidebar===================-->
+    <div class="d-flex flex-nowrap" id="user-sidebar-placeholder">
+        <div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary" style="width: 280px;">
+            <a class="d-flex align-items-center mb-3 mb-md-0  link-body-emphasis text-decoration-none"
+               href="#workspace-container">
+                <!--                <svg>-->
+                <use xlink:href="#bootstrap"></use>
+                <img id="shareWords-logo" src=/logo/sharewordslogo.png>
+                <!--                </svg>-->
+            </a>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <a aria-current="page" class="nav-link" href="#workspace-container">
+                        <svg class="bi pe-none me-2" height="16" width="16">
+                            <use xlink:href="#"></use>
+                            <img height="24" src=/logo/home.png width="24">
+                        </svg>
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link link-body-emphasis" href="#user-workspace">
+                        <svg class="bi pe-none me-2" height="16" width="16">
+                            <use xlink:href="#"></use>
+                            <img height="24" src=/logo/workspace.png width="24">
+                        </svg>
+                        Workspaces
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link link-body-emphasis" href="#user-friends-search-zone-container">
+                        <svg class="bi pe-none me-2" height="16" width="16">
+                            <use xlink:href="#"></use>
+                            <img height="24" src=/logo/friends.png width="24">
+                        </svg>
+                        Friends
+                    </a>
+                </li>
+            </ul>
+            <hr>
+            <div class="dropdown">
+                <a aria-expanded="false"
+                   class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle user-setting"
+                   data-bs-toggle="dropdown" href="#">
+                    <img alt="" class="rounded-circle me-2" height="32" id="rounded-circle" width="32">
+                    <strong id="user-account"></strong>
+                </a>
+                <ul class="dropdown-menu text-small shadow">
+                    <li><a class="dropdown-item" href="#">Home</a></li>
+                    <li><a class="dropdown-item" href="#user-workspace">Workspace</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="document.getElementById('fileInput').click();">Upload
+                        New Photo</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="/index.html">Sign out</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+
     <div id="workspace-container">
+        <header>
+            Welcome back to ShareWords!!
+        </header>
+
         <div id="workspace-mid-user-container">
-            <div class="user-information "> <!--mid-workspace-->
+            <!--    =============== userInfo  ===================-->
+            <div class="user-information " id="user-information"> <!--mid-workspace-->
                 <div class="user-workspaceList-head-container">
                     <h2>User Information</h2>
                     <div id="user-information-detail"></div>
@@ -50,11 +119,12 @@
                     </div>
                 </div>
             </div>
-            <div class="user-workspace-container">
+            <!--    =============== workspace  ===================-->
+            <div class="user-workspace-container" id="user-workspace">
 
                 <div class="user-workspaceList">
                     <div class="workspace-workspaceList-head-container">
-                        <h2>My Workspace</h2>
+                        <h2>Workspace</h2>
                         <div class="filter-container">
                             <svg class="bi bi-grid" fill="white" height="42" onclick="toggleView('grid') "
                                  style="display: none"
@@ -100,10 +170,34 @@
 
                 </div>
             </div>
+            <!--    =============== friends  ===================-->
+            <div id="user-friends-search-zone-container">
+                <div class="user-friends-zone">
+                    <h2>User Friends</h2>
+                    <div id="friends-list">
+                    </div>
+
+                    <h2> Friend Request </h2>
+                    <div id="friends-request-list">
+                        <div class="friend-request-item">
+                        </div>
+                    </div>
+                </div>
+                <div class="user-search-zone">
+                    <h2>Search Users</h2>
+                    <label for="searchBox"></label><input id="searchBox" placeholder="Search User Name" type="text">
+                    <!--        <button class="btn btn-primary" id="search-user-list" type="submit">Search</button>-->
+                    <div id="userList">
+                        <!-- User items will be dynamically inserted here -->
+                    </div>
+                </div>
+            </div>
         </div>
 
 
     </div>
+
+
 </div>
 <!--modal for invitation-->
 <div class="modal" id="friendRequestModal" tabindex="-1">
@@ -134,6 +228,7 @@
         src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <!--<script src="/src/pages/createWorkspace.js"></script>-->
+<script src="/src/pages/friends.js"></script>
 <script src="/src/components/asideWorkspace.js"></script>
 <script src="/src/pages/socketIO.js"></script>
 <script src="/src/pages/home.js"></script>
@@ -194,8 +289,11 @@
         }
     }
 
+    document.querySelector('#user-account').textContent = localStorage.getItem('username');
+
 
 </script>
+
 
 </body>
 </html>

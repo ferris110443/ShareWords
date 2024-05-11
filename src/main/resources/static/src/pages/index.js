@@ -20,6 +20,8 @@ document.getElementById('signupForm').addEventListener('submit', async function 
             const data = await response.json();
             const accessToken = data.data.access_token;
             localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('username', data.data.user.name);
+            localStorage.setItem('userImageURL', data.data.user.user_image_url);
             alert('Signup successful');
             window.location.href = '/admin/home';
         } else {
@@ -54,7 +56,10 @@ document.getElementById('signInForm').addEventListener('submit', async function 
         if (response.ok) {
             const data = await response.json();
             const accessToken = data.data.access_token;
+
             localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('username', data.data.user.name);
+            localStorage.setItem('userImageURL', data.data.user.user_image_url);
             alert('SignIn successful');
             window.location.href = '/admin/home';
         } else {

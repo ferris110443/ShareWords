@@ -59,11 +59,11 @@ socket.on('friendRequest', function (requestUserEmail, requestUserName) {
                 <div class="rq-email-${requestUserEmail}"><strong>Email:</strong> ${requestUserEmail}</div>
             </div>
             <div class="btn-accept-reject-container">
-                <button id="btn-userId" class="btn btn-success accept-friend-btn-ws" >Accept Friend</button>
-                <button id="btn-userId" class="btn btn-danger reject-friend-btn-ws" >Reject Friend</button>
+                <button id="btn-userId" class="btn btn-success accept-friend-btn-ws" >Confirm</button>
+                <button id="btn-userId" class="btn btn-danger reject-friend-btn-ws" >Delete</button>
             </div>
         `;
-    friendsRequestList.appendChild(friendRequestElement);
+    friendsRequestList.insertBefore(friendRequestElement, friendsRequestList.firstChild);
 
     const acceptButtons = document.querySelectorAll('.accept-friend-btn-ws');
     const rejectButtons = document.querySelectorAll('.reject-friend-btn-ws');
@@ -112,12 +112,14 @@ socket.on('friendRequest', function (requestUserEmail, requestUserName) {
                         <div><strong>Email:</strong> ${friendEmail}</div>
                         <div class="status-offline">Offline</div>
                     </div>
-                    <button id=btn-userId-${friendId} class="btn remove-friend-btn" data-user-id="${userId}" data-friend-id="${friendId}" data-email="${friendEmail}">
-                        <img class="remove-friend-btn-img" src="/logo/remove-user.png" alt="Remove Friend">
-                    </button>
+                    <div>
+                        <button id=btn-userId-${friendId} class="btn remove-friend-btn" data-user-id="${userId}" data-friend-id="${friendId}" data-email="${friendEmail}">
+                            <img class="remove-friend-btn-img" src="/logo/remove-user.png" alt="Remove Friend">
+                        </button>
+                    </div>
                 `;
 
-            document.getElementById('friends-list').appendChild(friendElement);
+            document.getElementById('friends-list').insertBefore(friendElement, document.getElementById('friends-list').firstChild);
             updateOnlineStatus();
 
         });
