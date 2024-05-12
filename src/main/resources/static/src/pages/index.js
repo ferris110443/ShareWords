@@ -22,7 +22,7 @@ document.getElementById('signupForm').addEventListener('submit', async function 
             localStorage.setItem('accessToken', accessToken);
             localStorage.setItem('username', data.data.user.name);
             localStorage.setItem('userImageURL', data.data.user.user_image_url);
-            alert('Signup successful');
+            // alert('Signup successful');
             window.location.href = '/admin/home';
         } else {
             const errorData = await response.json();
@@ -60,7 +60,7 @@ document.getElementById('signInForm').addEventListener('submit', async function 
             localStorage.setItem('accessToken', accessToken);
             localStorage.setItem('username', data.data.user.name);
             localStorage.setItem('userImageURL', data.data.user.user_image_url);
-            alert('SignIn successful');
+            // alert('SignIn successful');
             window.location.href = '/admin/home';
         } else {
             const errorData = await response.json();

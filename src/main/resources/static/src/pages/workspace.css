@@ -334,20 +334,40 @@ textarea {
 }
 
 
+/*.dropdown-menu-edit {*/
+/*    !*display: flex;*!*/
+/*    !*flex-direction: column;*!*/
+/*    !*align-items: center;*!*/
+/*    !*justify-content: center;*!*/
+/*    position: absolute;*/
+/*    !*position: relative;*!*/
+/*    display: block;*/
+/*    top: 0;*/
+/*    right: 100%;*/
+/*    z-index: 1000;*/
+/*    background-color: #ffffff;*/
+/*    width: 180px;*/
+
+/*}*/
+
+.dropdown-edit {
+    position: relative; /* Add this line */
+}
+
 .dropdown-menu-edit {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    display: none; /* Hidden by default */
     position: absolute;
-    top: 0;
-    right: 100%;
+    top: 0; /* Align with the top of the toggle button */
+    right: 100%; /* Align right beside the toggle button */
     z-index: 1000;
     background-color: #ffffff;
     width: 180px;
-
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.dropdown-menu-edit.show {
+    display: block; /* Display the dropdown menu when the dropdown is active */
+}
 
 .edit-file-btn, .delete-file-btn, .share-file-btn {
     border: none;
@@ -426,8 +446,7 @@ textarea {
 }
 
 .dropdown-menu-edit {
-    display: none; /* Hide the dropdown menu by default */
-    position: absolute;
+    display: none;
     will-change: transform;
 }
 
