@@ -7,16 +7,12 @@ const roomNumber = params.get('roomNumber');
 const coeditorURL = 'https://sharewords.org/coeditor';
 // const coeditorURL = 'http://localhost:8888/coeditor';
 
-
+checkAuthentication()
 document.addEventListener('DOMContentLoaded', function () {
-    checkAuthentication()
-
     document.getElementById('delete-workspace-btn').addEventListener('click', deleteWorkspace);
     document.getElementById('file-creation-form').addEventListener('submit', handleFormSubmission);
     document.getElementById('edit-workspace-save-btn').addEventListener('click', updateWorkspaceInformation);
     document.getElementById('cancel-workspace-save-btn').addEventListener('click', toggleEdit);
-
-
     renderWorkspaceFileList()
     renderWorkspaceInformation()
     getWorkspaceMember()
