@@ -57,9 +57,15 @@ window.addEventListener('load', async () => {
                     console.log(ytext)
                     console.log(data.data.content)
                     // Insert content if the document is empty
-                    if (ytext && ytext._start && ytext._start.content && ytext._start.content.toString() === '') {
+                    // if (ytext && ytext._start && ytext._start.content && ytext._start.content.toString() === '') {
+                    //     ytext.insert(0, data.data.content);
+                    //     console.log("ytext is empty")
+                    // }
+                    if (ytext.length === 0) {
                         ytext.insert(0, data.data.content);
-                        console.log("ytext is empty")
+                        console.log("ytext was empty and content inserted");
+                    } else {
+                        console.log("ytext was not empty");
                     }
                 });
                 updatePreview(data.data.content);
