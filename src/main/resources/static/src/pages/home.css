@@ -352,16 +352,24 @@ th {
 
 
 header {
-    background-color: #6f7071; /* A pleasant green background color */
-    color: white; /* White text for contrast */
-    text-align: center; /* Center the text */
-    padding: 20px 0; /* Padding to make the header taller and more spacious */
-    font-family: 'Arial', sans-serif; /* A clean, sans-serif font */
-    font-size: 36px; /* Increase the font size */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    height: 12vh;
+    color: #495464;
+    font-weight: bolder;
+    text-align: center;
+    padding: 20px 0;
+    font-family: 'Arial', sans-serif;
+    font-size: 36px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     border-radius: 20px;
     margin: 0 20px;
+    background-image: url('https://d2sgme9h4fi9e0.cloudfront.net/sharewords/logo/plants.png');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
 
 .user-setting {
     margin-left: 24px;
