@@ -55,6 +55,7 @@ window.addEventListener('load', async () => {
             if (data.data && data.data.content) {
                 ydoc.transact(() => {
                     console.log(ytext)
+                    console.log(data.data.content)
                     // Insert content if the document is empty
                     if (ytext && ytext._start && ytext._start.content && ytext._start.content.toString() === '') {
                         ytext.insert(0, data.data.content);
@@ -117,7 +118,7 @@ window.addEventListener('load', async () => {
 
     editor.on('text-change', () => {
         let markdownText = editor.getText();
-        console.log(markdownText)
+        // console.log(markdownText)
         updatePreview(markdownText);
         debouncedSaveData(markdownText);
 
@@ -129,7 +130,7 @@ window.addEventListener('load', async () => {
     const currentUserEmail = document.getElementById('current-user-email').textContent;
 
     async function fetchUserDetails(accessToken) {
-        console.log("currentUserEmail" + currentUserEmail)
+        // console.log("currentUserEmail" + currentUserEmail)
         return {
             name: `User-${currentUserEmail}`,
             color: `#${Math.floor(Math.random() * 16777215).toString(16)}`, // random color
@@ -150,7 +151,7 @@ window.addEventListener('load', async () => {
             window.location.reload();
         }
         const data = await response.json();
-        console.log(data.data);
+        // console.log(data.data);
 
         document.getElementById('workspace-name').innerText = roomId;
         document.getElementById('file-name').innerText = data.data.fileTitle;
@@ -198,7 +199,7 @@ async function saveText(markdownText) {
         })
     });
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
 }
 
 function debounce(func, timeout) {
