@@ -6,13 +6,11 @@ const roomId = decodeURIComponent(queryParams.get('roomId'));
 const roomNumber = params.get('roomNumber');
 const coeditorURL = 'https://sharewords.org/coeditor';
 // const coeditorURL = 'http://localhost:8888/coeditor';
-
-if (await checkAuthentication()) {
-    renderWorkspaceFileList()
-    renderWorkspaceInformation()
-    getWorkspaceMember()
-    getUserFriendsForAddingMembers()
-}
+checkAuthentication
+renderWorkspaceFileList()
+renderWorkspaceInformation()
+getWorkspaceMember()
+getUserFriendsForAddingMembers()
 
 
 document.addEventListener('DOMContentLoaded', function () {
