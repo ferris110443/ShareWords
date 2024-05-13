@@ -127,6 +127,19 @@ public class SocketIOService {
 
         });
 
+        server.addEventListener("confirmFriendRequest", MessageTokenData.class, (client, data, ackRequest) -> {
+
+            log.info("data: {}", data);
+            String userEmail = getEmailFromToken(data);
+            String userName = getNameFromToken(data);
+            String friendEmail = data.getRequestUserEmail();
+//            System.out.println("User email: " + userEmail);
+//            System.out.println("User name: " + userName);
+//            System.out.println("Friend email: " + friendEmail);
+            broadcastConfirmToUser(userEmail, userName, friendEmail);
+
+        });
+
 
         server.addEventListener("acceptFriendRequestWS", MessageTokenData.class, (client, data, ackRequest) -> {
             String userEmail = getEmailFromToken(data);
@@ -204,6 +217,14 @@ public class SocketIOService {
             broadcastAddMemberToUser(memberEmail, memberId, roomNumber);
 
         });
+    }
+
+    private void broadcastConfirmToUser(String userEmail, String userName, String friendEmail) {
+        UserSession friendSession = clients.get(friendEmail); // only friend user receive the invitation pop-up
+        logger.info("Friend session: {}", friendSession);
+        if (friendSession != null) {
+            friendSession.getClient().sendEvent("confirmFriendRequest", userEmail, userName, friendEmail);
+        }
     }
 
 

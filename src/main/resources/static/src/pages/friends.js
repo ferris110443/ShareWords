@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const friendName = event.target.getAttribute('data-friend-name');
             const friendEmail = event.target.getAttribute('data-friend-email');
             acceptFriend(userId, friendId, friendName, friendEmail);
+
         }
 
         if (event.target.matches('.reject-friend-btn')) {

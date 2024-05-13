@@ -73,10 +73,21 @@ socket.on('friendRequest', function (requestUserEmail, requestUserName) {
             acceptFriendWS(accessToken, requestUserEmail, requestUserName)
                 .then(() => {
                     friendRequestItem.remove(); // Remove the friend request from the DOM after successful operation
+
+
+                    socket.emit('confirmFriendRequest', {
+                        accessToken: accessToken,
+                        requestUserEmail: requestUserEmail
+                    }, (ack) => {
+                        console.log('Acknowledgment from server:', ack);
+                    });
+
+
                 })
                 .catch(error => {
                     console.error('Failed to accept friend request:', error);
                 });
+
         });
     });
 
@@ -139,6 +150,14 @@ socket.on('addMemberRequest', function (memberEmail, memberId, roomNumber) {
     console.log(memberEmail, memberId, roomNumber);
     renderUserWorkspaceList();
 });
+
+socket.on('confirmFriendRequest', function (userEmail, userName, friendEmail) {
+    console.log('confirmFriendRequest', userEmail);
+    console.log('confirmFriendRequest', userName);
+    console.log('confirmFriendRequest', friendEmail);
+    getUserInformation(friendEmail)
+    checkFriendshipStatus()
+})
 
 
 function updateOnlineStatus() {
