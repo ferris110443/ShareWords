@@ -41,7 +41,7 @@ window.addEventListener('load', async () => {
     })
 
     // retrieve the markdown content from the server and render it in the editor for the first time
-    fetchFileContentAndRenderMarkdown(roomId, fileId, roomNumber);
+    await fetchFileContentAndRenderMarkdown(roomId, fileId, roomNumber);
 
     async function fetchFileContentAndRenderMarkdown(roomId, fileId) {
         try {
@@ -62,7 +62,6 @@ window.addEventListener('load', async () => {
                         ytext.insert(0, data.data.content);
                         console.log("ytext is empty")
                     }
-
 
                 });
                 updatePreview(data.data.content);
