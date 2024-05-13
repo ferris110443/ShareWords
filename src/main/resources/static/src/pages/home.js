@@ -301,18 +301,13 @@ function toggleDropdown(event) {
     event.stopPropagation();
     let dropdown = event.currentTarget.parentNode.querySelector('.dropdown-menu-edit');
     const isVisible = dropdown.style.display === 'block';
-
-    // Hide all dropdowns
     document.querySelectorAll('.dropdown-menu-edit').forEach(function (m) {
         m.style.display = 'none';
     });
-
-    // Toggle current dropdown
     dropdown.style.display = isVisible ? 'none' : 'block';
 }
 
 window.onclick = function (event) {
-    // Check if the click is outside of any dropdown
     if (!event.target.closest('.dropdown-edit')) {
         document.querySelectorAll('.dropdown-menu-edit').forEach(function (menu) {
             menu.style.display = 'none';

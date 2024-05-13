@@ -370,6 +370,10 @@ header {
     justify-content: center;
 }
 
+.toggle-dropdown-btn-edit {
+    cursor: pointer;
+
+}
 
 .user-setting {
     margin-left: 24px;
