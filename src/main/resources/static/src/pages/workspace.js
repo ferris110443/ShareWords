@@ -4,19 +4,22 @@ const workspaceName = params.get('roomId');
 const queryParams = new URLSearchParams(window.location.search);
 const roomId = decodeURIComponent(queryParams.get('roomId'));
 const roomNumber = params.get('roomNumber');
-const coeditorURL = 'https://sharewords.org/coeditor';
-// const coeditorURL = 'http://localhost:8888/coeditor';
+// const coeditorURL = 'https://sharewords.org/coeditor';
+const coeditorURL = 'http://localhost:8888/coeditor';
 
-checkAuthentication()
+if (await checkAuthentication()) {
+    renderWorkspaceFileList()
+    renderWorkspaceInformation()
+    getWorkspaceMember()
+    getUserFriendsForAddingMembers()
+}
+
+
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('delete-workspace-btn').addEventListener('click', deleteWorkspace);
     document.getElementById('file-creation-form').addEventListener('submit', handleFormSubmission);
     document.getElementById('edit-workspace-save-btn').addEventListener('click', updateWorkspaceInformation);
     document.getElementById('cancel-workspace-save-btn').addEventListener('click', toggleEdit);
-    renderWorkspaceFileList()
-    renderWorkspaceInformation()
-    getWorkspaceMember()
-    getUserFriendsForAddingMembers()
 });
 
 async function handleFormSubmission(event) {

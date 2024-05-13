@@ -1,12 +1,11 @@
 // const accessToken = localStorage.getItem('accessToken');
 
+checkAuthentication()
+renderUserWorkspaceList();
+fetchUserInformation();
 
 document.addEventListener('DOMContentLoaded', async function () {
     const form = document.getElementById('create-new-workspace-form');
-    if (await checkAuthentication()) {
-        renderUserWorkspaceList();
-        fetchUserInformation();
-    }
 
     if (form) {
         form.addEventListener('submit', async function (event) {

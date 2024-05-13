@@ -90,10 +90,8 @@
     const accessToken = localStorage.getItem('accessToken');
     const roomNumber = queryParams.get('roomNumber');
 
-    document.addEventListener('DOMContentLoaded', () => {
-        checkAuthentication();
-        setupTabs();
-    });
+    checkAuthentication();
+    setupTabs();
     document.addEventListener('DOMContentLoaded', () => {
         const downloadMdBtn = document.getElementById('download-md');
         const downloadHtmlBtn = document.getElementById('download-html');
