@@ -4,6 +4,7 @@ body {
     font-size: 1.2rem;
     font-family: Arial, sans-serif;
     line-height: 1.6;
+    overflow-y: hidden;
 }
 
 .container {
@@ -229,8 +230,15 @@ body {
     margin: 20px;
 }
 
-#workspaceFilter, #ownershipFilter {
+#ownershipFilter {
     padding: 10px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#workspaceFilter {
+    padding: 6px;
     margin: 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -407,6 +415,9 @@ header {
     z-index: 1000;
 }
 
+#searchBox-aside {
+    display: none;
+}
 
 @media (max-width: 992px) {
     .workspace-name-description-container, .workspace-name-description-btn-container {
@@ -436,6 +447,11 @@ header {
         align-items: center;
 
     }
+
+    #searchBox-aside {
+        display: block;
+    }
+
 }
 
 @media (max-width: 1440px) {
