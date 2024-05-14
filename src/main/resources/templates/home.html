@@ -251,22 +251,28 @@
 <script src="/src/pages/home.js"></script>
 <script>
 
+
     function filterWorkspaces() {
         // Get filter values
         let textFilter = document.getElementById('workspaceFilter').value.toLowerCase();
         let ownershipFilter = document.getElementById('ownershipFilter').value;
         let currentUserEmail = document.getElementById('user-info-email').textContent.toLowerCase();
 
-
+        // console.log("textFilter : " + textFilter);
+        // console.log("ownershipFilter : " + ownershipFilter);
+        // console.log("currentUserEmail : " + currentUserEmail);
         let gridEntries = document.querySelectorAll('.workspace-entry');
         let listEntries = document.querySelectorAll('.workspace-entry-list');
-
+        // console.log(gridEntries)
+        // console.log(listEntries)
 
         function isVisible(workspaceName, workspaceDescription, workspaceOwner) {
             let textMatch = workspaceName.includes(textFilter) || workspaceDescription.includes(textFilter) || workspaceOwner.includes(textFilter);
             let ownershipMatch = (ownershipFilter === "all") ||
                 (ownershipFilter === "mine" && workspaceOwner === currentUserEmail) ||
                 (ownershipFilter === "others" && workspaceOwner !== currentUserEmail);
+            // console.log(workspaceOwner, currentUserEmail)
+            // console.log(`Matching ${workspaceName} | ${workspaceDescription} | ${workspaceOwner} => Text: ${textMatch}, Ownership: ${ownershipMatch}`);
             return textMatch && ownershipMatch;
         }
 
@@ -275,7 +281,7 @@
             let workspaceName = entry.querySelector('.workspace-name').textContent.toLowerCase().replace('workspace name: ', '');
             let workspaceDescription = entry.querySelector('.workspace-description').textContent.toLowerCase().replace('workspace description: ', '');
             let workspaceOwner = entry.querySelector('.workspace-owner').textContent.toLowerCase().replace('workspace owner : ', '');
-
+            console.log(workspaceName, workspaceDescription, workspaceOwner);
             entry.style.display = isVisible(workspaceName, workspaceDescription, workspaceOwner) ? '' : 'none';
         });
 
@@ -284,7 +290,7 @@
             let workspaceName = entry.cells[0].textContent.toLowerCase();
             let workspaceDescription = entry.cells[1].textContent.toLowerCase();
             let workspaceOwner = entry.cells[2].textContent.toLowerCase();
-
+            console.log(workspaceName, workspaceDescription, workspaceOwner);
             entry.style.display = isVisible(workspaceName, workspaceDescription, workspaceOwner) ? '' : 'none';
         });
     }

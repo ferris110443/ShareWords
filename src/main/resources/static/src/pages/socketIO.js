@@ -165,10 +165,10 @@ function updateOnlineStatus() {
     document.querySelectorAll('.friend-item').forEach(item => {
         const email = item.querySelector('button').getAttribute('data-email');
         const isOnline = onlineUsers[email];
-        console.log(onlineUsers);
+        // console.log(onlineUsers);
         const statusDiv = item.querySelector('.status-online, .status-offline');
 
-        console.log(email + " " + isOnline + " " + statusDiv);
+        // console.log(email + " " + isOnline + " " + statusDiv);
         if (statusDiv) {
             statusDiv.textContent = isOnline ? "Online" : "Offline";
             statusDiv.className = isOnline ? "status-online" : "status-offline";

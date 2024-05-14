@@ -193,8 +193,8 @@ async function fetchUserInformation() {
                 <input type="file" id="fileInput" name="file" style="display: none;" onchange="uploadFile()">
             </div>
             <div id="user-detail-container">
-                <div class="user-detail"><span id="user-info-name"> Name : ${data.name}</span></div>
-                <div class="user-detail"><span id="user-info-email"> Email : ${data.email}</span></div>
+                <div class="user-detail"> Name :&nbsp; <span id="user-info-name"> ${data.name}</span></div>
+                <div class="user-detail"> Email :&nbsp; <span id="user-info-email"> ${data.email}</span></div>
                 <div class="user-detail">Account Created : ${date} </div>
             </div>
 
