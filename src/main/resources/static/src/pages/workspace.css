@@ -3,6 +3,7 @@ body {
     font-size: 1.2rem;
     font-family: Arial, sans-serif;
     line-height: 1.6;
+    overflow-y: hidden;
 }
 
 .mid-workspace {
