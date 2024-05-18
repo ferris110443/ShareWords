@@ -24,4 +24,6 @@ public class SecurityConfig {
                 .addFilterAt(new UsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class); // Use form login
         return http.build();
     }
+
+
 }
