@@ -14,6 +14,7 @@ import org.yplin.project.data.form.UserAddFriendForm;
 import org.yplin.project.error.UserNotFoundException;
 import org.yplin.project.model.FriendsModel;
 import org.yplin.project.model.UserModel;
+import org.yplin.project.repository.user.UserRepository;
 import org.yplin.project.service.UserService;
 
 import java.sql.Timestamp;
@@ -33,6 +34,9 @@ public class UserInformationRestController {
 
     @Autowired
     JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    UserRepository userRepository;
 
 
     @GetMapping("/userPersonalInformation")
@@ -147,8 +151,9 @@ public class UserInformationRestController {
                     userService.removeFriendRequest(friendRequestForm, userEmail);
                     break;
             }
-
+            String requestUserEmail = userRepository.findEmailById(friendRequestForm.getFriendId()).getEmail();
             Map<String, Object> response = new HashMap<>();
+            response.put("message", "Friend request handled successfully");
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));

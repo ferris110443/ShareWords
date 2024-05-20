@@ -5,6 +5,19 @@ const acceptButtons = document.querySelectorAll('.accept-friend-btn');
 const rejectButtons = document.querySelectorAll('.reject-friend-btn');
 
 checkAuthentication()
+
+
+// document.addEventListener('DOMContentLoaded', function () {
+//     document.querySelectorAll('.remove-friend-btn').forEach(button => {
+//         button.addEventListener('click', function (event) {
+//             // If the clicked element is the img, get the parent button
+//             const target = event.target.closest('.remove-friend-btn');
+//             const email = target.getAttribute('data-email');
+//             console.log("email: " + email);
+//             emitEventConfirmFriendRequest(email);
+//         });
+//     });
+// });
 document.addEventListener('DOMContentLoaded', function () {
     document.body.addEventListener('click', function (event) {
         if (event.target.matches('.accept-friend-btn')) {
@@ -36,7 +49,12 @@ document.getElementById('friends-list').addEventListener('click', function (even
         const button = event.target.closest('.remove-friend-btn');
         const userId = button.dataset.userId;
         const friendId = button.dataset.friendId;
-        removeFriend(userId, friendId);
+        const target = event.target.closest('.remove-friend-btn');
+        const email = target.getAttribute('data-email');
+        console.log("email: " + email);
+
+        removeFriend(userId, friendId, email);
+
     }
 });
 
@@ -47,7 +65,6 @@ async function getUserInformation(searchQuery) {
         document.getElementById('userList').innerHTML = '';
         return;
     }
-
     try {
         const response = await fetch(`/api/1.0/user/userInformation?query=${encodeURIComponent(searchQuery)}`, {
             method: 'GET',
@@ -136,6 +153,7 @@ async function getUserInformation(searchQuery) {
     }
 }
 
+
 async function sendAddFriendRequest(event) {
     const userId = event.target.getAttribute('data-user-id');
     const response = await fetch(`/api/1.0/user/friends`,
@@ -164,11 +182,13 @@ async function checkFriendshipStatus(event) {
             'Authorization': `Bearer ${accessToken}`
         }
     });
+    // console.log("testing")
     const data = await response.json();
     const userId = data.userId;
     friendsList.innerHTML = '';
     friendsRequestList.innerHTML = '';
-
+    // console.log("testing")
+    console.log(data)
     data.data.forEach(item => {
         const isOnline = onlineUsers.hasOwnProperty(item.friendEmail); // Check if the friendId is in the onlineUsers array
         const friendStatus = isOnline ? "Online" : "Offline";
@@ -290,7 +310,7 @@ async function rejectFriend(userId, friendId) {
 }
 
 
-async function removeFriend(userId, friendId) {
+async function removeFriend(userId, friendId, email) {
     try {
         const response = await fetch(`/api/1.0/user/handleFriendRequest`, {
             method: 'POST',
@@ -303,8 +323,12 @@ async function removeFriend(userId, friendId) {
 
         const data = await response.json();
         console.log('Friend removed:', data);
+        console.log(response.status)
+
+
         if (response.ok) {
             document.querySelector(`#btn-userId-${friendId}`).closest('.friend-item').remove();
+            emitEventConfirmFriendRequest(email);
         } else {
             alert('Failed to remove friend: ' + data.message);
         }
@@ -344,4 +368,14 @@ async function checkAuthentication() {
 
 function redirectToLogin() {
     window.location.href = '/index.html';
+}
+
+
+function emitEventConfirmFriendRequest(requestUserEmail) {
+    socket.emit('confirmFriendRequest', {
+        accessToken: accessToken,
+        requestUserEmail: requestUserEmail
+    }, (ack) => {
+        console.log('Acknowledgment from server:', ack);
+    });
 }

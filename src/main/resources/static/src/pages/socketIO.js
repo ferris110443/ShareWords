@@ -97,6 +97,14 @@ socket.on('friendRequest', function (requestUserEmail, requestUserName) {
             rejectFriendWS(accessToken, requestUserEmail)
                 .then(() => {
                     friendRequestItem.remove(); // Remove the friend request from the DOM after successful operation
+
+                    socket.emit('confirmFriendRequest', {
+                        accessToken: accessToken,
+                        requestUserEmail: requestUserEmail
+                    }, (ack) => {
+                        console.log('Acknowledgment from server:', ack);
+                    });
+
                 })
                 .catch(error => {
                     console.error('Failed to remove friend request:', error);
@@ -139,6 +147,7 @@ socket.on('friendRequest', function (requestUserEmail, requestUserName) {
     async function rejectFriendWS(accessToken, requestUserEmail) {
         socket.emit('rejectFriendRequestWS', {accessToken: accessToken, requestUserEmail: requestUserEmail}, (ack) => {
             console.log('Acknowledgment from server:', ack);
+
 
         });
     }

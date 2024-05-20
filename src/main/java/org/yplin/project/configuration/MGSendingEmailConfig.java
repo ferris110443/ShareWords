@@ -36,6 +36,7 @@ public class MGSendingEmailConfig {
         if (request.getStatus() != 200) {
             logger.error("Failed to send email: " + request.getStatusText());
             logger.error("Response body: " + request.getBody());
+            throw new UnirestException("Failed to send email: " + request.getStatusText());
         }
 
         return request.getBody();

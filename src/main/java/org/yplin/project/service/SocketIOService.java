@@ -106,10 +106,6 @@ public class SocketIOService {
         server.addEventListener("chatMessage", ChatMessageDto.class, (client, data, ackRequest) -> {
             String userEmail = getEmailFromToken(data);
             data.setUserEmail(userEmail);
-//            System.out.println("Message received: " + message);
-//            System.out.println("User email: " + userEmail);
-//            System.out.println("Room ID: " + roomId);
-//            System.out.println("Access token: " + accessToken);
             ackRequest.sendAckData("Message received from clients");
             broadcastMessageToRoom(data);
 
@@ -133,9 +129,6 @@ public class SocketIOService {
             String userEmail = getEmailFromToken(data);
             String userName = getNameFromToken(data);
             String friendEmail = data.getRequestUserEmail();
-//            System.out.println("User email: " + userEmail);
-//            System.out.println("User name: " + userName);
-//            System.out.println("Friend email: " + friendEmail);
             broadcastConfirmToUser(userEmail, userName, friendEmail);
 
         });
@@ -209,8 +202,6 @@ public class SocketIOService {
         });
 
         server.addEventListener("addMemberRequest", MemberWorkspaceDto.class, (client, data, ackRequest) -> {
-            System.out.println("Received data: " + data);
-            String userEmail = getEmailFromToken(data);
             long memberId = data.getUserId();
             String memberEmail = userRepository.findEmailById(memberId).getEmail();
             long roomNumber = data.getRoomNumber();
