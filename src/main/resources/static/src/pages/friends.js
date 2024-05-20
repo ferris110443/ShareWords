@@ -231,13 +231,13 @@ async function checkFriendshipStatus(event) {
 
 async function acceptFriend(userId, friendId, friendName, friendEmail) {
     try {
-        const response = await fetch(`/api/1.0/user/acceptFriendRequest`, {
+        const response = await fetch(`/api/1.0/user/handleFriendRequest`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${accessToken}`
             },
-            body: JSON.stringify({userId: userId, friendId: friendId, status: 'pending'})
+            body: JSON.stringify({userId: userId, friendId: friendId, status: 'pending', action: "ACCEPT"})
         });
         const data = await response.json();
         console.log('Friend request accepted:', data.data);
@@ -272,13 +272,13 @@ async function acceptFriend(userId, friendId, friendName, friendEmail) {
 
 async function rejectFriend(userId, friendId) {
     try {
-        const response = await fetch(`/api/1.0/user/rejectFriendRequest`, {
+        const response = await fetch(`/api/1.0/user/handleFriendRequest`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${accessToken}`
             },
-            body: JSON.stringify({userId: userId, friendId: friendId, status: 'pending'})
+            body: JSON.stringify({userId: userId, friendId: friendId, status: 'pending', action: "REJECT"})
         });
 
         const data = await response.json();
@@ -292,13 +292,13 @@ async function rejectFriend(userId, friendId) {
 
 async function removeFriend(userId, friendId) {
     try {
-        const response = await fetch(`/api/1.0/user/removeFriendRequest`, {
+        const response = await fetch(`/api/1.0/user/handleFriendRequest`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${accessToken}`
             },
-            body: JSON.stringify({userId: userId, friendId: friendId})
+            body: JSON.stringify({userId: userId, friendId: friendId, action: "REMOVE"})
         });
 
         const data = await response.json();
