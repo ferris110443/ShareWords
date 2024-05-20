@@ -34,27 +34,14 @@ public class JwtTokenUtil {
 
     public Claims extractClaims(String token) {
         return Jwts.parser()
-                .setSigningKey(jwtSignKey) // set the signing key
-                .parseClaimsJws(token)// parse and verify its signature using secretKey
-                .getBody(); // extract the JWT claims object and return them as a object
+                .setSigningKey(jwtSignKey)
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     public String extractUserEmail(String token) {
         Claims claims = extractClaims(token);
         return (claims != null) ? claims.get("email", String.class) : null;
     }
-
-//    public String extractUsername(String token) {
-//        return extractClaims(token).getSubject();
-//    }
-//
-//    public boolean isTokenExpired(String token) {
-//        return extractClaims(token).getExpiration().before(new Date());
-//    }
-//
-//    public boolean validateToken(String token, String username) {
-//        return (username.equals(extractUsername(token)) && !isTokenExpired(token));
-//    }
-
-
+    
 }

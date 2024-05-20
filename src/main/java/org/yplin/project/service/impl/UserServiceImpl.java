@@ -1,17 +1,24 @@
 package org.yplin.project.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.yplin.project.configuration.JwtTokenUtil;
+import org.yplin.project.data.StatusEnum;
 import org.yplin.project.data.dto.SignInDto;
 import org.yplin.project.data.dto.UserWorkspaceDto;
 import org.yplin.project.data.dto.WorkspaceMemberDto;
 import org.yplin.project.data.form.*;
 import org.yplin.project.error.UserAlreadyMemberException;
-import org.yplin.project.model.*;
+import org.yplin.project.error.UserNotFoundException;
+import org.yplin.project.model.FriendsModel;
+import org.yplin.project.model.UserModel;
+import org.yplin.project.model.UserOwnWorkspaceDetailsModel;
+import org.yplin.project.model.UserWorkspaceModel;
 import org.yplin.project.repository.FriendsRepository;
 import org.yplin.project.repository.WorkspaceRepository;
 import org.yplin.project.repository.user.UserOwnWorkspaceDetailsRepository;
@@ -25,6 +32,9 @@ import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
     @Autowired
     JwtTokenUtil jwtTokenUtil;
 
@@ -104,27 +114,33 @@ public class UserServiceImpl implements UserService {
     // update user workspace in user_workspace table when user create workspace
     // transfer the workspace name to workspace id
     @Override
-    public String updateUserWorkspace(UserWorkspaceDto userWorkspaceDto) {
-        String userToken = userWorkspaceDto.getAccessToken();
-        String userEmailFromToken = jwtTokenUtil.extractUserEmail(userToken);
-
-        long userId = userRepository.findIdByEmail(userEmailFromToken).getId();
-        long workspaceId = userWorkspaceDto.getRoomNumber();
+    public void updateUserWorkspace(UserWorkspaceDto userWorkspaceDto) {
+        try {
+            String userToken = userWorkspaceDto.getAccessToken();
+            String userEmailFromToken = jwtTokenUtil.extractUserEmail(userToken);
 
 
-        UserWorkspaceModel userWorkspaceModel = new UserWorkspaceModel();
-        userWorkspaceModel.setWorkspaceId(workspaceId);
-        userWorkspaceModel.setUserId(userId);
+            UserModel user = userRepository.findIdByEmail(userEmailFromToken);
+            if (user == null) {
+                throw new UserNotFoundException("No user found with the email: " + userEmailFromToken);
+            }
+            long userId = user.getId();
+            long workspaceId = userWorkspaceDto.getRoomNumber();
 
-        userWorkspaceRepository.save(userWorkspaceModel);
+            UserWorkspaceModel userWorkspaceModel = new UserWorkspaceModel();
+            userWorkspaceModel.setWorkspaceId(workspaceId);
+            userWorkspaceModel.setUserId(userId);
 
+            userWorkspaceRepository.save(userWorkspaceModel);
 
-        return null;
+        } catch (Exception e) {
+            logger.error("error in updating user workspace");
+            throw new RuntimeException("Failed to update user workspace: " + e.getMessage(), e);
+        }
     }
 
     @Override
     public List<UserOwnWorkspaceDetailsModel> fetchUserOwnWorkspaceDetails(String userEmail) {
-//        System.out.println(userOwnWorkspaceDetailsRepository.fetchWorkspaceDetailsWithNativeQuery(userEmail));
         return userOwnWorkspaceDetailsRepository.fetchWorkspaceDetailsWithNativeQuery(userEmail);
     }
 
@@ -158,7 +174,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Long getUserIdByEmail(String userEmail) {
-        return userRepository.findIdByEmail(userEmail).getId();
+        UserModel user = userRepository.findIdByEmail(userEmail);
+        if (user == null) {
+            logger.error("error in finding userId from Email");
+            throw new UserNotFoundException("error in finding userId from Email");
+        }
+
+        return user.getId();
     }
 
 
@@ -178,8 +200,6 @@ public class UserServiceImpl implements UserService {
             friendsModel.setUserName(userEmailName.getName());
             friendsModel.setUserImageUrl(userImageUrl.getUserImageUrl());
         });
-//        System.out.println(friendsModelList);
-
 
         return friendsModelList;
     }
@@ -210,7 +230,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public void removeMemberFromWorkspace(UserAddRemoveMemberInWorkspaceForm userAddMemberInWorkspaceForm) throws UserAlreadyMemberException {
         long userId = userAddMemberInWorkspaceForm.getUserId();
-        String workspaceName = userAddMemberInWorkspaceForm.getWorkspaceName();
         long workspaceId = userAddMemberInWorkspaceForm.getRoomNumber();
         Optional<UserWorkspaceModel> existingEntry = userWorkspaceRepository.findByUserIdAndWorkspaceId(userId, workspaceId);
         if (existingEntry.isEmpty()) {

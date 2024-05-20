@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.yplin.project.configuration.JwtTokenUtil;
@@ -42,7 +43,7 @@ public class MarkdownRestController {
         markdownStorageService.addMarkdownForm(markdownForm);
         Map<String, MarkdownForm> response = new HashMap<>();
         response.put("data", markdownForm);
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 
@@ -51,7 +52,7 @@ public class MarkdownRestController {
     public ResponseEntity<?> getMarkdownContent(@RequestParam("roomId") String roomId, @RequestParam("fileId") String fileId) {
         Map<String, FileContentModel> response = new HashMap<>();
         response.put("data", fileContentService.getFileContent(fileId));
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/markdownInfo")
@@ -62,7 +63,7 @@ public class MarkdownRestController {
         Map<String, Object> response = new HashMap<>();
         response.put("data", fileContentService.getFileContent(fileId));
         response.put("userEmail", userEmail);
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PatchMapping("/markdownInfo")
@@ -71,17 +72,16 @@ public class MarkdownRestController {
         log.info("File name and description updated successfully" + fileNameAndDescription.toString());
         Map<String, String> response = new HashMap<>();
         response.put("message", "File name and description updated successfully");
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 
     @GetMapping("/workspaceFiles")
     public ResponseEntity<?> getWorkspaceFiles(@RequestParam("roomId") String roomId) {
 
-        fileContentService.getWorkspaceFilesContent(roomId);
         Map<String, List<WorkspaceFileContentProjection>> response = new HashMap<>();
         response.put("data", fileContentService.getWorkspaceFilesContent(roomId));
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 

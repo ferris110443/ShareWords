@@ -18,7 +18,7 @@ public interface UserService {
 
     SignInDto signIn(SignInForm signInForm) throws UserExistException, UserPasswordMismatchException;
 
-    String updateUserWorkspace(UserWorkspaceDto userWorkspaceDto);
+    void updateUserWorkspace(UserWorkspaceDto userWorkspaceDto);
 
     List<UserOwnWorkspaceDetailsModel> fetchUserOwnWorkspaceDetails(String userEmail);
 

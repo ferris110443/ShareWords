@@ -16,6 +16,7 @@ import org.yplin.project.data.form.CreateFileForm;
 import org.yplin.project.data.form.CreateWorkspaceForm;
 import org.yplin.project.data.form.UpdateWorkspaceForm;
 import org.yplin.project.data.form.UserAddRemoveMemberInWorkspaceForm;
+import org.yplin.project.error.FileNotFoundException;
 import org.yplin.project.error.NotWorkspaceOwnerException;
 import org.yplin.project.error.UserAlreadyMemberException;
 import org.yplin.project.model.FileContentModel;
@@ -93,8 +94,6 @@ public class WorkspaceRestController {
 
     @GetMapping(path = "/workspaceInformation")
     public ResponseEntity<?> getWorkspaceInformation(@RequestParam(value = "workspaceName") String workspaceName, @RequestParam(value = "roomNumber") long roomNumber, @RequestHeader("Authorization") String authorizationHeader) {
-        String token = authorizationHeader.replace("Bearer ", "");
-        String userEmail = jwtTokenUtil.extractUserEmail(token);
         WorkspaceModel workspaceInformation = workspaceService.getWorkspaceInformation(roomNumber);
         Map<String, WorkspaceModel> response = new HashMap<>();
         response.put("data", workspaceInformation);
@@ -106,13 +105,21 @@ public class WorkspaceRestController {
 
     @GetMapping(path = "/workspace")
     public ResponseEntity<?> getWorkspaceFileInformation(@RequestParam(value = "workspaceName") String workspaceName, @RequestParam(value = "roomNumber") long roomNumber, @RequestHeader("Authorization") String authorizationHeader) {
-        String token = authorizationHeader.replace("Bearer ", "");
-        String creatorEmail = jwtTokenUtil.extractUserEmail(token);
-        List<FileContentModel> fileList = fileContentService.getFileContentsByWorkspaceName(roomNumber);
+        try {
+            List<FileContentModel> fileList = fileContentService.getFileContentsByWorkspaceName(roomNumber);
+            if (fileList == null) {
+                throw new FileNotFoundException("File is not found");
+            }
+            Map<String, List<FileContentModel>> response = new HashMap<>();
+            response.put("data", fileList);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
 
-        Map<String, List<FileContentModel>> response = new HashMap<>();
-        response.put("data", fileList);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (FileNotFoundException e) {
+            logger.error("error in getting workspaceFileInformation : " + e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Failed to get workspaceFileInformation"));
+
+        }
+
     }
 
 
@@ -134,9 +141,6 @@ public class WorkspaceRestController {
     public ResponseEntity<?> createNewFile(@RequestBody CreateFileForm createFileForm, @RequestHeader("Authorization") String authorizationHeader) {
 
         try {
-            String token = authorizationHeader.replace("Bearer ", "");
-            String creatorEmail = jwtTokenUtil.extractUserEmail(token);
-
             if (createFileForm.getFileName() == null || createFileForm.getFileName().trim().isEmpty()) {
                 return ResponseEntity
                         .badRequest()
@@ -168,11 +172,7 @@ public class WorkspaceRestController {
     @DeleteMapping(path = "/file")
     public ResponseEntity<?> deleteFile(@RequestParam(value = "fileId") String fileId, @RequestHeader("Authorization") String authorizationHeader) {
         try {
-
-            String token = authorizationHeader.replace("Bearer ", "");
-            String userEmail = jwtTokenUtil.extractUserEmail(token);
             fileContentService.deleteFileInWorkspace(fileId);
-
             Map<String, Object> response = new HashMap<>();
             return ResponseEntity.status(HttpStatus.OK).body(response);
 
@@ -187,8 +187,6 @@ public class WorkspaceRestController {
     @PatchMapping(path = "/file")
     public ResponseEntity<?> updateFile(@RequestBody UpdateWorkspaceForm updateWorkspaceForm, @RequestHeader("Authorization") String authorizationHeader) {
         try {
-            String token = authorizationHeader.replace("Bearer ", "");
-            String userEmail = jwtTokenUtil.extractUserEmail(token);
             workspaceService.updateWorkspaceInformation(updateWorkspaceForm);
 
             return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "File updated successfully"));
@@ -197,7 +195,7 @@ public class WorkspaceRestController {
 
             log.error("Entity not found: " + enfe.getMessage());
             return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND) // 404 Status Code
+                    .status(HttpStatus.NOT_FOUND)
                     .body(Map.of("error", "Entity not found: " + enfe.getMessage()));
 
         } catch (Exception e) {
@@ -212,11 +210,7 @@ public class WorkspaceRestController {
     // getWorkspaceMembers return all members in the workspace
     @GetMapping(path = "/workspaceMembers")
     public ResponseEntity<?> getWorkspaceMembers(@RequestParam(value = "workspaceName") String workspaceName, @RequestParam(value = "roomNumber") long roomNumber, @RequestHeader("Authorization") String authorizationHeader) {
-        String token = authorizationHeader.replace("Bearer ", "");
-        String userEmail = jwtTokenUtil.extractUserEmail(token);
-
         List<WorkspaceMemberDto> workspaceMembersList = userservice.fetchUserOwnWorkspaceMembers(roomNumber);
-
         Map<String, Object> response = new HashMap<>();
         response.put("data", workspaceMembersList);
         response.put("workspaceName", workspaceName);
@@ -249,16 +243,13 @@ public class WorkspaceRestController {
     // delete user workspace in user_workspace table when user add member into workspace
     @DeleteMapping(path = "/workspaceMembers")
     public ResponseEntity<?> removeFriendFromWorkspaceMembers(@RequestBody UserAddRemoveMemberInWorkspaceForm userAddMemberInWorkspaceForm, @RequestHeader("Authorization") String authorizationHeader) {
-        String token = authorizationHeader.replace("Bearer ", "");
-        String userEmail = jwtTokenUtil.extractUserEmail(token);
-
         try {
             Map<String, List<UserOwnWorkspaceDetailsModel>> response = new HashMap<>();
             userservice.removeMemberFromWorkspace(userAddMemberInWorkspaceForm);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (UserAlreadyMemberException e) {
             Map<String, String> response = new HashMap<>();
-            response.put("error", "User already in the workspace");
+            response.put("error", "User already not in the workspace");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         } catch (Exception e) {
             Map<String, String> response = new HashMap<>();
@@ -271,19 +262,22 @@ public class WorkspaceRestController {
     // delete own workspace in homepage
     @DeleteMapping(path = "/workspaceUserSelfRemove")
     public ResponseEntity<?> removeSelfFromWorkspaceMembers(@RequestBody UserAddRemoveMemberInWorkspaceForm userAddMemberInWorkspaceForm, @RequestHeader("Authorization") String authorizationHeader) {
-        System.out.println("userAddMemberInWorkspaceForm" + userAddMemberInWorkspaceForm);
-        String token = authorizationHeader.replace("Bearer ", "");
-        String userEmail = jwtTokenUtil.extractUserEmail(token);
-        userAddMemberInWorkspaceForm.setUserId(userservice.getUserIdByEmail(userEmail));
-//        System.out.println("userAddMemberInWorkspaceForm" + userAddMemberInWorkspaceForm);
         try {
+            String token = authorizationHeader.replace("Bearer ", "");
+            String userEmail = jwtTokenUtil.extractUserEmail(token);
+            userAddMemberInWorkspaceForm.setUserId(userservice.getUserIdByEmail(userEmail));
             Map<String, String> response = new HashMap<>();
             userservice.removeMemberFromWorkspace(userAddMemberInWorkspaceForm);
             response.put("message", "User removed from workspace");
             return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (UserAlreadyMemberException e) {
+            logger.error("error" + e.getMessage());
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Internal error in removing user from workspace");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         } catch (Exception e) {
             Map<String, String> response = new HashMap<>();
-            response.put("error", "Internal error");
+            response.put("error", "Internal error in removing user from workspace");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }

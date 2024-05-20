@@ -3,6 +3,7 @@ package org.yplin.project.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.yplin.project.data.StatusEnum;
 
 import java.sql.Timestamp;
 

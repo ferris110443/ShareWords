@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.yplin.project.configuration.MGSendingEmailConfig;
 import org.yplin.project.data.form.MailServiceForm;
+import org.yplin.project.error.MarkdownFileSendingFailException;
 import org.yplin.project.model.FileContentModel;
 import org.yplin.project.service.FileContentService;
 import org.yplin.project.service.MarkdownMailService;
@@ -33,7 +34,7 @@ public class MarkdownMailServiceImp implements MarkdownMailService {
     private String staticFolderPath;
 
     @Override
-    public void sendMarkdownFiles(MailServiceForm mailServiceForm) {
+    public void sendMarkdownFiles(MailServiceForm mailServiceForm) throws MarkdownFileSendingFailException {
         String recipientEmail = mailServiceForm.getRecipientEmail();
         String fileId = mailServiceForm.getFileId();
 
@@ -44,13 +45,19 @@ public class MarkdownMailServiceImp implements MarkdownMailService {
         String filePath = path.toAbsolutePath().toString();
         try {
             Files.write(path, fileContent.getBytes());
-            System.out.println("File saved successfully: " + filePath);
+            logger.info("File saved successfully: " + filePath);
         } catch (IOException e) {
-            System.err.println("Error saving the file: " + e.getMessage());
+            logger.error("Error saving the file: " + e.getMessage());
+            throw new MarkdownFileSendingFailException("Error sending MarkdownFile");
         }
 
         // Send the email
-        mgServiceImp.sendSimpleMessage(recipientEmail, filePath, fileName);
+        try {
+            mgServiceImp.sendSimpleMessage(recipientEmail, filePath, fileName);
+        } catch (Exception e) {
+            logger.error("Error sending mail from service");
+            throw new MarkdownFileSendingFailException("Error sending mail from service");
+        }
 
 
     }

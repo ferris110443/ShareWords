@@ -34,8 +34,6 @@ public class FileContentServiceImp implements FileContentService {
     @Autowired
     FileContentRepository fileContentRepository;
 
-    //    final String userPictureDirectory = "/home/ubuntu/sharewords/ShareWords/src/main/resources/static/userPicture/";
-//    final String upLoadImageDirectory = "/home/ubuntu/sharewords/ShareWords/src/main/resources/static/images/";
     @Autowired
     FileContentBatchInsertRepository fileContentBatchInsertRepository;
     @Autowired
@@ -44,6 +42,7 @@ public class FileContentServiceImp implements FileContentService {
     UserRepository userRepository;
     @Autowired
     private S3Uploader s3Uploader;
+
     @Value("${static.folder.path}")
     private String staticFolderPath;
     @Value("${project.domain}")

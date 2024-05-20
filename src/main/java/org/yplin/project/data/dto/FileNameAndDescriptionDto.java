@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class FileNameAndDescriptionDto {
-    String fileTitle;
-    String fileDescription;
-    String fileId;
+    private String fileTitle;
+    private String fileDescription;
+    private String fileId;
 
 }

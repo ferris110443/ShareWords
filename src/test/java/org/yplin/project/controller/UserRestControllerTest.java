@@ -38,14 +38,15 @@ public class UserRestControllerTest {
 
 
     @BeforeEach
+    // every test case will run for every testcase , if you set @BeforeAll, it will run once before all test cases
     public void setup() {
         mockMvc = MockMvcBuilders.standaloneSetup(userRestController).build(); // instantiate MockMVC instance simulate HTTP request
-        objectMapper = new ObjectMapper();
         MockitoAnnotations.openMocks(this); //initialize fields annotated with Mockito annotations like @Mock, @InjectMocks
+        objectMapper = new ObjectMapper();
     }
 
     @Test
-    public void testSignUpSuccess() throws Exception {
+    public void test_SignUp_Success() throws Exception {
 
         UserDto userDto = new UserDto(1L, "username", "email@example.com", "https://testUrl");
         SignupForm signupForm = new SignupForm("username", "email@example.com", "password");
@@ -70,7 +71,6 @@ public class UserRestControllerTest {
                 """;
 
 
-        // When & Then
         mockMvc.perform(post("/api/1.0/user/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(signupFormJsonString))
@@ -85,5 +85,31 @@ public class UserRestControllerTest {
 //                .andExpect(jsonPath("$.data.user.email").value("email@example.com"))
 //                .andExpect(jsonPath("$.data.user.user_image_url").value("https://testUrl"));
     }
+
+
+    @Test
+    public void test_SignUp_Fail_For_Duplicate_Email() throws Exception {
+
+        UserDto userDto = new UserDto(1L, "username", "email@example.com", "https://testUrl");
+        SignupForm signupForm = new SignupForm("username", "email@example.com", "password");
+        SignInDto signInDto = new SignInDto("access_token123", 3600L, userDto);
+        when(userService.signup(any(SignupForm.class))).thenThrow(new UserService.UserExistException("email@example.com is already exist"));
+
+        String signupFormJsonString =
+                objectMapper.writeValueAsString(signupForm);
+        String expectedJson = """
+                {
+                    "error": "email@example.com is already exist"
+                }
+                """;
+
+
+        mockMvc.perform(post("/api/1.0/user/signup")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(signupFormJsonString))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(expectedJson));
+    }
+
 
 }

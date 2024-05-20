@@ -3,12 +3,15 @@ package org.yplin.project.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.yplin.project.configuration.JwtTokenUtil;
+import org.yplin.project.data.ActionEnum;
 import org.yplin.project.data.dto.UserWorkspaceDto;
 import org.yplin.project.data.form.FriendRequestForm;
 import org.yplin.project.data.form.UserAddFriendForm;
+import org.yplin.project.error.UserNotFoundException;
 import org.yplin.project.model.FriendsModel;
 import org.yplin.project.model.UserModel;
 import org.yplin.project.service.UserService;
@@ -43,7 +46,7 @@ public class UserInformationRestController {
         response.put("email", userModel.getEmail());
         response.put("picture", userModel.getUserImageUrl());
         response.put("AccountCreatedDate", userModel.getAccountCreatedDate().toString());
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 
@@ -62,37 +65,44 @@ public class UserInformationRestController {
             userMap.put("id", userModel.getId());
             responseList.add(userMap);
         });
-        return ResponseEntity.ok().body(responseList);
+        return ResponseEntity.status(HttpStatus.OK).body(responseList);
     }
 
     // update user workspace in user_workspace table when user create workspace
     @PostMapping("/userWorkspace")
     public ResponseEntity<?> updateUserWorkspace(@RequestBody UserWorkspaceDto userWorkspaceDto) {
-
-        userService.updateUserWorkspace(userWorkspaceDto);
-
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Update User Workspace Success while creating workspace");
-        return ResponseEntity.ok().body(response);
+        try {
+            userService.updateUserWorkspace(userWorkspaceDto);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Update User Workspace Success while creating workspace");
+            return ResponseEntity.ok(response);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));
+        }
     }
 
 
     @PostMapping("/friends")
     public ResponseEntity<?> addFriend(@RequestBody UserAddFriendForm userAddFriendForm, @RequestHeader("Authorization") String authorizationHeader) {
         Map<String, String> response = new HashMap<>();
-        String token = authorizationHeader.replace("Bearer ", "");
-        String userEmail = jwtTokenUtil.extractUserEmail(token);
-        userAddFriendForm.setUserId(userService.getUserIdByEmail(userEmail));
-        userAddFriendForm.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        userAddFriendForm.setStatus("pending");
 
         try {
+            String token = authorizationHeader.replace("Bearer ", "");
+            String userEmail = jwtTokenUtil.extractUserEmail(token);
+            userAddFriendForm.setUserId(userService.getUserIdByEmail(userEmail));
+            userAddFriendForm.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+            userAddFriendForm.setStatus("pending");
             userService.addFriend(userAddFriendForm);
             response.put("message", "Friend added successfully");
-            return ResponseEntity.ok(response);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (UserNotFoundException e) {
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         } catch (RuntimeException e) {
             response.put("message", e.getMessage());
-            return ResponseEntity.badRequest().body(response);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
 
@@ -102,49 +112,96 @@ public class UserInformationRestController {
     public ResponseEntity<?> getFriendsRelationStatus(@RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
         String userEmail = jwtTokenUtil.extractUserEmail(token);
-        long userId = userService.getUserIdByEmail(userEmail);
-        List<FriendsModel> friendsRelationStatusList = userService.getFriendsRelationStatus(userId);
-
         Map<String, Object> response = new HashMap<>();
 
-        response.put("data", friendsRelationStatusList);
-        response.put("userId", userId);
-        return ResponseEntity.ok(response);
+        try {
+            long userId = userService.getUserIdByEmail(userEmail);
+            List<FriendsModel> friendsRelationStatusList = userService.getFriendsRelationStatus(userId);
+            response.put("data", friendsRelationStatusList);
+            response.put("userId", userId);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "FileNotFoundException" + e));
+
+        }
+
+
     }
+
+    @PostMapping("/handleFriendRequest")
+    public ResponseEntity<?> handleFriendRequest(@RequestBody FriendRequestForm friendRequestForm, @RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            String token = authorizationHeader.replace("Bearer ", "");
+            String userEmail = jwtTokenUtil.extractUserEmail(token);
+
+            ActionEnum action = friendRequestForm.getAction();
+            switch (action) {
+                case ACCEPT:
+                    userService.acceptFriendRequest(friendRequestForm, userEmail);
+                    break;
+                case REJECT:
+                    userService.rejectFriendRequest(friendRequestForm, userEmail);
+                    break;
+                case REMOVE:
+                    userService.removeFriendRequest(friendRequestForm, userEmail);
+                    break;
+            }
+
+            Map<String, Object> response = new HashMap<>();
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));
+        }
+    }
+
 
     // accept friend request button
     @PostMapping("/acceptFriendRequest")
     public ResponseEntity<?> acceptFriendRequest(@RequestBody FriendRequestForm friendRequestForm, @RequestHeader("Authorization") String authorizationHeader) {
-        String token = authorizationHeader.replace("Bearer ", "");
-        String userEmail = jwtTokenUtil.extractUserEmail(token);
+        try {
+            String token = authorizationHeader.replace("Bearer ", "");
+            String userEmail = jwtTokenUtil.extractUserEmail(token);
 
-        userService.acceptFriendRequest(friendRequestForm, userEmail);
+            userService.acceptFriendRequest(friendRequestForm, userEmail);
 
-        Map<String, Object> response = new HashMap<>();
-        return ResponseEntity.ok(response);
+            Map<String, Object> response = new HashMap<>();
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));
+        }
     }
 
     @PostMapping("/rejectFriendRequest")
     public ResponseEntity<?> rejectFriendRequest(@RequestBody FriendRequestForm friendRequestForm, @RequestHeader("Authorization") String authorizationHeader) {
-        String token = authorizationHeader.replace("Bearer ", "");
-        String userEmail = jwtTokenUtil.extractUserEmail(token);
+        try {
+            String token = authorizationHeader.replace("Bearer ", "");
+            String userEmail = jwtTokenUtil.extractUserEmail(token);
 
-        userService.rejectFriendRequest(friendRequestForm, userEmail);
+            userService.rejectFriendRequest(friendRequestForm, userEmail);
 
-        Map<String, Object> response = new HashMap<>();
-        return ResponseEntity.ok(response);
+            Map<String, Object> response = new HashMap<>();
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));
+        }
+
     }
 
 
     @PostMapping("/removeFriendRequest")
     public ResponseEntity<?> removeFriendRequest(@RequestBody FriendRequestForm friendRequestForm, @RequestHeader("Authorization") String authorizationHeader) {
-        String token = authorizationHeader.replace("Bearer ", "");
-        String userEmail = jwtTokenUtil.extractUserEmail(token);
+        try {
+            String token = authorizationHeader.replace("Bearer ", "");
+            String userEmail = jwtTokenUtil.extractUserEmail(token);
+            userService.removeFriendRequest(friendRequestForm, userEmail);
+            Map<String, Object> response = new HashMap<>();
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));
+        }
 
-        userService.removeFriendRequest(friendRequestForm, userEmail);
-
-        Map<String, Object> response = new HashMap<>();
-        return ResponseEntity.ok(response);
     }
 
 
