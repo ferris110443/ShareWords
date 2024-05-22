@@ -1,5 +1,4 @@
 # ShareWords
-## Introduction
 ShareWords is an advanced, real-time markdown editor designed for seamless collaboration within teams. It enables workspace members to simultaneously edit and create detailed markdown documents, fostering an environment of collective creativity and productivity. 
 
 <!---<img src="https://github.com/ferris110443/ShareWords/assets/58131832/99c1894b-094e-4955-b8cb-e623579b9dec" width="800">-->
