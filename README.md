@@ -20,11 +20,13 @@ ShareWords is an advanced, real-time markdown editor designed for seamless colla
 
 ## Architectural diagram
 
-* ShareWords employs Socket.IO on the client-side and Netty.io on the server-side to efficiently manage real-time functionalities such as notifications and group chatting. 
-* Utilizing NGINX as a reverse proxy server for URL redirection.
-* Quill editor binding for Yjs to accomplish collaborative editing through CRDT implementation
-* Static content, including markdown images, user images, and logos, is stored in Amazon S3 and delivered to clients through CloudFront. It accelerates the content delivery, improving the user experienc by reducing load times and providing global content availability.
-<img src="https://github.com/ferris110443/ShareWords/assets/58131832/d709a7f7-ebc8-430e-b952-7827caad27cc" width="800">
+* Implements Socket.IO and Netty for instant notifications and real-time updates.
+* Integrates the Quill editor with the Yjs library to support collaborative editing through CRDTs.
+* Employs NGINX as a proxy server to route various requests to backend servers running on Spring Boot and Express.js.
+* Static content, including markdown images, user images, and logos, is stored in Amazon S3 and delivered to clients through CloudFront. It enhances the content delivery, improving the user experienc by reducing load times and providing global content availability.
+* Supports file delivery through emails using the third-party mail service Mailgun.
+  
+<img src="https://github.com/ferris110443/ShareWords/assets/58131832/e3203f06-755b-4c4b-aea9-10be00c2cdb4" width="800">
 
 ## Database table schema design
 <img src="https://github.com/ferris110443/ShareWords/assets/58131832/d4042140-7da9-407e-9592-5d81fc2b207f" width="800">
