@@ -1,25 +1,22 @@
 # ShareWords - A collaborative markdown editor
 ShareWords is an advanced, real-time markdown editor designed for seamless collaboration within teams. It enables workspace members to simultaneously edit and create detailed markdown documents, fostering an environment of collective creativity and productivity. 
 
-<img src="https://github.com/ferris110443/ShareWords/assets/58131832/99c1894b-094e-4955-b8cb-e623579b9dec" width="800">
+<!---<img src="https://github.com/ferris110443/ShareWords/assets/58131832/99c1894b-094e-4955-b8cb-e623579b9dec" width="800">-->
 
 
 ## Features
 * Individual workspaces for different member groups to edit files and chat.
 * Real-time notifications for friend requests and friend list updates.
-<img src="https://github.com/ferris110443/ShareWords/assets/58131832/c4ce6521-396e-48c0-ab79-18997d6cc6a4" width="800">
-
 * Group chat functionality for workspace members to discuss in real time.
-<img src="https://github.com/ferris110443/ShareWords/assets/58131832/d49b294f-08b0-4193-80b2-ba8fed93c3a2" width="800">
-
 * Collaborative markdown editor for multiple members to edit together.
-<img src="https://github.com/ferris110443/ShareWords/assets/58131832/663a3f8a-03e0-47d1-9c72-e2ec8e8a58ef" width="800">
-
 * Provide preview page for markdown.
 * Option to download .md files and .html files.
-<img src="https://github.com/ferris110443/ShareWords/assets/58131832/0045b41b-96e0-40c2-a41c-10630c64ff85" width="800">
-
 * External mail service to share .md files.
+
+<img src="https://github.com/ferris110443/ShareWords/assets/58131832/c4ce6521-396e-48c0-ab79-18997d6cc6a4" width="800">
+<img src="https://github.com/ferris110443/ShareWords/assets/58131832/d49b294f-08b0-4193-80b2-ba8fed93c3a2" width="800">
+<img src="https://github.com/ferris110443/ShareWords/assets/58131832/663a3f8a-03e0-47d1-9c72-e2ec8e8a58ef" width="800">
+<!---<img src="https://github.com/ferris110443/ShareWords/assets/58131832/0045b41b-96e0-40c2-a41c-10630c64ff85" width="800">-->
 
 ## Architectural diagram
 
