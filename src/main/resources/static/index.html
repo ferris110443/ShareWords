@@ -70,7 +70,7 @@
                      src="https://d2sgme9h4fi9e0.cloudfront.net/sharewords/logo/sharewordslogo.png" width=300px>
                 <div>Collaborate with friends</div>
             </div>
-            <div id="signupSection">
+            <div id="signupSection" style="display: none;">
                 <form id="signupForm">
                     <div>
                         <label for="signup-username">Username:</label><br>
@@ -92,15 +92,15 @@
                     </div>
                 </form>
             </div>
-            <div id="signInSection" style="display: none;">
+            <div id="signInSection">
                 <form id="signInForm">
                     <div>
                         <label for="signIn-email">Email:</label><br>
-                        <input id="signIn-email" name="email" required type="text">
+                        <input id="signIn-email" name="email" required type="text" value="Alice@gmail.com">
                     </div>
                     <div>
                         <label for="signIn-password">Password:</label><br>
-                        <input id="signIn-password" name="password" required type="password">
+                        <input id="signIn-password" name="password" required type="password" value="Alice">
                     </div>
                     <div>
                         <button type="submit">Sign In</button>
