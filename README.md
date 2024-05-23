@@ -3,6 +3,13 @@ ShareWords is an advanced, real-time markdown editor designed for seamless colla
 
 <!---<img src="https://github.com/ferris110443/ShareWords/assets/58131832/99c1894b-094e-4955-b8cb-e623579b9dec" width="800">-->
 
+Demo Account 
+
+| Account          | Password |
+| ---------------- |:--------:|
+| Alice@gmail.com  |Alice     |
+| Tony@gmail.com   |Tony      |
+
 
 ## Features
 * Individual workspaces for different member groups to edit files and chat.
