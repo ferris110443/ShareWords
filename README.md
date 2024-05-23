@@ -3,6 +3,13 @@ ShareWords is an advanced, real-time markdown editor designed for seamless colla
 
 <!---<img src="https://github.com/ferris110443/ShareWords/assets/58131832/99c1894b-094e-4955-b8cb-e623579b9dec" width="800">-->
 
+Demo Account 
+
+| Account          | Password |
+| ---------------- |:--------:|
+| Alice@gmail.com  |Alice     |
+| Tony@gmail.com   |Tony      |
+
 
 ## Features
 * Individual workspaces for different member groups to edit files and chat.
@@ -13,6 +20,8 @@ ShareWords is an advanced, real-time markdown editor designed for seamless colla
 * Option to download .md files and .html files.
 * External mail service to share .md files.
 
+## Live Demo
+
 <img src="https://github.com/ferris110443/ShareWords/assets/58131832/c4ce6521-396e-48c0-ab79-18997d6cc6a4" width="800">
 <img src="https://github.com/ferris110443/ShareWords/assets/58131832/d49b294f-08b0-4193-80b2-ba8fed93c3a2" width="800">
 <img src="https://github.com/ferris110443/ShareWords/assets/58131832/663a3f8a-03e0-47d1-9c72-e2ec8e8a58ef" width="800">
@@ -20,11 +29,11 @@ ShareWords is an advanced, real-time markdown editor designed for seamless colla
 
 ## Architectural diagram
 
-* Implements Socket.IO and Netty for instant notifications and real-time updates.
+* Implements instant notifications and real-time updates status through Socket.IO.
 * Integrates the Quill editor with the Yjs library to support collaborative editing through CRDTs.
-* Employs NGINX as a proxy server to route various requests to backend servers running on Spring Boot and Express.js.
-* Static content, including markdown images, user images, and logos, is stored in Amazon S3 and delivered to clients through CloudFront. It enhances the content delivery, improving the user experienc by reducing load times and providing global content availability.
-* Supports file delivery through emails using the third-party mail service Mailgun.
+* Uses NGINX as a proxy server to route various requests to different services.
+* Leverages AWS S3 and CloudFront to deliver images, enhancing user experience.
+* Supports markdown files delivery through emails.
   
 <img src="https://github.com/ferris110443/ShareWords/assets/58131832/e3203f06-755b-4c4b-aea9-10be00c2cdb4" width="800">
 
