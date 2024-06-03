@@ -38,8 +38,8 @@ Demo Account
 <img src="https://github.com/ferris110443/ShareWords/assets/58131832/e3203f06-755b-4c4b-aea9-10be00c2cdb4" width="800">
 
 ## Database table schema design
-<!---<img src="https://github.com/ferris110443/ShareWords/assets/58131832/d4042140-7da9-407e-9592-5d81fc2b207f" width="800">-->
-<img src="https://github.com/ferris110443/ShareWords/assets/58131832/f4027544-59c7-4aeb-b117-f141d718caef" width="800">
+<!--<img src="https://github.com/ferris110443/ShareWords/assets/58131832/d4042140-7da9-407e-9592-5d81fc2b207f" width="800">-->
+<img src = "https://github.com/ferris110443/ShareWords/assets/58131832/9230521f-a569-4b68-9346-1fe13c65e461" width = "800" >
 
 
 ## Tech Stack
